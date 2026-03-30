@@ -1,0 +1,196 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Existing model (unchanged) ──────────────────────────────────────────────
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+}
+
+// ─── India Public Holidays ────────────────────────────────────────────────────
+
+model State {
+  code      String   @id
+  name      String
+  emoji     String   @default("")
+  tone      String   @default("saff")
+  type      String   // "state" | "ut"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Festival {
+  id               String   @id
+  name             String
+  alternateName    String?
+  type             String   // national | religious | seasonal | cultural | harvest
+  month            Int
+  day              Int
+  // Short & rich content
+  shortDesc        String?
+  description      String?
+  significance     String?  // JSON array of strings
+  heroEmoji        String   @default("")
+  colorTone        String   @default("")
+  calendarType     String?
+  dateLabel        String?
+  sortOrder        Int      @default(0)
+  isActive         Boolean  @default(true)
+  // Media
+  heroImage        String?
+  images           String   @default("[]")   // JSON array of image URLs
+  // Rich content — stored as JSON strings
+  regions          String   @default("[]")   // JSON array of region names
+  statesCelebrated String   @default("[]")   // JSON array of state codes
+  tags             String   @default("[]")   // JSON array of tags
+  whyCelebrate     String   @default("[]")   // JSON array of strings
+  howToCelebrate   String   @default("[]")   // JSON array of {title, details}
+  rituals          String   @default("[]")   // JSON array of strings
+  foods            String   @default("[]")   // JSON array of strings
+  wishes           String   @default("[]")   // JSON array of strings
+  timeline         String   @default("[]")   // JSON array of {label, detail}
+  faq              String   @default("[]")   // JSON array of {q, a}
+  cardTheme        String   @default("{}")   // JSON object {gradient, accent, etc}
+  // SEO
+  seoTitle         String?
+  seoDescription   String?
+  seoKeywords      String   @default("[]")   // JSON array of keywords
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([type])
+  @@index([month])
+  @@index([isActive])
+}
+
+model Holiday {
+  id          String   @id
+  title       String
+  date        String   // YYYY-MM-DD
+  year        Int
+  type        String   // national | state | bank | festival
+  states      String   @default("[]") // JSON array of state codes
+  description String?
+  holidayType String   @default("gazetted") // gazetted | restricted | seasonal | observance
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([year])
+  @@index([date])
+  @@index([type])
+}
+
+// ─── Kids Zone Content ───────────────────────────────────────────────────────
+
+model KidsContent {
+  id            String   @id
+  slug          String   @unique
+  type          String   // story | quiz | coloring | fact | craft | game
+  title         String
+  emoji         String   @default("🎉")
+  summary       String?
+  festivalSlugs String   @default("[]") // JSON array
+  ageGroup      String   @default("[]") // JSON array e.g. ["4-7","8-12"]
+  featured      Boolean  @default(false)
+  isActive      Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  content       String   @default("{}") // Full JSON: paragraphs, questions, steps etc.
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([type])
+  @@index([isActive])
+  @@index([type, isActive])
+}
+
+// ─── Blog ────────────────────────────────────────────────────────────────────
+
+model BlogTopic {
+  id        String   @id                          // e.g. "pdf", "security"
+  siteId    String   @default("smartutilitiesai")
+  title     String
+  icon      String   @default("📝")
+  accent    String   @default("blue")             // blue|pink|orange|cyan|purple|green
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  posts     BlogPost[]
+
+  @@unique([siteId, id])
+  @@index([siteId])
+}
+
+model BlogPost {
+  id             String   @id @default(uuid())
+  siteId         String   @default("smartutilitiesai")
+  slug           String
+  topicId        String
+  featured       Boolean  @default(false)
+  published      Boolean  @default(true)
+
+  title          String
+  subtitle       String   @default("")
+  author         String   @default("SmartUtilitiesAI")
+  coverEmoji     String   @default("📝")
+  accent         String   @default("blue")
+
+  publishedAt    String                           // YYYY-MM-DD
+  readingMinutes Int      @default(5)
+
+  seoTitle       String   @default("")
+  seoDescription String   @default("")
+  keywords       Json     @default("[]")          // string[]
+
+  quickSummary   String   @default("")
+  sections       Json     @default("[]")          // {h2, p[], bullets?}[]
+  faq            Json     @default("[]")          // {q, a}[]
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  topic          BlogTopic @relation(fields: [topicId], references: [id])
+
+  @@unique([siteId, slug])
+  @@index([siteId])
+  @@index([siteId, published])
+  @@index([topicId])
+}
+
+model SeoPage {
+  id             String   @id @default(uuid())
+  siteId         String   @default("smartutilitiesai")   // project namespace
+  routePath      String
+  title          String?
+  description    String?
+  canonicalPath  String?
+  robots         String   @default("index,follow")
+  ogType         String   @default("website")
+  ogImage        String?
+  ogImageWidth   Int      @default(1200)
+  ogImageHeight  Int      @default(630)
+  twitterCard    String   @default("summary_large_image")
+  twitterSite    String?
+  ogSiteName     String   @default("SmartUtilitiesAI")
+  jsonLd         Json?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([siteId, routePath])
+  @@index([siteId])
+  @@index([isActive])
+}
