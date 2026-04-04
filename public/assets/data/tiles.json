@@ -1,0 +1,9 @@
+[
+  { "title": "Daily Tips",       "icon": "leaf-outline",                 "accent": "#5FF3A1", "tip": "You are doing good — keep your routine light and consistent today." },
+  { "title": "Mindfulness",      "icon": "assets/icon/mindfulness.png",  "accent": "#53F0D4", "tip": "Take 3 slow breaths. Inhale 4s, hold 2s, exhale 6s. Repeat x3." },
+  { "title": "Do / Don’t",       "icon": "alert-circle-outline",         "accent": "#5FF3A1", "tip": "Do: communicate clearly • Don’t: rush decisions." },
+  { "title": "Today’s Luck",     "icon": "star-outline",                 "accent": "#6DC7FF", "tip": "Best window: late afternoon. Try a calming color." },
+  { "title": "Daily Matches",    "icon": "people-outline",               "accent": "#C3A1FF", "tip": "Connect with someone who shares your curiosity." },
+  { "title": "Dating Tips",      "icon": "heart-outline",                "accent": "#FF8DA1", "tip": "Lead with empathy; ask one genuine question." },
+  { "title": "Career Tips ", "icon": "assets/icon/career.png",            "accent": "#7EE6A9", "tip": "Do one high-impact task before noon." }
+]

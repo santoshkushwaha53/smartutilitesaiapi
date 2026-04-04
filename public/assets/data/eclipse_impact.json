@@ -1,0 +1,38 @@
+{
+  "signs": {
+    "aries": {
+      "solar": {
+        "total": "Big reset for goals and identity; start fresh with courage.",
+        "annular": "Refine visibility and leadership—polish, don’t push.",
+        "partial": "Small course-correct around career and public image."
+      },
+      "lunar": {
+        "total": "Release old roles. Balance independence with partnership.",
+        "partial": "Emotional clarity about commitments.",
+        "penumbral": "Quiet reflection; rest and recharge."
+      }
+    },
+    "taurus": {
+      "solar": {
+        "total": "Value shifts; finances and self-worth get a bold reboot.",
+        "annular": "Update routines and resources; keep it simple.",
+        "partial": "Tweak budgets or comforts to support growth."
+      },
+      "lunar": {
+        "total": "Let go of stubborn habits; embrace flexibility.",
+        "partial": "Reassess possessions vs. priorities.",
+        "penumbral": "Ground and soothe your body."
+      }
+    },
+    "gemini": { "solar": { "partial": "New learning or travel threads open up." }, "lunar": { "partial": "Edit your message; listen more." } },
+    "cancer": { "solar": { "partial": "Home/family themes refresh gently." }, "lunar": { "partial": "Nourish boundaries and rest." } },
+    "leo":    { "solar": { "partial": "Spotlight moments; keep heart-first." }, "lunar": { "partial": "Balance play with purpose." } },
+    "virgo":  { "solar": { "partial": "Small system upgrades; declutter." }, "lunar": { "partial": "Release perfection pressure." } },
+    "libra":  { "solar": { "partial": "Relationship dynamics tune-up." }, "lunar": { "partial": "Name your needs; invite fairness." } },
+    "scorpio":{ "solar": { "partial": "Deep motivations shift; slow and steady." }, "lunar": { "partial": "Transform without burning out." } },
+    "sagittarius":{ "solar": { "partial": "New aim or study refresh." }, "lunar": { "partial": "Wisdom matures through editing beliefs." } },
+    "capricorn":{ "solar": { "partial": "Career micro-pivot; plant pragmatic seeds." }, "lunar": { "partial": "Release rigid timelines." } },
+    "aquarius":{ "solar": { "partial": "Community and networks re-align." }, "lunar": { "partial": "Friends/teams evolve; stay authentic." } },
+    "pisces": { "solar": { "partial": "Creative/inner life stirring softly." }, "lunar": { "partial": "Restorative surrender; dreamwork." } }
+  }
+}

@@ -1,0 +1,1946 @@
+{
+  "aries": {
+    "general": {
+      "score_percent": 75,
+      "summary": "Today brings a burst of energy. Embrace new challenges.",
+      "tips": [
+        "Stay active",
+        "Be open to change"
+      ],
+      "do": [
+        "Exercise",
+        "Network",
+        "Plan ahead"
+      ],
+      "dont": [
+        "Procrastinate",
+        "Dwell on past",
+        "Avoid collaboration"
+      ],
+      "lucky_color": "red",
+      "lucky_number": 3
+    },
+    "love": {
+      "score_percent": 70,
+      "summary": "Romantic sparks may fly today. Be receptive.",
+      "tips": [
+        "Express feelings",
+        "Plan a date"
+      ],
+      "do": [
+        "Flirt",
+        "Listen actively",
+        "Be spontaneous"
+      ],
+      "dont": [
+        "Be overly critical",
+        "Rush decisions",
+        "Ignore partner's needs"
+      ],
+      "lucky_color": "pink",
+      "lucky_number": 5
+    },
+    "relationships": {
+      "score_percent": 65,
+      "summary": "Focus on communication with loved ones.",
+      "tips": [
+        "Share thoughts",
+        "Be supportive"
+      ],
+      "do": [
+        "Reach out",
+        "Resolve conflicts",
+        "Show appreciation"
+      ],
+      "dont": [
+        "Avoid confrontation",
+        "Hold grudges",
+        "Be distant"
+      ],
+      "lucky_color": "orange",
+      "lucky_number": 2
+    },
+    "career": {
+      "score_percent": 80,
+      "summary": "A productive day awaits. Take initiative.",
+      "tips": [
+        "Set clear goals",
+        "Collaborate with others"
+      ],
+      "do": [
+        "Lead projects",
+        "Seek feedback",
+        "Stay organized"
+      ],
+      "dont": [
+        "Micromanage",
+        "Ignore details",
+        "Neglect teamwork"
+      ],
+      "lucky_color": "blue",
+      "lucky_number": 8
+    },
+    "money": {
+      "score_percent": 60,
+      "summary": "Financial planning is key today.",
+      "tips": [
+        "Budget wisely",
+        "Avoid impulse buys"
+      ],
+      "do": [
+        "Track expenses",
+        "Save for future",
+        "Consult an expert"
+      ],
+      "dont": [
+        "Overspend",
+        "Neglect savings",
+        "Make hasty investments"
+      ],
+      "lucky_color": "green",
+      "lucky_number": 4
+    },
+    "health": {
+      "score_percent": 70,
+      "summary": "Focus on wellness and self-care.",
+      "tips": [
+        "Stay hydrated",
+        "Practice mindfulness"
+      ],
+      "do": [
+        "Eat healthy",
+        "Get enough sleep",
+        "Exercise regularly"
+      ],
+      "dont": [
+        "Skip meals",
+        "Neglect mental health",
+        "Avoid routine check-ups"
+      ],
+      "lucky_color": "yellow",
+      "lucky_number": 6
+    },
+    "wellness": {
+      "score_percent": 75,
+      "summary": "Balance work and relaxation.",
+      "tips": [
+        "Take breaks",
+        "Meditate"
+      ],
+      "do": [
+        "Engage in hobbies",
+        "Connect with nature",
+        "Reflect on goals"
+      ],
+      "dont": [
+        "Overwork",
+        "Ignore stress",
+        "Avoid downtime"
+      ],
+      "lucky_color": "purple",
+      "lucky_number": 1
+    },
+    "luck": {
+      "score_percent": 80,
+      "summary": "Good fortune is on your side.",
+      "tips": [
+        "Take risks",
+        "Trust your instincts"
+      ],
+      "do": [
+        "Try something new",
+        "Be adventurous",
+        "Embrace opportunities"
+      ],
+      "dont": [
+        "Play it safe",
+        "Doubt yourself",
+        "Miss chances"
+      ],
+      "lucky_color": "gold",
+      "lucky_number": 9
+    }
+  },
+  "taurus": {
+    "general": {
+      "score_percent": 65,
+      "summary": "Stability is key today. Focus on routine.",
+      "tips": [
+        "Organize your space",
+        "Stick to plans"
+      ],
+      "do": [
+        "Prioritize tasks",
+        "Embrace comfort",
+        "Work steadily"
+      ],
+      "dont": [
+        "Rush decisions",
+        "Overcommit",
+        "Be inflexible"
+      ],
+      "lucky_color": "green",
+      "lucky_number": 2
+    },
+    "love": {
+      "score_percent": 60,
+      "summary": "Relationships may require patience.",
+      "tips": [
+        "Communicate openly",
+        "Show affection"
+      ],
+      "do": [
+        "Be nurturing",
+        "Plan quality time",
+        "Listen carefully"
+      ],
+      "dont": [
+        "Be possessive",
+        "Ignore partner's feelings",
+        "Rush intimacy"
+      ],
+      "lucky_color": "pink",
+      "lucky_number": 7
+    },
+    "relationships": {
+      "score_percent": 70,
+      "summary": "Strengthen bonds with friends.",
+      "tips": [
+        "Reach out",
+        "Be supportive"
+      ],
+      "do": [
+        "Make plans",
+        "Share experiences",
+        "Be reliable"
+      ],
+      "dont": [
+        "Cancel plans",
+        "Be judgmental",
+        "Neglect connections"
+      ],
+      "lucky_color": "blue",
+      "lucky_number": 3
+    },
+    "career": {
+      "score_percent": 75,
+      "summary": "Focus on long-term goals.",
+      "tips": [
+        "Invest in skills",
+        "Stay consistent"
+      ],
+      "do": [
+        "Work diligently",
+        "Seek mentorship",
+        "Network"
+      ],
+      "dont": [
+        "Get distracted",
+        "Avoid challenges",
+        "Neglect growth"
+      ],
+      "lucky_color": "brown",
+      "lucky_number": 5
+    },
+    "money": {
+      "score_percent": 70,
+      "summary": "Financial stability is within reach.",
+      "tips": [
+        "Save wisely",
+        "Plan for the future"
+      ],
+      "do": [
+        "Create a budget",
+        "Track spending",
+        "Avoid debts"
+      ],
+      "dont": [
+        "Make impulsive purchases",
+        "Neglect savings",
+        "Ignore financial advice"
+      ],
+      "lucky_color": "gold",
+      "lucky_number": 4
+    },
+    "health": {
+      "score_percent": 65,
+      "summary": "Focus on physical wellness.",
+      "tips": [
+        "Stay active",
+        "Eat well"
+      ],
+      "do": [
+        "Exercise regularly",
+        "Maintain a balanced diet",
+        "Prioritize self-care"
+      ],
+      "dont": [
+        "Skip workouts",
+        "Neglect sleep",
+        "Ignore health advice"
+      ],
+      "lucky_color": "orange",
+      "lucky_number": 6
+    },
+    "wellness": {
+      "score_percent": 70,
+      "summary": "Find balance in today routines.",
+      "tips": [
+        "Practice self-care",
+        "Meditate"
+      ],
+      "do": [
+        "Take time for yourself",
+        "Reflect on your needs",
+        "Engage in hobbies"
+      ],
+      "dont": [
+        "Overwhelm yourself",
+        "Avoid relaxation",
+        "Ignore stressors"
+      ],
+      "lucky_color": "purple",
+      "lucky_number": 1
+    },
+    "luck": {
+      "score_percent": 75,
+      "summary": "Fortune favors the prepared.",
+      "tips": [
+        "Stay optimistic",
+        "Take calculated risks"
+      ],
+      "do": [
+        "Be proactive",
+        "Trust your instincts",
+        "Seize opportunities"
+      ],
+      "dont": [
+        "Doubt your abilities",
+        "Remain passive",
+        "Ignore chances"
+      ],
+      "lucky_color": "red",
+      "lucky_number": 8
+    }
+  },
+  "gemini": {
+    "general": {
+      "score_percent": 70,
+      "summary": "A day for socializing and networking.",
+      "tips": [
+        "Connect with others",
+        "Share ideas"
+      ],
+      "do": [
+        "Attend events",
+        "Engage in discussions",
+        "Be adaptable"
+      ],
+      "dont": [
+        "Isolate yourself",
+        "Avoid new experiences",
+        "Be rigid"
+      ],
+      "lucky_color": "yellow",
+      "lucky_number": 5
+    },
+    "love": {
+      "score_percent": 75,
+      "summary": "Romance is in the air. Be playful.",
+      "tips": [
+        "Flirt openly",
+        "Plan fun outings"
+      ],
+      "do": [
+        "Be spontaneous",
+        "Communicate freely",
+        "Express affection"
+      ],
+      "dont": [
+        "Overthink",
+        "Be too serious",
+        "Ignore partner's needs"
+      ],
+      "lucky_color": "blue",
+      "lucky_number": 3
+    },
+    "relationships": {
+      "score_percent": 80,
+      "summary": "Enhance connections with friends.",
+      "tips": [
+        "Reach out",
+        "Be supportive"
+      ],
+      "do": [
+        "Organize gatherings",
+        "Share experiences",
+        "Listen actively"
+      ],
+      "dont": [
+        "Neglect friendships",
+        "Avoid socializing",
+        "Be judgmental"
+      ],
+      "lucky_color": "green",
+      "lucky_number": 6
+    },
+    "career": {
+      "score_percent": 65,
+      "summary": "Focus on collaboration at work.",
+      "tips": [
+        "Share ideas",
+        "Support teammates"
+      ],
+      "do": [
+        "Work in teams",
+        "Communicate clearly",
+        "Seek feedback"
+      ],
+      "dont": [
+        "Be competitive",
+        "Avoid teamwork",
+        "Ignore input"
+      ],
+      "lucky_color": "orange",
+      "lucky_number": 4
+    },
+    "money": {
+      "score_percent": 60,
+      "summary": "Be cautious with finances today.",
+      "tips": [
+        "Track expenses",
+        "Avoid impulse buys"
+      ],
+      "do": [
+        "Create a budget",
+        "Plan ahead",
+        "Consult a financial advisor"
+      ],
+      "dont": [
+        "Overspend",
+        "Neglect savings",
+        "Make hasty investments"
+      ],
+      "lucky_color": "red",
+      "lucky_number": 2
+    },
+    "health": {
+      "score_percent": 75,
+      "summary": "Maintain a balanced lifestyle.",
+      "tips": [
+        "Stay active",
+        "Practice mindfulness"
+      ],
+      "do": [
+        "Eat healthily",
+        "Get enough rest",
+        "Engage in physical activities"
+      ],
+      "dont": [
+        "Skip meals",
+        "Neglect mental health",
+        "Avoid exercise"
+      ],
+      "lucky_color": "purple",
+      "lucky_number": 1
+    },
+    "wellness": {
+      "score_percent": 70,
+      "summary": "Focus on mental and emotional health.",
+      "tips": [
+        "Meditate",
+        "Journal"
+      ],
+      "do": [
+        "Reflect on feelings",
+        "Connect with nature",
+        "Seek positivity"
+      ],
+      "dont": [
+        "Ignore stress",
+        "Avoid self-care",
+        "Dwell on negativity"
+      ],
+      "lucky_color": "gold",
+      "lucky_number": 9
+    },
+    "luck": {
+      "score_percent": 80,
+      "summary": "Good fortune is within reach.",
+      "tips": [
+        "Stay optimistic",
+        "Be open to opportunities"
+      ],
+      "do": [
+        "Take risks",
+        "Trust your intuition",
+        "Embrace change"
+      ],
+      "dont": [
+        "Be fearful",
+        "Miss chances",
+        "Doubt yourself"
+      ],
+      "lucky_color": "silver",
+      "lucky_number": 7
+    }
+  },
+  "cancer": {
+    "general": {
+      "score_percent": 75,
+      "summary": "Emotions may run high. Seek comfort.",
+      "tips": [
+        "Connect with loved ones",
+        "Express feelings"
+      ],
+      "do": [
+        "Spend time at home",
+        "Nurture relationships",
+        "Practice self-care"
+      ],
+      "dont": [
+        "Isolate yourself",
+        "Avoid emotions",
+        "Neglect self-care"
+      ],
+      "lucky_color": "white",
+      "lucky_number": 6
+    },
+    "love": {
+      "score_percent": 70,
+      "summary": "Love is nurturing today. Be open.",
+      "tips": [
+        "Share your heart",
+        "Plan cozy moments"
+      ],
+      "do": [
+        "Be affectionate",
+        "Listen actively",
+        "Plan a romantic evening"
+      ],
+      "dont": [
+        "Be critical",
+        "Ignore partner's needs",
+        "Rush intimacy"
+      ],
+      "lucky_color": "pink",
+      "lucky_number": 3
+    },
+    "relationships": {
+      "score_percent": 65,
+      "summary": "Strengthen family ties today.",
+      "tips": [
+        "Reach out",
+        "Be supportive"
+      ],
+      "do": [
+        "Make time for family",
+        "Share feelings",
+        "Be dependable"
+      ],
+      "dont": [
+        "Avoid family",
+        "Neglect communication",
+        "Be distant"
+      ],
+      "lucky_color": "blue",
+      "lucky_number": 2
+    },
+    "career": {
+      "score_percent": 60,
+      "summary": "Focus on teamwork at work.",
+      "tips": [
+        "Collaborate effectively",
+        "Support colleagues"
+      ],
+      "do": [
+        "Be a team player",
+        "Communicate openly",
+        "Share responsibilities"
+      ],
+      "dont": [
+        "Work alone",
+        "Ignore input",
+        "Neglect tasks"
+      ],
+      "lucky_color": "green",
+      "lucky_number": 1
+    },
+    "money": {
+      "score_percent": 65,
+      "summary": "Budget wisely for future needs.",
+      "tips": [
+        "Track spending",
+        "Save for emergencies"
+      ],
+      "do": [
+        "Create a financial plan",
+        "Avoid unnecessary purchases",
+        "Seek advice"
+      ],
+      "dont": [
+        "Overspend",
+        "Neglect savings",
+        "Make impulsive decisions"
+      ],
+      "lucky_color": "gold",
+      "lucky_number": 4
+    },
+    "health": {
+      "score_percent": 70,
+      "summary": "Focus on emotional health today.",
+      "tips": [
+        "Practice self-care",
+        "Engage in relaxing activities"
+      ],
+      "do": [
+        "Meditate",
+        "Connect with nature",
+        "Talk about feelings"
+      ],
+      "dont": [
+        "Avoid emotions",
+        "Overwork",
+        "Neglect health"
+      ],
+      "lucky_color": "purple",
+      "lucky_number": 5
+    },
+    "wellness": {
+      "score_percent": 75,
+      "summary": "Find balance in your routine.",
+      "tips": [
+        "Set aside time for yourself",
+        "Reflect on goals"
+      ],
+      "do": [
+        "Engage in hobbies",
+        "Connect with friends",
+        "Practice gratitude"
+      ],
+      "dont": [
+        "Neglect yourself",
+        "Avoid relaxation",
+        "Overcommit"
+      ],
+      "lucky_color": "silver",
+      "lucky_number": 3
+    },
+    "luck": {
+      "score_percent": 80,
+      "summary": "Fortune smiles upon you today.",
+      "tips": [
+        "Be open to new opportunities",
+        "Trust your instincts"
+      ],
+      "do": [
+        "Take chances",
+        "Explore new ventures",
+        "Stay positive"
+      ],
+      "dont": [
+        "Be fearful",
+        "Doubt your abilities",
+        "Miss opportunities"
+      ],
+      "lucky_color": "orange",
+      "lucky_number": 7
+    }
+  },
+  "leo": {
+    "general": {
+      "score_percent": 80,
+      "summary": "A vibrant day full of creativity.",
+      "tips": [
+        "Express yourself",
+        "Engage in activities you love"
+      ],
+      "do": [
+        "Take the lead",
+        "Collaborate with others",
+        "Be confident"
+      ],
+      "dont": [
+        "Hold back",
+        "Be passive",
+        "Ignore your talents"
+      ],
+      "lucky_color": "gold",
+      "lucky_number": 9
+    },
+    "love": {
+      "score_percent": 75,
+      "summary": "Romantic energy is high. Shine bright.",
+      "tips": [
+        "Be confident",
+        "Plan special dates"
+      ],
+      "do": [
+        "Flirt",
+        "Show affection",
+        "Communicate openly"
+      ],
+      "dont": [
+        "Be overly critical",
+        "Rush intimacy",
+        "Ignore partner's needs"
+      ],
+      "lucky_color": "red",
+      "lucky_number": 8
+    },
+    "relationships": {
+      "score_percent": 70,
+      "summary": "Strengthen friendships and connections.",
+      "tips": [
+        "Make time for loved ones",
+        "Be supportive"
+      ],
+      "do": [
+        "Plan gatherings",
+        "Share experiences",
+        "Listen actively"
+      ],
+      "dont": [
+        "Neglect relationships",
+        "Be self-centered",
+        "Avoid socializing"
+      ],
+      "lucky_color": "purple",
+      "lucky_number": 2
+    },
+    "career": {
+      "score_percent": 75,
+      "summary": "Showcase your skills at work.",
+      "tips": [
+        "Take initiative",
+        "Seek leadership roles"
+      ],
+      "do": [
+        "Network",
+        "Share ideas",
+        "Stay organized"
+      ],
+      "dont": [
+        "Avoid risks",
+        "Ignore feedback",
+        "Be complacent"
+      ],
+      "lucky_color": "blue",
+      "lucky_number": 4
+    },
+    "money": {
+      "score_percent": 70,
+      "summary": "Financial prospects look good.",
+      "tips": [
+        "Plan for future expenses",
+        "Budget wisely"
+      ],
+      "do": [
+        "Save money",
+        "Invest smartly",
+        "Track spending"
+      ],
+      "dont": [
+        "Overspend",
+        "Neglect savings",
+        "Make hasty investments"
+      ],
+      "lucky_color": "green",
+      "lucky_number": 1
+    },
+    "health": {
+      "score_percent": 75,
+      "summary": "Focus on physical activity today.",
+      "tips": [
+        "Stay active",
+        "Eat healthy"
+      ],
+      "do": [
+        "Join a fitness class",
+        "Take walks",
+        "Drink plenty of water"
+      ],
+      "dont": [
+        "Skip exercise",
+        "Neglect sleep",
+        "Overindulge"
+      ],
+      "lucky_color": "orange",
+      "lucky_number": 5
+    },
+    "wellness": {
+      "score_percent": 80,
+      "summary": "Balance work and play.",
+      "tips": [
+        "Make time for relaxation",
+        "Reflect on achievements"
+      ],
+      "do": [
+        "Engage in hobbies",
+        "Connect with loved ones",
+        "Practice gratitude"
+      ],
+      "dont": [
+        "Overwork",
+        "Avoid downtime",
+        "Neglect self-care"
+      ],
+      "lucky_color": "silver",
+      "lucky_number": 6
+    },
+    "luck": {
+      "score_percent": 85,
+      "summary": "Good fortune is on your side.",
+      "tips": [
+        "Take bold steps",
+        "Trust your intuition"
+      ],
+      "do": [
+        "Explore new opportunities",
+        "Be adventurous",
+        "Stay optimistic"
+      ],
+      "dont": [
+        "Doubt yourself",
+        "Play it safe",
+        "Miss chances"
+      ],
+      "lucky_color": "yellow",
+      "lucky_number": 3
+    }
+  },
+  "virgo": {
+    "general": {
+      "score_percent": 70,
+      "summary": "Focus on details and organization.",
+      "tips": [
+        "Plan your day",
+        "Stay organized"
+      ],
+      "do": [
+        "Tackle tasks methodically",
+        "Seek perfection",
+        "Prioritize effectively"
+      ],
+      "dont": [
+        "Rush through tasks",
+        "Neglect details",
+        "Avoid planning"
+      ],
+      "lucky_color": "blue",
+      "lucky_number": 4
+    },
+    "love": {
+      "score_percent": 65,
+      "summary": "Be attentive to your partner's needs.",
+      "tips": [
+        "Listen closely",
+        "Show appreciation"
+      ],
+      "do": [
+        "Communicate openly",
+        "Plan thoughtful gestures",
+        "Be supportive"
+      ],
+      "dont": [
+        "Be critical",
+        "Ignore feelings",
+        "Rush decisions"
+      ],
+      "lucky_color": "green",
+      "lucky_number": 7
+    },
+    "relationships": {
+      "score_percent": 60,
+      "summary": "Strengthen bonds with friends.",
+      "tips": [
+        "Reach out",
+        "Be present"
+      ],
+      "do": [
+        "Make time for friends",
+        "Share experiences",
+        "Be dependable"
+      ],
+      "dont": [
+        "Neglect friendships",
+        "Be judgmental",
+        "Avoid socializing"
+      ],
+      "lucky_color": "purple",
+      "lucky_number": 2
+    },
+    "career": {
+      "score_percent": 75,
+      "summary": "A productive day at work.",
+      "tips": [
+        "Focus on tasks",
+        "Be proactive"
+      ],
+      "do": [
+        "Complete projects",
+        "Seek feedback",
+        "Collaborate with others"
+      ],
+      "dont": [
+        "Procrastinate",
+        "Ignore responsibilities",
+        "Be disorganized"
+      ],
+      "lucky_color": "orange",
+      "lucky_number": 5
+    },
+    "money": {
+      "score_percent": 70,
+      "summary": "Financial planning is essential.",
+      "tips": [
+        "Create a budget",
+        "Track expenses"
+      ],
+      "do": [
+        "Save money",
+        "Invest wisely",
+        "Avoid unnecessary purchases"
+      ],
+      "dont": [
+        "Overspend",
+        "Neglect savings",
+        "Make impulsive decisions"
+      ],
+      "lucky_color": "red",
+      "lucky_number": 3
+    },
+    "health": {
+      "score_percent": 75,
+      "summary": "Prioritize mental and physical health.",
+      "tips": [
+        "Practice self-care",
+        "Stay active"
+      ],
+      "do": [
+        "Meditate",
+        "Eat healthily",
+        "Get enough rest"
+      ],
+      "dont": [
+        "Skip meals",
+        "Neglect exercise",
+        "Ignore stress"
+      ],
+      "lucky_color": "gold",
+      "lucky_number": 6
+    },
+    "wellness": {
+      "score_percent": 70,
+      "summary": "Balance work and relaxation.",
+      "tips": [
+        "Take breaks",
+        "Reflect on goals"
+      ],
+      "do": [
+        "Engage in hobbies",
+        "Connect with friends",
+        "Practice mindfulness"
+      ],
+      "dont": [
+        "Overwork",
+        "Avoid downtime",
+        "Neglect self-care"
+      ],
+      "lucky_color": "silver",
+      "lucky_number": 1
+    },
+    "luck": {
+      "score_percent": 75,
+      "summary": "Good fortune is on your side.",
+      "tips": [
+        "Stay positive",
+        "Take risks"
+      ],
+      "do": [
+        "Embrace opportunities",
+        "Trust your instincts",
+        "Be proactive"
+      ],
+      "dont": [
+        "Doubt yourself",
+        "Play it safe",
+        "Miss chances"
+      ],
+      "lucky_color": "yellow",
+      "lucky_number": 8
+    }
+  },
+  "libra": {
+    "general": {
+      "score_percent": 80,
+      "summary": "Today favors harmony and balance.",
+      "tips": [
+        "Seek collaboration",
+        "Embrace beauty"
+      ],
+      "do": [
+        "Cultivate relationships",
+        "Express creativity",
+        "Stay diplomatic"
+      ],
+      "dont": [
+        "Avoid conflict",
+        "Neglect self-care",
+        "Be overly critical"
+      ],
+      "lucky_color": "pink",
+      "lucky_number": 6
+    },
+    "love": {
+      "score_percent": 75,
+      "summary": "Romantic connections flourish today.",
+      "tips": [
+        "Plan special moments",
+        "Communicate openly"
+      ],
+      "do": [
+        "Show affection",
+        "Listen actively",
+        "Be spontaneous"
+      ],
+      "dont": [
+        "Rush intimacy",
+        "Ignore partner's feelings",
+        "Be critical"
+      ],
+      "lucky_color": "red",
+      "lucky_number": 5
+    },
+    "relationships": {
+      "score_percent": 70,
+      "summary": "Strengthen ties with friends.",
+      "tips": [
+        "Reach out",
+        "Be supportive"
+      ],
+      "do": [
+        "Make plans",
+        "Share experiences",
+        "Be dependable"
+      ],
+      "dont": [
+        "Neglect friendships",
+        "Avoid socializing",
+        "Be judgmental"
+      ],
+      "lucky_color": "blue",
+      "lucky_number": 3
+    },
+    "career": {
+      "score_percent": 75,
+      "summary": "A productive day at work.",
+      "tips": [
+        "Focus on teamwork",
+        "Be proactive"
+      ],
+      "do": [
+        "Collaborate with colleagues",
+        "Seek feedback",
+        "Stay organized"
+      ],
+      "dont": [
+        "Ignore responsibilities",
+        "Procrastinate",
+        "Be disorganized"
+      ],
+      "lucky_color": "green",
+      "lucky_number": 1
+    },
+    "money": {
+      "score_percent": 70,
+      "summary": "Financial planning is key today.",
+      "tips": [
+        "Budget wisely",
+        "Track expenses"
+      ],
+      "do": [
+        "Save for future",
+        "Invest smartly",
+        "Avoid impulsive purchases"
+      ],
+      "dont": [
+        "Overspend",
+        "Neglect savings",
+        "Make hasty decisions"
+      ],
+      "lucky_color": "gold",
+      "lucky_number": 4
+    },
+    "health": {
+      "score_percent": 75,
+      "summary": "Focus on physical and mental well-being.",
+      "tips": [
+        "Practice mindfulness",
+        "Stay active"
+      ],
+      "do": [
+        "Eat healthily",
+        "Get enough rest",
+        "Engage in hobbies"
+      ],
+      "dont": [
+        "Skip meals",
+        "Neglect exercise",
+        "Avoid relaxation"
+      ],
+      "lucky_color": "purple",
+      "lucky_number": 2
+    },
+    "wellness": {
+      "score_percent": 80,
+      "summary": "Embrace self-care and balance.",
+      "tips": [
+        "Meditate",
+        "Reflect on goals"
+      ],
+      "do": [
+        "Connect with loved ones",
+        "Engage in hobbies",
+        "Practice gratitude"
+      ],
+      "dont": [
+        "Overwork",
+        "Neglect downtime",
+        "Ignore needs"
+      ],
+      "lucky_color": "silver",
+      "lucky_number": 8
+    },
+    "luck": {
+      "score_percent": 85,
+      "summary": "Good fortune is on your side.",
+      "tips": [
+        "Take risks",
+        "Be open to opportunities"
+      ],
+      "do": [
+        "Trust your instincts",
+        "Be adventurous",
+        "Seize chances"
+      ],
+      "dont": [
+        "Be fearful",
+        "Doubt yourself",
+        "Miss opportunities"
+      ],
+      "lucky_color": "yellow",
+      "lucky_number": 3
+    }
+  },
+  "scorpio": {
+    "general": {
+      "score_percent": 75,
+      "summary": "Intense emotions may surface today.",
+      "tips": [
+        "Practice self-reflection",
+        "Stay grounded"
+      ],
+      "do": [
+        "Channel energy creatively",
+        "Seek clarity",
+        "Connect with others"
+      ],
+      "dont": [
+        "Overreact",
+        "Hold grudges",
+        "Be secretive"
+      ],
+      "lucky_color": "black",
+      "lucky_number": 9
+    },
+    "love": {
+      "score_percent": 80,
+      "summary": "Passion and intimacy are highlighted.",
+      "tips": [
+        "Be open about feelings",
+        "Create romantic moments"
+      ],
+      "do": [
+        "Communicate desires",
+        "Plan special dates",
+        "Show vulnerability"
+      ],
+      "dont": [
+        "Be possessive",
+        "Rush intimacy",
+        "Ignore partner's needs"
+      ],
+      "lucky_color": "red",
+      "lucky_number": 6
+    },
+    "relationships": {
+      "score_percent": 70,
+      "summary": "Deepen connections with others.",
+      "tips": [
+        "Be honest",
+        "Show support"
+      ],
+      "do": [
+        "Reach out",
+        "Share experiences",
+        "Be dependable"
+      ],
+      "dont": [
+        "Avoid confrontation",
+        "Be distant",
+        "Neglect friendships"
+      ],
+      "lucky_color": "purple",
+      "lucky_number": 2
+    },
+    "career": {
+      "score_percent": 75,
+      "summary": "Focus on goals and ambitions.",
+      "tips": [
+        "Stay organized",
+        "Be proactive"
+      ],
+      "do": [
+        "Pursue opportunities",
+        "Network",
+        "Seek mentorship"
+      ],
+      "dont": [
+        "Get distracted",
+        "Avoid challenges",
+        "Neglect growth"
+      ],
+      "lucky_color": "blue",
+      "lucky_number": 4
+    },
+    "money": {
+      "score_percent": 65,
+      "summary": "Be mindful of spending today.",
+      "tips": [
+        "Track expenses",
+        "Avoid impulsive purchases"
+      ],
+      "do": [
+        "Create a budget",
+        "Plan for future needs",
+        "Consult an expert"
+      ],
+      "dont": [
+        "Overspend",
+        "Neglect savings",
+        "Make hasty investments"
+      ],
+      "lucky_color": "green",
+      "lucky_number": 5
+    },
+    "health": {
+      "score_percent": 70,
+      "summary": "Focus on emotional and physical health.",
+      "tips": [
+        "Practice self-care",
+        "Stay active"
+      ],
+      "do": [
+        "Meditate",
+        "Engage in physical activities",
+        "Connect with nature"
+      ],
+      "dont": [
+        "Ignore stress",
+        "Skip workouts",
+        "Neglect mental health"
+      ],
+      "lucky_color": "orange",
+      "lucky_number": 1
+    },
+    "wellness": {
+      "score_percent": 75,
+      "summary": "Balance intensity with relaxation.",
+      "tips": [
+        "Reflect on feelings",
+        "Engage in hobbies"
+      ],
+      "do": [
+        "Take breaks",
+        "Connect with friends",
+        "Practice gratitude"
+      ],
+      "dont": [
+        "Overwork",
+        "Avoid downtime",
+        "Neglect self-care"
+      ],
+      "lucky_color": "silver",
+      "lucky_number": 3
+    },
+    "luck": {
+      "score_percent": 80,
+      "summary": "Favorable outcomes are likely today.",
+      "tips": [
+        "Trust your instincts",
+        "Be open to change"
+      ],
+      "do": [
+        "Take chances",
+        "Embrace new opportunities",
+        "Stay positive"
+      ],
+      "dont": [
+        "Doubt yourself",
+        "Miss chances",
+        "Be fearful"
+      ],
+      "lucky_color": "yellow",
+      "lucky_number": 7
+    }
+  },
+  "sagittarius": {
+    "general": {
+      "score_percent": 80,
+      "summary": "A day for exploration and adventure.",
+      "tips": [
+        "Seek new experiences",
+        "Stay optimistic"
+      ],
+      "do": [
+        "Travel",
+        "Learn something new",
+        "Network"
+      ],
+      "dont": [
+        "Be complacent",
+        "Ignore opportunities",
+        "Limit yourself"
+      ],
+      "lucky_color": "purple",
+      "lucky_number": 8
+    },
+    "love": {
+      "score_percent": 75,
+      "summary": "Romantic adventures await. Be open.",
+      "tips": [
+        "Plan spontaneous dates",
+        "Communicate freely"
+      ],
+      "do": [
+        "Be adventurous",
+        "Show affection",
+        "Listen actively"
+      ],
+      "dont": [
+        "Be too serious",
+        "Ignore partner's needs",
+        "Rush intimacy"
+      ],
+      "lucky_color": "orange",
+      "lucky_number": 5
+    },
+    "relationships": {
+      "score_percent": 70,
+      "summary": "Strengthen friendships through shared activities.",
+      "tips": [
+        "Engage in fun outings",
+        "Be supportive"
+      ],
+      "do": [
+        "Plan gatherings",
+        "Share experiences",
+        "Be dependable"
+      ],
+      "dont": [
+        "Neglect friendships",
+        "Avoid socializing",
+        "Be judgmental"
+      ],
+      "lucky_color": "blue",
+      "lucky_number": 9
+    },
+    "career": {
+      "score_percent": 75,
+      "summary": "Focus on growth and new opportunities.",
+      "tips": [
+        "Pursue challenges",
+        "Seek mentorship"
+      ],
+      "do": [
+        "Take initiative",
+        "Network",
+        "Learn new skills"
+      ],
+      "dont": [
+        "Be complacent",
+        "Ignore feedback",
+        "Neglect growth"
+      ],
+      "lucky_color": "green",
+      "lucky_number": 4
+    },
+    "money": {
+      "score_percent": 70,
+      "summary": "Financial opportunities are on the horizon.",
+      "tips": [
+        "Invest wisely",
+        "Budget for future"
+      ],
+      "do": [
+        "Track expenses",
+        "Save regularly",
+        "Consult an expert"
+      ],
+      "dont": [
+        "Overspend",
+        "Neglect savings",
+        "Make hasty investments"
+      ],
+      "lucky_color": "gold",
+      "lucky_number": 2
+    },
+    "health": {
+      "score_percent": 75,
+      "summary": "Stay active and engaged.",
+      "tips": [
+        "Exercise regularly",
+        "Eat healthily"
+      ],
+      "do": [
+        "Join a fitness group",
+        "Stay hydrated",
+        "Prioritize self-care"
+      ],
+      "dont": [
+        "Skip workouts",
+        "Neglect rest",
+        "Overindulge"
+      ],
+      "lucky_color": "red",
+      "lucky_number": 3
+    },
+    "wellness": {
+      "score_percent": 80,
+      "summary": "Balance activity with relaxation.",
+      "tips": [
+        "Reflect on goals",
+        "Engage in hobbies"
+      ],
+      "do": [
+        "Take breaks",
+        "Connect with friends",
+        "Practice gratitude"
+      ],
+      "dont": [
+        "Overwork",
+        "Avoid downtime",
+        "Neglect self-care"
+      ],
+      "lucky_color": "silver",
+      "lucky_number": 1
+    },
+    "luck": {
+      "score_percent": 85,
+      "summary": "Fortune favors the bold today.",
+      "tips": [
+        "Take risks",
+        "Be open to new experiences"
+      ],
+      "do": [
+        "Explore opportunities",
+        "Trust your instincts",
+        "Stay positive"
+      ],
+      "dont": [
+        "Doubt yourself",
+        "Limit yourself",
+        "Ignore chances"
+      ],
+      "lucky_color": "yellow",
+      "lucky_number": 6
+    }
+  },
+  "capricorn": {
+    "general": {
+      "score_percent": 70,
+      "summary": "Focus on responsibilities and goals.",
+      "tips": [
+        "Stay organized",
+        "Plan ahead"
+      ],
+      "do": [
+        "Set clear objectives",
+        "Work diligently",
+        "Seek support"
+      ],
+      "dont": [
+        "Get distracted",
+        "Avoid responsibilities",
+        "Procrastinate"
+      ],
+      "lucky_color": "brown",
+      "lucky_number": 2
+    },
+    "love": {
+      "score_percent": 65,
+      "summary": "Relationships may require effort today.",
+      "tips": [
+        "Communicate openly",
+        "Show appreciation"
+      ],
+      "do": [
+        "Be supportive",
+        "Plan quality time",
+        "Listen actively"
+      ],
+      "dont": [
+        "Be critical",
+        "Ignore partner's feelings",
+        "Rush intimacy"
+      ],
+      "lucky_color": "green",
+      "lucky_number": 4
+    },
+    "relationships": {
+      "score_percent": 60,
+      "summary": "Strengthen connections with colleagues.",
+      "tips": [
+        "Collaborate effectively",
+        "Be present"
+      ],
+      "do": [
+        "Make time for coworkers",
+        "Share experiences",
+        "Be reliable"
+      ],
+      "dont": [
+        "Neglect teamwork",
+        "Be judgmental",
+        "Avoid socializing"
+      ],
+      "lucky_color": "blue",
+      "lucky_number": 5
+    },
+    "career": {
+      "score_percent": 75,
+      "summary": "A productive day at work.",
+      "tips": [
+        "Focus on tasks",
+        "Be proactive"
+      ],
+      "do": [
+        "Complete projects",
+        "Seek feedback",
+        "Network"
+      ],
+      "dont": [
+        "Procrastinate",
+        "Ignore responsibilities",
+        "Be disorganized"
+      ],
+      "lucky_color": "gold",
+      "lucky_number": 1
+    },
+    "money": {
+      "score_percent": 70,
+      "summary": "Financial planning is essential.",
+      "tips": [
+        "Create a budget",
+        "Track expenses"
+      ],
+      "do": [
+        "Save money",
+        "Invest wisely",
+        "Avoid unnecessary purchases"
+      ],
+      "dont": [
+        "Overspend",
+        "Neglect savings",
+        "Make impulsive decisions"
+      ],
+      "lucky_color": "silver",
+      "lucky_number": 8
+    },
+    "health": {
+      "score_percent": 65,
+      "summary": "Focus on physical wellness.",
+      "tips": [
+        "Stay active",
+        "Eat well"
+      ],
+      "do": [
+        "Exercise regularly",
+        "Maintain a balanced diet",
+        "Prioritize self-care"
+      ],
+      "dont": [
+        "Skip workouts",
+        "Neglect sleep",
+        "Ignore health advice"
+      ],
+      "lucky_color": "orange",
+      "lucky_number": 3
+    },
+    "wellness": {
+      "score_percent": 70,
+      "summary": "Find balance in today routines.",
+      "tips": [
+        "Practice self-care",
+        "Meditate"
+      ],
+      "do": [
+        "Take time for yourself",
+        "Reflect on your needs",
+        "Engage in hobbies"
+      ],
+      "dont": [
+        "Overwhelm yourself",
+        "Avoid relaxation",
+        "Ignore stressors"
+      ],
+      "lucky_color": "purple",
+      "lucky_number": 6
+    },
+    "luck": {
+      "score_percent": 75,
+      "summary": "Fortune favors the prepared.",
+      "tips": [
+        "Stay optimistic",
+        "Take calculated risks"
+      ],
+      "do": [
+        "Be proactive",
+        "Trust your instincts",
+        "Seize opportunities"
+      ],
+      "dont": [
+        "Doubt your abilities",
+        "Remain passive",
+        "Ignore chances"
+      ],
+      "lucky_color": "red",
+      "lucky_number": 9
+    }
+  },
+  "aquarius": {
+    "general": {
+      "score_percent": 70,
+      "summary": "A day for innovation and creativity.",
+      "tips": [
+        "Think outside the box",
+        "Embrace new ideas"
+      ],
+      "do": [
+        "Collaborate with others",
+        "Seek inspiration",
+        "Express yourself"
+      ],
+      "dont": [
+        "Be rigid",
+        "Avoid change",
+        "Ignore feedback"
+      ],
+      "lucky_color": "turquoise",
+      "lucky_number": 5
+    },
+    "love": {
+      "score_percent": 75,
+      "summary": "Romantic possibilities are bright today.",
+      "tips": [
+        "Be open to new connections",
+        "Communicate freely"
+      ],
+      "do": [
+        "Plan fun dates",
+        "Show affection",
+        "Listen actively"
+      ],
+      "dont": [
+        "Be critical",
+        "Rush intimacy",
+        "Ignore partner's needs"
+      ],
+      "lucky_color": "violet",
+      "lucky_number": 3
+    },
+    "relationships": {
+      "score_percent": 80,
+      "summary": "Strengthen friendships through shared experiences.",
+      "tips": [
+        "Engage in fun activities",
+        "Be supportive"
+      ],
+      "do": [
+        "Make plans",
+        "Share ideas",
+        "Be dependable"
+      ],
+      "dont": [
+        "Neglect friendships",
+        "Avoid socializing",
+        "Be judgmental"
+      ],
+      "lucky_color": "yellow",
+      "lucky_number": 1
+    },
+    "career": {
+      "score_percent": 75,
+      "summary": "Focus on innovation and teamwork.",
+      "tips": [
+        "Collaborate effectively",
+        "Seek new solutions"
+      ],
+      "do": [
+        "Be proactive",
+        "Share ideas",
+        "Stay organized"
+      ],
+      "dont": [
+        "Be complacent",
+        "Ignore feedback",
+        "Neglect responsibilities"
+      ],
+      "lucky_color": "blue",
+      "lucky_number": 4
+    },
+    "money": {
+      "score_percent": 65,
+      "summary": "Be cautious with finances today.",
+      "tips": [
+        "Track expenses",
+        "Avoid impulsive purchases"
+      ],
+      "do": [
+        "Create a budget",
+        "Plan for future needs",
+        "Consult an expert"
+      ],
+      "dont": [
+        "Overspend",
+        "Neglect savings",
+        "Make hasty investments"
+      ],
+      "lucky_color": "green",
+      "lucky_number": 2
+    },
+    "health": {
+      "score_percent": 70,
+      "summary": "Focus on mental and emotional well-being.",
+      "tips": [
+        "Practice self-care",
+        "Stay active"
+      ],
+      "do": [
+        "Meditate",
+        "Connect with nature",
+        "Engage in physical activities"
+      ],
+      "dont": [
+        "Ignore stress",
+        "Skip workouts",
+        "Neglect mental health"
+      ],
+      "lucky_color": "orange",
+      "lucky_number": 6
+    },
+    "wellness": {
+      "score_percent": 75,
+      "summary": "Balance creativity with relaxation.",
+      "tips": [
+        "Reflect on feelings",
+        "Engage in hobbies"
+      ],
+      "do": [
+        "Take breaks",
+        "Connect with friends",
+        "Practice mindfulness"
+      ],
+      "dont": [
+        "Overwork",
+        "Avoid downtime",
+        "Neglect self-care"
+      ],
+      "lucky_color": "purple",
+      "lucky_number": 8
+    },
+    "luck": {
+      "score_percent": 80,
+      "summary": "Good fortune is on your side.",
+      "tips": [
+        "Trust your instincts",
+        "Be open to opportunities"
+      ],
+      "do": [
+        "Take chances",
+        "Embrace new experiences",
+        "Stay positive"
+      ],
+      "dont": [
+        "Doubt yourself",
+        "Miss opportunities",
+        "Be fearful"
+      ],
+      "lucky_color": "red",
+      "lucky_number": 7
+    }
+  },
+  "pisces": {
+    "general": {
+      "score_percent": 75,
+      "summary": "Embrace your creative side today.",
+      "tips": [
+        "Express yourself artistically",
+        "Stay inspired"
+      ],
+      "do": [
+        "Engage in artistic activities",
+        "Connect with nature",
+        "Reflect on emotions"
+      ],
+      "dont": [
+        "Overthink",
+        "Avoid creativity",
+        "Neglect self-care"
+      ],
+      "lucky_color": "blue",
+      "lucky_number": 6
+    },
+    "love": {
+      "score_percent": 70,
+      "summary": "Romance is dreamy today. Be open.",
+      "tips": [
+        "Plan intimate moments",
+        "Communicate feelings"
+      ],
+      "do": [
+        "Be affectionate",
+        "Listen actively",
+        "Create special memories"
+      ],
+      "dont": [
+        "Be critical",
+        "Rush intimacy",
+        "Ignore partner's needs"
+      ],
+      "lucky_color": "pink",
+      "lucky_number": 3
+    },
+    "relationships": {
+      "score_percent": 65,
+      "summary": "Strengthen connections with loved ones.",
+      "tips": [
+        "Reach out",
+        "Be supportive"
+      ],
+      "do": [
+        "Make time for friends",
+        "Share experiences",
+        "Be dependable"
+      ],
+      "dont": [
+        "Neglect friendships",
+        "Avoid socializing",
+        "Be judgmental"
+      ],
+      "lucky_color": "green",
+      "lucky_number": 5
+    },
+    "career": {
+      "score_percent": 70,
+      "summary": "Focus on creativity in your work.",
+      "tips": [
+        "Think outside the box",
+        "Collaborate with others"
+      ],
+      "do": [
+        "Engage in creative projects",
+        "Seek inspiration",
+        "Stay organized"
+      ],
+      "dont": [
+        "Be rigid",
+        "Ignore feedback",
+        "Neglect responsibilities"
+      ],
+      "lucky_color": "orange",
+      "lucky_number": 1
+    },
+    "money": {
+      "score_percent": 65,
+      "summary": "Be mindful of finances today.",
+      "tips": [
+        "Track expenses",
+        "Avoid impulsive purchases"
+      ],
+      "do": [
+        "Create a budget",
+        "Plan for future needs",
+        "Consult an expert"
+      ],
+      "dont": [
+        "Overspend",
+        "Neglect savings",
+        "Make hasty investments"
+      ],
+      "lucky_color": "gold",
+      "lucky_number": 4
+    },
+    "health": {
+      "score_percent": 70,
+      "summary": "Focus on emotional and physical wellness.",
+      "tips": [
+        "Practice self-care",
+        "Stay active"
+      ],
+      "do": [
+        "Meditate",
+        "Connect with nature",
+        "Engage in physical activities"
+      ],
+      "dont": [
+        "Ignore stress",
+        "Skip workouts",
+        "Neglect mental health"
+      ],
+      "lucky_color": "purple",
+      "lucky_number": 2
+    },
+    "wellness": {
+      "score_percent": 75,
+      "summary": "Balance creativity with relaxation.",
+      "tips": [
+        "Reflect on goals",
+        "Engage in hobbies"
+      ],
+      "do": [
+        "Take breaks",
+        "Connect with friends",
+        "Practice mindfulness"
+      ],
+      "dont": [
+        "Overwork",
+        "Avoid downtime",
+        "Neglect self-care"
+      ],
+      "lucky_color": "silver",
+      "lucky_number": 8
+    },
+    "luck": {
+      "score_percent": 80,
+      "summary": "Good fortune is within reach.",
+      "tips": [
+        "Stay optimistic",
+        "Be open to opportunities"
+      ],
+      "do": [
+        "Take risks",
+        "Trust your instincts",
+        "Embrace new experiences"
+      ],
+      "dont": [
+        "Be fearful",
+        "Ignore chances",
+        "Doubt yourself"
+      ],
+      "lucky_color": "yellow",
+      "lucky_number": 5
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "system": "western",
+  "lang": "en",
+  "periods": ["daily"],
+  "planet_status": [
+    { "body": "Sun",      "sign": "Libra",       "degree": 4.248761418103754,  "retrograde": false, "note": "" },
+    { "body": "Moon",     "sign": "Sagittarius", "degree": 3.2876063433095624, "retrograde": false, "note": "" },
+    { "body": "Mercury",  "sign": "Libra",       "degree": 14.895914482812032, "retrograde": false, "note": "" },
+    { "body": "Venus",    "sign": "Virgo",       "degree": 9.28109138518613,   "retrograde": false, "note": "" },
+    { "body": "Mars",     "sign": "Scorpio",     "degree": 3.2293525477829803, "retrograde": false, "note": "" },
+    { "body": "Jupiter",  "sign": "Cancer",      "degree": 21.98051864965521,  "retrograde": false, "note": "" },
+    { "body": "Saturn",   "sign": "Pisces",      "degree": 28.039911084447795, "retrograde": true,  "note": "" },
+    { "body": "Uranus",   "sign": "Gemini",      "degree": 1.302812082003605,  "retrograde": true,  "note": "" },
+    { "body": "Neptune",  "sign": "Aries",       "degree": 0.6492129565464604, "retrograde": true,  "note": "" },
+    { "body": "Pluto",    "sign": "Aquarius",    "degree": 1.4210509629647845, "retrograde": true,  "note": "" }
+  ],
+  "planet_movements": {
+    "since_yesterday": [
+      { "body": "Sun",     "delta_deg": 0.98,  "sign_change": false, "to_sign": "Libra",       "retro_flip": false },
+      { "body": "Moon",    "delta_deg": 11.84, "sign_change": true,  "to_sign": "Sagittarius", "retro_flip": false },
+      { "body": "Mercury", "delta_deg": 1.65,  "sign_change": false, "to_sign": "Libra",       "retro_flip": false },
+      { "body": "Venus",   "delta_deg": 1.23,  "sign_change": false, "to_sign": "Virgo",       "retro_flip": false },
+      { "body": "Mars",    "delta_deg": 0.68,  "sign_change": false, "to_sign": "Scorpio",     "retro_flip": false },
+      { "body": "Jupiter", "delta_deg": 0.13,  "sign_change": false, "to_sign": "Cancer",      "retro_flip": false },
+      { "body": "Saturn",  "delta_deg": -0.08, "sign_change": false, "to_sign": "Pisces",      "retro_flip": false },
+      { "body": "Uranus",  "delta_deg": -0.02, "sign_change": false, "to_sign": "Gemini",      "retro_flip": false },
+      { "body": "Neptune", "delta_deg": -0.03, "sign_change": false, "to_sign": "Aries",       "retro_flip": false },
+      { "body": "Pluto",   "delta_deg": -0.01, "sign_change": false, "to_sign": "Aquarius",    "retro_flip": false }
+    ],
+    "into_tomorrow": [
+      { "body": "Sun",     "delta_deg": 0.98,  "sign_change": false, "to_sign": "Libra",       "retro_flip": false },
+      { "body": "Moon",    "delta_deg": 11.85, "sign_change": false, "to_sign": "Sagittarius", "retro_flip": false },
+      { "body": "Mercury", "delta_deg": 1.64,  "sign_change": false, "to_sign": "Libra",       "retro_flip": false },
+      { "body": "Venus",   "delta_deg": 1.23,  "sign_change": false, "to_sign": "Virgo",       "retro_flip": false },
+      { "body": "Mars",    "delta_deg": 0.68,  "sign_change": false, "to_sign": "Scorpio",     "retro_flip": false },
+      { "body": "Jupiter", "delta_deg": 0.13,  "sign_change": false, "to_sign": "Cancer",      "retro_flip": false },
+      { "body": "Saturn",  "delta_deg": -0.08, "sign_change": false, "to_sign": "Pisces",      "retro_flip": false },
+      { "body": "Uranus",  "delta_deg": -0.02, "sign_change": false, "to_sign": "Gemini",      "retro_flip": false },
+      { "body": "Neptune", "delta_deg": -0.03, "sign_change": false, "to_sign": "Aries",       "retro_flip": false },
+      { "body": "Pluto",   "delta_deg": -0.01, "sign_change": false, "to_sign": "Aquarius",    "retro_flip": false }
+    ]
+  }
+}

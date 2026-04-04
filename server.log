@@ -1,0 +1,96 @@
+[33m[nodemon] 3.1.10[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,cjs,json[39m
+[32m[nodemon] starting `node index.js`[39m
+[dotenv@17.2.2] injecting env (7) from .env -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+[dotenv@17.2.2] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+JWT_SECRET present? true
+API listening on http://localhost:4000
+✅ Connected to Postgres
+[32m[nodemon] restarting due to changes...[39m
+[32m[32m[nodemon] starting `node index.js`[dotenv@17.2.2] injecting env (7) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.2] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+JWT_SECRET present? true
+API listening on http://localhost:4000
+✅ Connected to Postgres
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node index.js`[39m
+[dotenv@17.2.2[dotenv@17.2.2] injecting env (7) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom[dotenv@17.2.2[dotenv@17.2.2] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+JWT_SECRET present? true
+API listening on http://localhost:4000
+✅ Conn[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] sta[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `no[32m[nodemon] sta[32m[nodemon] restarting d[32m[nodemon] restart[32m[nodemon] starting `node index.js`[39m
+[dotenv@17.2.2] injecting e[dotenv@17.2.2] injecting env (7) from .env -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.2] injecting env (0) from .env -- tip: 📡 observe env with Radar: https://dotenvx.com/radar
+JWT_SECRET present? true
+API listening on http://localhost[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node index.js`[39m
+[32m[nodemon] restarting due to[32m[nodemon] re[32m[nodemon] starting `node in[32m[nodemon[32m[nodemon] restarting due to cha[32m[nodemon[32m[nodemon] restarting due to[32m[nodemon] re[32m[nodemon] starting `node in[32m[nodemon[32m[nodemon] restarting due to cha[32m[nodemon[32m[nodemon] starting `node in[dotenv@17.2.[dotenv@17.2.2] injecting env (7) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.2] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+JWT_SECRET present? true
+API listening on http://localhost:4000
+✅ Connected to Postgres[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node index.js`[39m
+[dotenv@17.2.2] injecting env (7) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.2] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+JWT_SECRET present? true
+API listening on http://localhost:4000
+✅ C[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node index.js`[39m
+[dotenv@17.2.2] injecting env (7) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.2] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+JWT_SECRET present? true
+API listening on http://localhost:4000
+✅ Connected to Postgres
+[32m[nodemon] restarting due to[32m[nodemon] re[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node index.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node index.js`[39m
+[dotenv@17.2.2] injecting env (7) from .env -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.2] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+JWT_SECRET present? true
+API listening on http://localhost:4000
+✅ Connected to Postg✅ [32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node index.js`[39m
+[32m[nodemon] restart[32m[nodemon] restarting d[32m[nodemon] restart[32m[nodemon] restarting d[32m[nodemon] startin[32m[nodemon] startingnode:internal/modules/node:internal/modules/esm/resolve:275
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Volumes/SOHUM/Projects/Horoscope-API/routes/user.js' imported from /Volumes/SOHUM/Projects/Horoscope-API/index.js
+    at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    at moduleResolve (node:internal/modules/esm/resolve:860:10)
+    at defaultResolve (node:internal/modules/esm/resolve:984:11)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:780:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:704:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:687:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:305:38)
+    at ModuleJob._link (node:internal/modules/esm/module_job:175:49) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///Volumes/SOHUM/Projects/Horoscope-API/routes/user.js'
+}
+
+Node.js v22.17.0
+[31m[nodemon] app crashed - waiting for file changes be[32m[nodemon] restarting child process[39m
+[32m[nodemon] starting `node index.js`[39m
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: read EIO
+    at TTY.onStreamRead (node:internal/stream_base_commons:216:20)
+Emitted 'error' event on ReadStream instance at:
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  errno: -5,
+  code: 'EIO',
+  syscall: 'read'
+}
+
+Node.js v22.17.0
+'
+}
+
+Node.js v22.17.0

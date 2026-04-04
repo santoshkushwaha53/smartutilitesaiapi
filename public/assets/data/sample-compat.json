@@ -1,0 +1,61 @@
+{
+  "aspectHeatmap": {
+    "rows": ["Sun","Moon","Mercury","Venus","Mars","Jupiter","Saturn","Uranus","Neptune","Pluto"],
+    "cols": ["Sun","Moon","Mercury","Venus","Mars","Jupiter","Saturn","Uranus","Neptune","Pluto"],
+    "cells": [
+      [{"type":"conjunction","orb":85,"note":"Sun conjunct Sun — shared identity spotlight."},{"type":"trine","orb":72,"note":"Sun trine Moon — ego nurtures emotion."},{"type":"sextile","orb":61,"note":"Sun sextile Mercury — fluent expression."},{"type":"trine","orb":78,"note":"Sun trine Venus — warmth and affection."},{"type":"square","orb":58,"note":"Sun square Mars — challenge sparks growth."},{"type":"sextile","orb":64,"note":"Sun sextile Jupiter — generosity grows."},{"type":"square","orb":52,"note":"Sun square Saturn — define boundaries."},{"type":"trine","orb":70,"note":"Sun trine Uranus — excite each other."},{"type":"sextile","orb":60,"note":"Sun sextile Neptune — dream together."},{"type":"opposition","orb":49,"note":"Sun opposite Pluto — power awareness."}],
+      [{"type":"trine","orb":74,"note":"Moon trine Sun — emotion meets identity."},{"type":"conjunction","orb":83,"note":"Moon conjunct Moon — deep mirroring."},{"type":"sextile","orb":65,"note":"Moon sextile Mercury — feelings voiced."},{"type":"trine","orb":77,"note":"Moon trine Venus — easy comfort."},{"type":"square","orb":55,"note":"Moon square Mars — hot/cold moods."},{"type":"sextile","orb":66,"note":"Moon sextile Jupiter — nurturing grows."},{"type":"square","orb":50,"note":"Moon square Saturn — structure feelings."},{"type":"trine","orb":71,"note":"Moon trine Uranus — surprise caring."},{"type":"sextile","orb":59,"note":"Moon sextile Neptune — empathy high."},{"type":"opposition","orb":48,"note":"Moon opposite Pluto — intensity check."}],
+      [{"type":"sextile","orb":63,"note":"Mercury sextile Sun — clarity."},{"type":"sextile","orb":62,"note":"Mercury sextile Moon — talk it out."},{"type":"conjunction","orb":82,"note":"Mercury conjunct Mercury — same channel."},{"type":"trine","orb":76,"note":"Mercury trine Venus — kind words."},{"type":"square","orb":53,"note":"Mercury square Mars — blunt sparks."},{"type":"trine","orb":73,"note":"Mercury trine Jupiter — big ideas."},{"type":"square","orb":49,"note":"Mercury square Saturn — be precise."},{"type":"trine","orb":69,"note":"Mercury trine Uranus — inventive chat."},{"type":"sextile","orb":58,"note":"Mercury sextile Neptune — poetic vibe."},{"type":"opposition","orb":47,"note":"Mercury opposite Pluto — probing Qs."}],
+      [{"type":"trine","orb":75,"note":"Venus trine Sun — affection glows."},{"type":"trine","orb":74,"note":"Venus trine Moon — sweet care."},{"type":"trine","orb":73,"note":"Venus trine Mercury — nice tone."},{"type":"conjunction","orb":88,"note":"Venus conjunct Venus — love language match."},{"type":"trine","orb":71,"note":"Venus trine Mars — chemistry!"},{"type":"sextile","orb":65,"note":"Venus sextile Jupiter — generosity."},{"type":"square","orb":52,"note":"Venus square Saturn — define needs."},{"type":"trine","orb":70,"note":"Venus trine Uranus — play!"},{"type":"sextile","orb":60,"note":"Venus sextile Neptune — romance film."},{"type":"opposition","orb":49,"note":"Venus opposite Pluto — magnetism."}],
+      [{"type":"square","orb":56,"note":"Mars square Sun — pace mismatch."},{"type":"square","orb":54,"note":"Mars square Moon — touchy."},{"type":"square","orb":52,"note":"Mars square Mercury — word heat."},{"type":"trine","orb":72,"note":"Mars trine Venus — sparks fly."},{"type":"conjunction","orb":80,"note":"Mars conjunct Mars — same drive."},{"type":"trine","orb":71,"note":"Mars trine Jupiter — bold moves."},{"type":"square","orb":50,"note":"Mars square Saturn — patience gym."},{"type":"trine","orb":68,"note":"Mars trine Uranus — adventures."},{"type":"sextile","orb":59,"note":"Mars sextile Neptune — fantasy heat."},{"type":"opposition","orb":46,"note":"Mars opposite Pluto — power + heat."}],
+      [{"type":"sextile","orb":63,"note":"Jupiter sextile Sun — growth outlook."},{"type":"sextile","orb":62,"note":"Jupiter sextile Moon — comfort grows."},{"type":"trine","orb":74,"note":"Jupiter trine Mercury — big thinking."},{"type":"sextile","orb":65,"note":"Jupiter sextile Venus — gifts & joy."},{"type":"trine","orb":72,"note":"Jupiter trine Mars — winning energy."},{"type":"conjunction","orb":85,"note":"Jupiter conjunct Jupiter — aligned luck."},{"type":"sextile","orb":61,"note":"Jupiter sextile Saturn — plan growth."},{"type":"trine","orb":69,"note":"Jupiter trine Uranus — breakthroughs."},{"type":"sextile","orb":58,"note":"Jupiter sextile Neptune — faith & art."},{"type":"opposition","orb":47,"note":"Jupiter opposite Pluto — big stakes."}],
+      [{"type":"square","orb":50,"note":"Saturn square Sun — duties talk."},{"type":"square","orb":49,"note":"Saturn square Moon — boundaries."},{"type":"square","orb":48,"note":"Saturn square Mercury — rules."},{"type":"square","orb":52,"note":"Saturn square Venus — define care."},{"type":"square","orb":50,"note":"Saturn square Mars — brake/accelerate."},{"type":"sextile","orb":61,"note":"Saturn sextile Jupiter — structure luck."},{"type":"conjunction","orb":78,"note":"Saturn conjunct Saturn — maturity pact."},{"type":"trine","orb":69,"note":"Saturn trine Uranus — stable change."},{"type":"sextile","orb":57,"note":"Saturn sextile Neptune — practical dream."},{"type":"opposition","orb":46,"note":"Saturn opposite Pluto — real power."}],
+      [{"type":"trine","orb":70,"note":"Uranus trine Sun — fresh vibe."},{"type":"trine","orb":69,"note":"Uranus trine Moon — surprise care."},{"type":"trine","orb":68,"note":"Uranus trine Mercury — quirky talk."},{"type":"trine","orb":70,"note":"Uranus trine Venus — play & change."},{"type":"trine","orb":68,"note":"Uranus trine Mars — bold twists."},{"type":"trine","orb":69,"note":"Uranus trine Jupiter — lucky jumps."},{"type":"trine","orb":69,"note":"Uranus trine Saturn — inventive order."},{"type":"conjunction","orb":80,"note":"Uranus conjunct Uranus — shared era."},{"type":"trine","orb":68,"note":"Uranus trine Neptune — dreamy tech."},{"type":"trine","orb":67,"note":"Uranus trine Pluto — reinventions."}],
+      [{"type":"sextile","orb":60,"note":"Neptune sextile Sun — shared dream."},{"type":"sextile","orb":59,"note":"Neptune sextile Moon — soft focus."},{"type":"sextile","orb":58,"note":"Neptune sextile Mercury — imagination."},{"type":"sextile","orb":60,"note":"Neptune sextile Venus — romance art."},{"type":"sextile","orb":59,"note":"Neptune sextile Mars — fantasy fuel."},{"type":"sextile","orb":58,"note":"Neptune sextile Jupiter — faith grows."},{"type":"sextile","orb":57,"note":"Neptune sextile Saturn — dream rules."},{"type":"trine","orb":68,"note":"Neptune trine Uranus — mystic sparks."},{"type":"conjunction","orb":78,"note":"Neptune conjunct Neptune — ideals."},{"type":"trine","orb":66,"note":"Neptune trine Pluto — deep tides."}],
+      [{"type":"opposition","orb":49,"note":"Pluto opposite Sun — power mirrors."},{"type":"opposition","orb":48,"note":"Pluto opposite Moon — deep waters."},{"type":"opposition","orb":47,"note":"Pluto opposite Mercury — truth tests."},{"type":"opposition","orb":49,"note":"Pluto opposite Venus — magnetic."},{"type":"opposition","orb":46,"note":"Pluto opposite Mars — raw will."},{"type":"opposition","orb":47,"note":"Pluto opposite Jupiter — high stakes."},{"type":"opposition","orb":46,"note":"Pluto opposite Saturn — reform rules."},{"type":"trine","orb":67,"note":"Pluto trine Uranus — phoenix tech."},{"type":"trine","orb":66,"note":"Pluto trine Neptune — soul oceans."},{"type":"conjunction","orb":82,"note":"Pluto conjunct Pluto — soul epoch."}]
+    ]
+  },
+  "houses": {
+    "selected": [1,5,7],
+    "notes": {
+      "1": "Identity & first impressions — how your aura first meets.",
+      "2": "Values & possessions — what you protect together.",
+      "3": "Communication & siblings — shared language patterns.",
+      "4": "Home & roots — the nest you build.",
+      "5": "Romance & creativity — play and spark.",
+      "6": "Habits & health — routines that sustain you.",
+      "7": "Partnership & contracts — the we-space.",
+      "8": "Intimacy & shared resources — trust in depth.",
+      "9": "Beliefs & travel — horizons and meaning.",
+      "10": "Career & reputation — goals you’re seen for.",
+      "11": "Friendship & groups — your circle’s vibe.",
+      "12": "Inner world & closure — compassion and rest."
+    }
+  },
+  "transits": [
+    {"date":"2025-10-07T00:00:00.000Z","label":"Mercury sextile Moon","severity":44,"note":"Heart-to-head alignment. Journal and share."},
+    {"date":"2025-10-08T00:00:00.000Z","label":"Mars trine Sun","severity":63,"note":"Green light for action together."},
+    {"date":"2025-10-09T00:00:00.000Z","label":"Venus square Mars","severity":58,"note":"Spicy; use humor and time-outs."},
+    {"date":"2025-10-10T00:00:00.000Z","label":"Sun conjunct Mercury","severity":52,"note":"Speak decisions clearly."},
+    {"date":"2025-10-11T00:00:00.000Z","label":"Moon trine Jupiter","severity":61,"note":"Nurture optimism; plan a treat."},
+    {"date":"2025-10-12T00:00:00.000Z","label":"Mars sextile Venus","severity":57,"note":"Flirt, play, move your bodies."},
+    {"date":"2025-10-13T00:00:00.000Z","label":"Saturn square Sun","severity":49,"note":"Set boundaries, then relax."}
+  ],
+  "ai": {
+    "strengths": [
+      "Mutual admiration loop keeps both motivated for long projects.",
+      "Creative risk-taking blends with practical follow-through.",
+      "Honest conversations recover quickly from friction."
+    ],
+    "frictions": [
+      "Different recharge styles can cause missed cues on timing.",
+      "One speaks in ideas, the other in feelings; translate generously.",
+      "Busy weeks reduce play; defend a small daily fun ritual."
+    ],
+    "glow": [
+      "Celebrate micro-wins with a 2-minute ‘spotlight’ each night.",
+      "One low-stakes joint goal each week bonds you steadily.",
+      "Name one appreciation out loud every day."
+    ]
+  }
+}

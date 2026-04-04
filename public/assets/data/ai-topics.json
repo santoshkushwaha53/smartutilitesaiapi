@@ -1,0 +1,40 @@
+{
+  "love": [
+    "What does Venus mean for my love life this month?",
+    "When are my lucky dates for romance?",
+    "How to rebuild trust and closeness?"
+  ],
+  "career": [
+    "Is it a good time to switch jobs?",
+    "How to impress leadership this quarter?",
+    "When do promotions look likely?"
+  ],
+  "health": [
+    "How can I balance energy this week?",
+    "What habits should I focus on now?"
+  ],
+  "money": [
+    "When is a good time to invest?",
+    "How to improve savings this quarter?"
+  ],
+  "travel": [
+    "Is this a good month to travel abroad?",
+    "Which dates are safest to fly?"
+  ],
+  "compatibility": [
+    "Am I compatible with Scorpio?",
+    "How to handle our differences?"
+  ],
+  "birth-chart": [
+    "What does my rising sign say about me?",
+    "What’s highlighted in my 10th house?"
+  ],
+  "education": ["How to prepare for exams?", "When is focus peak?"],
+  "relationship": ["How to strengthen our bond?", "How to communicate better?"],
+  "son-future": ["What talents should he nurture?", "When are lucky phases?"],
+  "daughter-future": ["What paths look promising?", "When are confident phases?"],
+  "marriage": ["When is a good time to marry?", "How to maintain harmony?"],
+  "job": ["When will job prospects improve?", "Best time to apply?"],
+  "security": ["How to build stability this year?", "Good time for long plans?"],
+  "business": ["Best time to launch?", "Should I seek a partner now?"]
+}

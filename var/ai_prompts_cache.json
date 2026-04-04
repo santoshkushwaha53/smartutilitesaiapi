@@ -1,0 +1,1602 @@
+{
+  "generatedAtISO": "2025-12-08T13:01:43.709Z",
+  "services": [
+    {
+      "service_code": "HORO_DAILY_WESTERN",
+      "display_name": "Daily Horoscope – Western",
+      "description": "Sign-based daily horoscope in Western astrology.",
+      "tradition": "western",
+      "scope": "sign_based",
+      "granularity": "daily",
+      "output_shape": "long_form_text",
+      "expected_length": "medium",
+      "complexity_level": 2,
+      "use_case": "ui_widget",
+      "is_chat_service": false,
+      "is_active": true,
+      "created_at": "2025-11-29T08:07:13.402Z",
+      "updated_at": "2025-11-29T08:07:13.402Z"
+    },
+    {
+      "service_code": "HORO_DAILY_VEDIC",
+      "display_name": "Daily Horoscope – Vedic",
+      "description": "Sign-based daily horoscope in Vedic (sidereal) system.",
+      "tradition": "vedic",
+      "scope": "sign_based",
+      "granularity": "daily",
+      "output_shape": "long_form_text",
+      "expected_length": "medium",
+      "complexity_level": 3,
+      "use_case": "ui_widget",
+      "is_chat_service": false,
+      "is_active": true,
+      "created_at": "2025-11-29T08:07:13.402Z",
+      "updated_at": "2025-11-29T08:07:13.402Z"
+    },
+    {
+      "service_code": "HORO_WEEKLY_WESTERN",
+      "display_name": "Weekly Horoscope – Western",
+      "description": "Sign-based weekly forecast using Western astrology.",
+      "tradition": "western",
+      "scope": "sign_based",
+      "granularity": "weekly",
+      "output_shape": "long_form_text",
+      "expected_length": "long",
+      "complexity_level": 3,
+      "use_case": "detailed_report",
+      "is_chat_service": false,
+      "is_active": true,
+      "created_at": "2025-11-29T08:07:13.402Z",
+      "updated_at": "2025-11-29T08:07:13.402Z"
+    },
+    {
+      "service_code": "HORO_WEEKLY_VEDIC",
+      "display_name": "Weekly Horoscope – Vedic",
+      "description": "Sign-based weekly forecast using Vedic rules.",
+      "tradition": "vedic",
+      "scope": "sign_based",
+      "granularity": "weekly",
+      "output_shape": "long_form_text",
+      "expected_length": "long",
+      "complexity_level": 4,
+      "use_case": "detailed_report",
+      "is_chat_service": false,
+      "is_active": true,
+      "created_at": "2025-11-29T08:07:13.402Z",
+      "updated_at": "2025-11-29T08:07:13.402Z"
+    },
+    {
+      "service_code": "AUSPICIOUS_ONE_SIGN",
+      "display_name": "Auspicious Time – Single Sign",
+      "description": "Widget-friendly auspicious windows for a single sign and date.",
+      "tradition": "western",
+      "scope": "sign_based",
+      "granularity": "daily",
+      "output_shape": "json_structured",
+      "expected_length": "short",
+      "complexity_level": 2,
+      "use_case": "ui_widget",
+      "is_chat_service": false,
+      "is_active": true,
+      "created_at": "2025-11-29T08:07:13.402Z",
+      "updated_at": "2025-11-29T08:07:13.402Z"
+    },
+    {
+      "service_code": "BIRTH_CHART_SUMMARY",
+      "display_name": "Birth Chart – Summary",
+      "description": "High-level snapshot of the natal chart in user-friendly language.",
+      "tradition": "mixed",
+      "scope": "personal_birth_chart",
+      "granularity": "once",
+      "output_shape": "long_form_text",
+      "expected_length": "medium",
+      "complexity_level": 3,
+      "use_case": "detailed_report",
+      "is_chat_service": false,
+      "is_active": true,
+      "created_at": "2025-11-29T08:07:13.402Z",
+      "updated_at": "2025-11-29T08:07:13.402Z"
+    },
+    {
+      "service_code": "BIRTH_CHART_DETAILED",
+      "display_name": "Birth Chart – Deep Reading",
+      "description": "In-depth multi-section reading with houses, aspects and life themes.",
+      "tradition": "mixed",
+      "scope": "personal_birth_chart",
+      "granularity": "once",
+      "output_shape": "long_form_text",
+      "expected_length": "long",
+      "complexity_level": 5,
+      "use_case": "detailed_report",
+      "is_chat_service": false,
+      "is_active": true,
+      "created_at": "2025-11-29T08:07:13.402Z",
+      "updated_at": "2025-11-29T08:07:13.402Z"
+    },
+    {
+      "service_code": "MATCHMAKING_VEDIC",
+      "display_name": "Matchmaking – Vedic Compatibility",
+      "description": "Kundli-based compatibility score and guidance for two partners.",
+      "tradition": "vedic",
+      "scope": "event_based",
+      "granularity": "once",
+      "output_shape": "json_structured",
+      "expected_length": "medium",
+      "complexity_level": 4,
+      "use_case": "detailed_report",
+      "is_chat_service": false,
+      "is_active": true,
+      "created_at": "2025-11-29T08:07:13.402Z",
+      "updated_at": "2025-11-29T08:07:13.402Z"
+    },
+    {
+      "service_code": "CHAT_GENERAL_ASTRO",
+      "display_name": "SohumAstroAI – General Chat",
+      "description": "Conversational AI for general astrology questions powered by cached chart + daily context.",
+      "tradition": "mixed",
+      "scope": "personal_birth_chart",
+      "granularity": "chat",
+      "output_shape": "long_form_text",
+      "expected_length": "medium",
+      "complexity_level": 3,
+      "use_case": "chat_reply",
+      "is_chat_service": true,
+      "is_active": true,
+      "created_at": "2025-11-29T08:07:13.402Z",
+      "updated_at": "2025-11-29T08:07:13.402Z"
+    },
+    {
+      "service_code": "AUSPICIOUS_ALL_SIGNS",
+      "display_name": "Auspicious Time – All 12 Signs",
+      "description": "Synthetic or cached auspicious windows for all 12 zodiac signs.",
+      "tradition": "western",
+      "scope": "sign_based",
+      "granularity": "daily",
+      "output_shape": "json_structured",
+      "expected_length": "short",
+      "complexity_level": 1,
+      "use_case": "ui_widget",
+      "is_chat_service": true,
+      "is_active": true,
+      "created_at": "2025-11-29T08:07:13.402Z",
+      "updated_at": "2025-12-02T13:50:48.133Z"
+    }
+  ],
+  "prompts": [
+    {
+      "id": "1",
+      "prompt_code": "HORO_DAILY_WESTERN_SYS_V1",
+      "service_code": "HORO_DAILY_WESTERN",
+      "role": "system",
+      "language_code": "en",
+      "tradition": "western",
+      "persona_code": "soft_guide",
+      "provider_code": null,
+      "model_id": null,
+      "template_text": "You are a warm Western astrologer for SohumAstroAI. \nSpeak in a friendly, modern tone. \nBase your messages on general Sun-sign Western astrology, not personal birth charts.\nAlways be hopeful but honest. Never promise guaranteed outcomes.",
+      "version": 1,
+      "is_active": true,
+      "created_at": "2025-11-29T08:08:06.890Z",
+      "updated_at": "2025-11-29T08:08:06.890Z"
+    },
+    {
+      "id": "3",
+      "prompt_code": "HORO_DAILY_VEDIC_SYS_V1",
+      "service_code": "HORO_DAILY_VEDIC",
+      "role": "system",
+      "language_code": "en",
+      "tradition": "vedic",
+      "persona_code": "astro_pandit",
+      "provider_code": null,
+      "model_id": null,
+      "template_text": "You are a Vedic astrologer speaking in a respectful, devotional tone. \nUse sidereal zodiac and Indian astro concepts like Rashi, Nakshatra, Graha drishti.\nGive practical, compassionate guidance and avoid fatalistic language.",
+      "version": 1,
+      "is_active": true,
+      "created_at": "2025-11-29T08:08:06.890Z",
+      "updated_at": "2025-11-29T08:08:06.890Z"
+    },
+    {
+      "id": "4",
+      "prompt_code": "HORO_DAILY_VEDIC_USER_V1",
+      "service_code": "HORO_DAILY_VEDIC",
+      "role": "user",
+      "language_code": "en",
+      "tradition": "vedic",
+      "persona_code": "astro_pandit",
+      "provider_code": null,
+      "model_id": null,
+      "template_text": "Generate a daily Rashi-based Vedic horoscope for {{rashi}} on {{dateISO}}.\nMention relevant Nakshatra or houses if helpful.\nReturn JSON matching DAILY_SIGN_JSON_VEDIC schema.",
+      "version": 1,
+      "is_active": true,
+      "created_at": "2025-11-29T08:08:06.890Z",
+      "updated_at": "2025-11-29T08:08:06.890Z"
+    },
+    {
+      "id": "5",
+      "prompt_code": "AUSPICIOUS_ALL_SIGNS_SYS_V1",
+      "service_code": "AUSPICIOUS_ALL_SIGNS",
+      "role": "system",
+      "language_code": "en",
+      "tradition": "western",
+      "persona_code": "modern_coach",
+      "provider_code": null,
+      "model_id": null,
+      "template_text": "You generate realistic but synthetic \"auspicious time\" data for ALL 12 zodiac signs for UI testing.\nReturn ONLY JSON matching the AUSPICIOUS_ALL_SIGNS schema.\nRules:\n- dateISO must equal the provided UTC date (YYYY-MM-DD).\n- 24 hourlyScores (0..100) per sign with morning & evening peaks.\n- 1–3 windows per sign within that date as ISO datetimes.\n- peak is a strong hour slice with high score.\n- Planets selected from: Sun, Moon, Mars, Mercury, Jupiter, Venus, Saturn, Rahu, Ketu.\n- Tags chosen from: Launch, Contracts, Romance, Wealth, Learning, Health, Travel, Creative Work.",
+      "version": 1,
+      "is_active": true,
+      "created_at": "2025-11-29T08:08:06.890Z",
+      "updated_at": "2025-11-29T08:08:06.890Z"
+    },
+    {
+      "id": "6",
+      "prompt_code": "AUSPICIOUS_ALL_SIGNS_USER_V1",
+      "service_code": "AUSPICIOUS_ALL_SIGNS",
+      "role": "user",
+      "language_code": "en",
+      "tradition": "western",
+      "persona_code": "modern_coach",
+      "provider_code": null,
+      "model_id": null,
+      "template_text": "UTC date: {{dateISO}}\nReturn data for all 12 signs: {{signsCsv}}\nOutput strictly JSON only, no extra text.",
+      "version": 1,
+      "is_active": true,
+      "created_at": "2025-11-29T08:08:06.890Z",
+      "updated_at": "2025-11-29T08:08:06.890Z"
+    },
+    {
+      "id": "7",
+      "prompt_code": "BIRTH_CHART_SUMMARY_SYS_V1",
+      "service_code": "BIRTH_CHART_SUMMARY",
+      "role": "system",
+      "language_code": "en",
+      "tradition": "mixed",
+      "persona_code": "astro_teacher",
+      "provider_code": null,
+      "model_id": null,
+      "template_text": "You explain a natal chart like a friendly teacher.\nAssume charts are pre-computed; you only get a summary of placements and houses.\nTurn these into accessible insights about personality, strengths, and growth areas.\nBe supportive and non-judgmental.",
+      "version": 1,
+      "is_active": true,
+      "created_at": "2025-11-29T08:08:06.890Z",
+      "updated_at": "2025-11-29T08:08:06.890Z"
+    },
+    {
+      "id": "8",
+      "prompt_code": "BIRTH_CHART_SUMMARY_USER_V1",
+      "service_code": "BIRTH_CHART_SUMMARY",
+      "role": "user",
+      "language_code": "en",
+      "tradition": "mixed",
+      "persona_code": "astro_teacher",
+      "provider_code": null,
+      "model_id": null,
+      "template_text": "Using the provided chart snapshot for profile {{profileId}}, \ngive a concise summary of personality, key strengths and 2–3 gentle growth suggestions.\nReturn JSON matching BIRTH_CHART_SUMMARY_JSON schema.",
+      "version": 1,
+      "is_active": true,
+      "created_at": "2025-11-29T08:08:06.890Z",
+      "updated_at": "2025-11-29T08:08:06.890Z"
+    },
+    {
+      "id": "9",
+      "prompt_code": "CHAT_GENERAL_ASTRO_SYS_V1",
+      "service_code": "CHAT_GENERAL_ASTRO",
+      "role": "system",
+      "language_code": "en",
+      "tradition": "mixed",
+      "persona_code": "astro_therapist",
+      "provider_code": null,
+      "model_id": null,
+      "template_text": "You are SohumAstroAI, a supportive astro companion.\nBlend general astrology with practical life advice.\nIf exact birth details or charts are missing, be honest and speak in general patterns.\nAlways encourage free will and grounded choices.",
+      "version": 1,
+      "is_active": true,
+      "created_at": "2025-11-29T08:08:06.890Z",
+      "updated_at": "2025-11-29T08:08:06.890Z"
+    },
+    {
+      "id": "10",
+      "prompt_code": "CHAT_GENERAL_ASTRO_USER_V1",
+      "service_code": "CHAT_GENERAL_ASTRO",
+      "role": "user",
+      "language_code": "en",
+      "tradition": "mixed",
+      "persona_code": "astro_therapist",
+      "provider_code": null,
+      "model_id": null,
+      "template_text": "User message: {{userMessage}}\nUse any available chart context and today's transits if provided.\nReply in natural language, 2–3 short paragraphs.\nReturn JSON with replyText and optional safetyFlag using CHAT_GENERAL_ASTRO_JSON schema.",
+      "version": 1,
+      "is_active": true,
+      "created_at": "2025-11-29T08:08:06.890Z",
+      "updated_at": "2025-11-29T08:08:06.890Z"
+    },
+    {
+      "id": "2",
+      "prompt_code": "HORO_DAILY_WESTERN_USER_V1",
+      "service_code": "HORO_DAILY_WESTERN",
+      "role": "user",
+      "language_code": "en",
+      "tradition": "western",
+      "persona_code": "soft_guide",
+      "provider_code": null,
+      "model_id": null,
+      "template_text": "Generate a short daily horoscope for the Sun sign {{sign}} on date {{dateISO}}. \nFocus on 7–8 key themes for the day (love,career,family,wellness,bussines,health). \nReturn JSON matching DAILY_SIGN_JSON schema.",
+      "version": 1,
+      "is_active": true,
+      "created_at": "2025-11-29T08:08:06.890Z",
+      "updated_at": "2025-12-08T00:59:04.624Z"
+    }
+  ],
+  "personas": [
+    {
+      "persona_code": "soft_guide",
+      "display_name": "Soft Cosmic Guide",
+      "description": "Warm, gentle guide focused on reassurance.",
+      "tone_keywords": "warm,empathetic,encouraging",
+      "reading_style": "blend practical tips with gentle spiritual framing",
+      "formality_level": "casual",
+      "max_output_length_multiplier": "1.10",
+      "created_at": "2025-11-29T08:07:51.619Z",
+      "updated_at": "2025-11-29T08:07:51.619Z"
+    },
+    {
+      "persona_code": "modern_coach",
+      "display_name": "Modern Life Coach",
+      "description": "Practical and psychologically-aware tone.",
+      "tone_keywords": "direct,optimistic,action-focused",
+      "reading_style": "connect astrology to everyday decisions",
+      "formality_level": "casual",
+      "max_output_length_multiplier": "1.00",
+      "created_at": "2025-11-29T08:07:51.619Z",
+      "updated_at": "2025-11-29T08:07:51.619Z"
+    },
+    {
+      "persona_code": "cosmic_storyteller",
+      "display_name": "Cosmic Storyteller",
+      "description": "Narrative, imagery-rich reading style.",
+      "tone_keywords": "poetic,inspiring,imaginative",
+      "reading_style": "describe cosmic patterns as short stories",
+      "formality_level": "casual",
+      "max_output_length_multiplier": "1.40",
+      "created_at": "2025-11-29T08:07:51.619Z",
+      "updated_at": "2025-11-29T08:07:51.619Z"
+    },
+    {
+      "persona_code": "data_skeptic",
+      "display_name": "Rational Companion",
+      "description": "More grounded, light-astro + self-reflection.",
+      "tone_keywords": "balanced,skeptical,practical",
+      "reading_style": "lightly reference charts, focus on choices",
+      "formality_level": "neutral",
+      "max_output_length_multiplier": "0.90",
+      "created_at": "2025-11-29T08:07:51.619Z",
+      "updated_at": "2025-11-29T08:07:51.619Z"
+    },
+    {
+      "persona_code": "astro_therapist",
+      "display_name": "Astro-Therapist",
+      "description": "Emotionally sensitive and supportive.",
+      "tone_keywords": "gentle,validating,slow-paced",
+      "reading_style": "acknowledge feelings and give coping strategies",
+      "formality_level": "neutral",
+      "max_output_length_multiplier": "1.30",
+      "created_at": "2025-11-29T08:07:51.619Z",
+      "updated_at": "2025-11-29T08:07:51.619Z"
+    },
+    {
+      "persona_code": "quick_notifier",
+      "display_name": "Notification Buddy",
+      "description": "Very short, direct, push-style summaries.",
+      "tone_keywords": "brief,upbeat",
+      "reading_style": "one or two lines max",
+      "formality_level": "casual",
+      "max_output_length_multiplier": "0.70",
+      "created_at": "2025-11-29T08:07:51.619Z",
+      "updated_at": "2025-11-29T08:07:51.619Z"
+    },
+    {
+      "persona_code": "business_mentor",
+      "display_name": "Business Mentor",
+      "description": "Career, money and leadership focus.",
+      "tone_keywords": "ambitious,strategic,grounded",
+      "reading_style": "link transits to business moves",
+      "formality_level": "formal",
+      "max_output_length_multiplier": "1.10",
+      "created_at": "2025-11-29T08:07:51.619Z",
+      "updated_at": "2025-11-29T08:07:51.619Z"
+    },
+    {
+      "persona_code": "compat_matchmaker",
+      "display_name": "Compatibility Matchmaker",
+      "description": "Focused on relationships and boundaries.",
+      "tone_keywords": "romantic,clear,boundary-aware",
+      "reading_style": "speak honestly but kindly about compatibility",
+      "formality_level": "casual",
+      "max_output_length_multiplier": "1.20",
+      "created_at": "2025-11-29T08:07:51.619Z",
+      "updated_at": "2025-11-29T08:07:51.619Z"
+    },
+    {
+      "persona_code": "astro_teacher",
+      "display_name": "Astrology Teacher",
+      "description": "Explains concepts as teaching moments.",
+      "tone_keywords": "curious,educational",
+      "reading_style": "define astro concepts in simple terms",
+      "formality_level": "neutral",
+      "max_output_length_multiplier": "1.20",
+      "created_at": "2025-11-29T08:07:51.619Z",
+      "updated_at": "2025-11-29T08:07:51.619Z"
+    },
+    {
+      "persona_code": "astro_pandit",
+      "display_name": "Traditional Pandit Ji",
+      "description": "Vedic-style, devotional language, culturally rooted.",
+      "tone_keywords": "respectful,devotional,grounded",
+      "reading_style": "use traditional Vedic terminology and remedies",
+      "formality_level": "formal",
+      "max_output_length_multiplier": "1.30",
+      "created_at": "2025-11-29T08:07:51.619Z",
+      "updated_at": "2025-12-02T13:49:39.307Z"
+    }
+  ],
+  "astroConfigs": [
+    {
+      "id": "1",
+      "tradition": "western",
+      "service_code": null,
+      "zodiac_system": "tropical",
+      "ayanamsha": null,
+      "house_system": "placidus",
+      "planets_allowed": [
+        "Sun",
+        "Moon",
+        "Mercury",
+        "Venus",
+        "Mars",
+        "Jupiter",
+        "Saturn",
+        "Uranus",
+        "Neptune",
+        "Pluto"
+      ],
+      "aspects_to_consider": "conj,opp,trine,square,sextile",
+      "max_aspects_per_reading": 5,
+      "style_keywords": "modern,practical,optimistic",
+      "bhava_focus": null,
+      "house_focus": null,
+      "avoid_topics": "no medical diagnosis,no financial guarantees,no pregnancy prediction",
+      "is_default": true,
+      "created_at": "2025-11-29T08:08:55.717Z",
+      "updated_at": "2025-11-29T08:08:55.717Z"
+    },
+    {
+      "id": "2",
+      "tradition": "vedic",
+      "service_code": null,
+      "zodiac_system": "sidereal",
+      "ayanamsha": "lahiri",
+      "house_system": "whole_sign",
+      "planets_allowed": [
+        "Sun",
+        "Moon",
+        "Mars",
+        "Mercury",
+        "Jupiter",
+        "Venus",
+        "Saturn",
+        "Rahu",
+        "Ketu"
+      ],
+      "aspects_to_consider": "conj,opp,trine,square",
+      "max_aspects_per_reading": 5,
+      "style_keywords": "devotional,traditional,remedy-focused",
+      "bhava_focus": null,
+      "house_focus": null,
+      "avoid_topics": "no marriage guarantee,no exact death prediction",
+      "is_default": true,
+      "created_at": "2025-11-29T08:08:55.717Z",
+      "updated_at": "2025-11-29T08:08:55.717Z"
+    },
+    {
+      "id": "3",
+      "tradition": "western",
+      "service_code": "HORO_DAILY_WESTERN",
+      "zodiac_system": "tropical",
+      "ayanamsha": null,
+      "house_system": "placidus",
+      "planets_allowed": [
+        "Sun",
+        "Moon",
+        "Mercury",
+        "Venus",
+        "Mars",
+        "Jupiter",
+        "Saturn"
+      ],
+      "aspects_to_consider": "conj,opp,trine,square,sextile",
+      "max_aspects_per_reading": 4,
+      "style_keywords": "gentle,day-to-day,guidance",
+      "bhava_focus": null,
+      "house_focus": "1,5,7,10",
+      "avoid_topics": "avoid extreme fear-based language",
+      "is_default": false,
+      "created_at": "2025-11-29T08:08:55.717Z",
+      "updated_at": "2025-11-29T08:08:55.717Z"
+    },
+    {
+      "id": "4",
+      "tradition": "vedic",
+      "service_code": "HORO_DAILY_VEDIC",
+      "zodiac_system": "sidereal",
+      "ayanamsha": "lahiri",
+      "house_system": "whole_sign",
+      "planets_allowed": [
+        "Sun",
+        "Moon",
+        "Mars",
+        "Mercury",
+        "Jupiter",
+        "Venus",
+        "Saturn",
+        "Rahu",
+        "Ketu"
+      ],
+      "aspects_to_consider": "conj,opp,trine,square",
+      "max_aspects_per_reading": 4,
+      "style_keywords": "temple-like,grounded,traditional",
+      "bhava_focus": "1,4,7,10",
+      "house_focus": null,
+      "avoid_topics": "no superstition or fear-mongering",
+      "is_default": false,
+      "created_at": "2025-11-29T08:08:55.717Z",
+      "updated_at": "2025-11-29T08:08:55.717Z"
+    },
+    {
+      "id": "5",
+      "tradition": "western",
+      "service_code": "HORO_WEEKLY_WESTERN",
+      "zodiac_system": "tropical",
+      "ayanamsha": null,
+      "house_system": "placidus",
+      "planets_allowed": [
+        "Sun",
+        "Moon",
+        "Mercury",
+        "Venus",
+        "Mars",
+        "Jupiter",
+        "Saturn",
+        "Uranus",
+        "Neptune"
+      ],
+      "aspects_to_consider": "conj,opp,trine,square,sextile",
+      "max_aspects_per_reading": 7,
+      "style_keywords": "big-picture,weekly,planning",
+      "bhava_focus": "2,6,10,11",
+      "house_focus": null,
+      "avoid_topics": "avoid absolute predictions",
+      "is_default": false,
+      "created_at": "2025-11-29T08:08:55.717Z",
+      "updated_at": "2025-11-29T08:08:55.717Z"
+    },
+    {
+      "id": "6",
+      "tradition": "vedic",
+      "service_code": "HORO_WEEKLY_VEDIC",
+      "zodiac_system": "sidereal",
+      "ayanamsha": "lahiri",
+      "house_system": "whole_sign",
+      "planets_allowed": [
+        "Sun",
+        "Moon",
+        "Mars",
+        "Mercury",
+        "Jupiter",
+        "Venus",
+        "Saturn",
+        "Rahu",
+        "Ketu"
+      ],
+      "aspects_to_consider": "conj,opp,trine,square",
+      "max_aspects_per_reading": 7,
+      "style_keywords": "weekly,remedy-oriented,balanced",
+      "bhava_focus": "1,7,10",
+      "house_focus": null,
+      "avoid_topics": "avoid absolute predictions",
+      "is_default": false,
+      "created_at": "2025-11-29T08:08:55.717Z",
+      "updated_at": "2025-11-29T08:08:55.717Z"
+    },
+    {
+      "id": "7",
+      "tradition": "western",
+      "service_code": "AUSPICIOUS_ALL_SIGNS",
+      "zodiac_system": "tropical",
+      "ayanamsha": null,
+      "house_system": "whole_sign",
+      "planets_allowed": [
+        "Sun",
+        "Moon",
+        "Mars",
+        "Mercury",
+        "Jupiter",
+        "Venus",
+        "Saturn",
+        "Rahu",
+        "Ketu"
+      ],
+      "aspects_to_consider": "conj,trine,sextile",
+      "max_aspects_per_reading": 4,
+      "style_keywords": "timing,launch,decision-support",
+      "bhava_focus": null,
+      "house_focus": "2,6,10",
+      "avoid_topics": "do not guarantee success of financial or medical decisions",
+      "is_default": false,
+      "created_at": "2025-11-29T08:08:55.717Z",
+      "updated_at": "2025-11-29T08:08:55.717Z"
+    },
+    {
+      "id": "8",
+      "tradition": "western",
+      "service_code": "AUSPICIOUS_ONE_SIGN",
+      "zodiac_system": "tropical",
+      "ayanamsha": null,
+      "house_system": "whole_sign",
+      "planets_allowed": [
+        "Sun",
+        "Moon",
+        "Mars",
+        "Mercury",
+        "Jupiter",
+        "Venus",
+        "Saturn",
+        "Rahu",
+        "Ketu"
+      ],
+      "aspects_to_consider": "conj,trine,sextile",
+      "max_aspects_per_reading": 4,
+      "style_keywords": "timing,short-term,practical",
+      "bhava_focus": null,
+      "house_focus": "2,6,10",
+      "avoid_topics": "do not guarantee success of financial or medical decisions",
+      "is_default": false,
+      "created_at": "2025-11-29T08:08:55.717Z",
+      "updated_at": "2025-11-29T08:08:55.717Z"
+    },
+    {
+      "id": "9",
+      "tradition": "mixed",
+      "service_code": "BIRTH_CHART_SUMMARY",
+      "zodiac_system": "tropical",
+      "ayanamsha": null,
+      "house_system": "placidus",
+      "planets_allowed": [
+        "Sun",
+        "Moon",
+        "Mercury",
+        "Venus",
+        "Mars",
+        "Jupiter",
+        "Saturn",
+        "Uranus",
+        "Neptune",
+        "Pluto"
+      ],
+      "aspects_to_consider": "conj,opp,trine,square,sextile",
+      "max_aspects_per_reading": 8,
+      "style_keywords": "educational,psychological,self-discovery",
+      "bhava_focus": "1,4,7,10",
+      "house_focus": null,
+      "avoid_topics": "no deterministic fate,avoid sensitive trauma topics",
+      "is_default": false,
+      "created_at": "2025-11-29T08:08:55.717Z",
+      "updated_at": "2025-11-29T08:08:55.717Z"
+    },
+    {
+      "id": "10",
+      "tradition": "mixed",
+      "service_code": "MATCHMAKING_VEDIC",
+      "zodiac_system": "sidereal",
+      "ayanamsha": "lahiri",
+      "house_system": "whole_sign",
+      "planets_allowed": [
+        "Sun",
+        "Moon",
+        "Mars",
+        "Mercury",
+        "Jupiter",
+        "Venus",
+        "Saturn",
+        "Rahu",
+        "Ketu"
+      ],
+      "aspects_to_consider": "conj,opp,trine,square",
+      "max_aspects_per_reading": 6,
+      "style_keywords": "relationship-focused,realistic,boundary-aware",
+      "bhava_focus": "1,5,7",
+      "house_focus": null,
+      "avoid_topics": "never guarantee marriage,never shame the user",
+      "is_default": false,
+      "created_at": "2025-11-29T08:08:55.717Z",
+      "updated_at": "2025-11-29T08:08:55.717Z"
+    }
+  ],
+  "runtimeFlags": [
+    {
+      "id": "1",
+      "service_code": "HORO_DAILY_WESTERN",
+      "tier": null,
+      "allow_followup_questions": false,
+      "include_disclaimer": true,
+      "allow_user_context": false,
+      "max_context_turns": null,
+      "truncate_strategy": "oldest_first",
+      "include_birth_chart_context": "never",
+      "include_daily_context": "auto",
+      "include_auspicious_context": "never",
+      "created_at": "2025-11-29T08:09:12.051Z",
+      "updated_at": "2025-11-29T08:09:12.051Z"
+    },
+    {
+      "id": "2",
+      "service_code": "HORO_DAILY_VEDIC",
+      "tier": null,
+      "allow_followup_questions": false,
+      "include_disclaimer": true,
+      "allow_user_context": false,
+      "max_context_turns": null,
+      "truncate_strategy": "oldest_first",
+      "include_birth_chart_context": "never",
+      "include_daily_context": "auto",
+      "include_auspicious_context": "never",
+      "created_at": "2025-11-29T08:09:12.051Z",
+      "updated_at": "2025-11-29T08:09:12.051Z"
+    },
+    {
+      "id": "3",
+      "service_code": "HORO_WEEKLY_WESTERN",
+      "tier": null,
+      "allow_followup_questions": false,
+      "include_disclaimer": true,
+      "allow_user_context": false,
+      "max_context_turns": null,
+      "truncate_strategy": "oldest_first",
+      "include_birth_chart_context": "never",
+      "include_daily_context": "auto",
+      "include_auspicious_context": "never",
+      "created_at": "2025-11-29T08:09:12.051Z",
+      "updated_at": "2025-11-29T08:09:12.051Z"
+    },
+    {
+      "id": "4",
+      "service_code": "HORO_WEEKLY_VEDIC",
+      "tier": null,
+      "allow_followup_questions": false,
+      "include_disclaimer": true,
+      "allow_user_context": false,
+      "max_context_turns": null,
+      "truncate_strategy": "oldest_first",
+      "include_birth_chart_context": "never",
+      "include_daily_context": "auto",
+      "include_auspicious_context": "never",
+      "created_at": "2025-11-29T08:09:12.051Z",
+      "updated_at": "2025-11-29T08:09:12.051Z"
+    },
+    {
+      "id": "6",
+      "service_code": "AUSPICIOUS_ONE_SIGN",
+      "tier": null,
+      "allow_followup_questions": false,
+      "include_disclaimer": false,
+      "allow_user_context": false,
+      "max_context_turns": null,
+      "truncate_strategy": "oldest_first",
+      "include_birth_chart_context": "never",
+      "include_daily_context": "never",
+      "include_auspicious_context": "auto",
+      "created_at": "2025-11-29T08:09:12.051Z",
+      "updated_at": "2025-11-29T08:09:12.051Z"
+    },
+    {
+      "id": "7",
+      "service_code": "BIRTH_CHART_SUMMARY",
+      "tier": null,
+      "allow_followup_questions": true,
+      "include_disclaimer": true,
+      "allow_user_context": true,
+      "max_context_turns": 3,
+      "truncate_strategy": "oldest_first",
+      "include_birth_chart_context": "always",
+      "include_daily_context": "auto",
+      "include_auspicious_context": "never",
+      "created_at": "2025-11-29T08:09:12.051Z",
+      "updated_at": "2025-11-29T08:09:12.051Z"
+    },
+    {
+      "id": "8",
+      "service_code": "BIRTH_CHART_DETAILED",
+      "tier": "pro",
+      "allow_followup_questions": true,
+      "include_disclaimer": true,
+      "allow_user_context": true,
+      "max_context_turns": 5,
+      "truncate_strategy": "shorten_summaries",
+      "include_birth_chart_context": "always",
+      "include_daily_context": "auto",
+      "include_auspicious_context": "never",
+      "created_at": "2025-11-29T08:09:12.051Z",
+      "updated_at": "2025-11-29T08:09:12.051Z"
+    },
+    {
+      "id": "9",
+      "service_code": "MATCHMAKING_VEDIC",
+      "tier": "pro",
+      "allow_followup_questions": true,
+      "include_disclaimer": true,
+      "allow_user_context": true,
+      "max_context_turns": 5,
+      "truncate_strategy": "shorten_summaries",
+      "include_birth_chart_context": "always",
+      "include_daily_context": "auto",
+      "include_auspicious_context": "never",
+      "created_at": "2025-11-29T08:09:12.051Z",
+      "updated_at": "2025-11-29T08:09:12.051Z"
+    },
+    {
+      "id": "10",
+      "service_code": "CHAT_GENERAL_ASTRO",
+      "tier": "free",
+      "allow_followup_questions": true,
+      "include_disclaimer": true,
+      "allow_user_context": true,
+      "max_context_turns": 8,
+      "truncate_strategy": "shorten_summaries",
+      "include_birth_chart_context": "auto",
+      "include_daily_context": "auto",
+      "include_auspicious_context": "auto",
+      "created_at": "2025-11-29T08:09:12.051Z",
+      "updated_at": "2025-11-29T08:09:12.051Z"
+    },
+    {
+      "id": "5",
+      "service_code": "AUSPICIOUS_ALL_SIGNS",
+      "tier": null,
+      "allow_followup_questions": false,
+      "include_disclaimer": false,
+      "allow_user_context": false,
+      "max_context_turns": 2,
+      "truncate_strategy": "oldest_first",
+      "include_birth_chart_context": "never",
+      "include_daily_context": "never",
+      "include_auspicious_context": "auto",
+      "created_at": "2025-11-29T08:09:12.051Z",
+      "updated_at": "2025-12-02T14:15:57.638Z"
+    }
+  ],
+  "experiments": [
+    {
+      "id": "1",
+      "experiment_code": "EXP_HDW_SYS_V1V2",
+      "service_code": "HORO_DAILY_WESTERN",
+      "variant_a_prompt_code": "HORO_DAILY_WESTERN_SYS_V1",
+      "variant_b_prompt_code": "HORO_DAILY_WESTERN_SYS_V1",
+      "start_date": "2024-12-31T16:00:00.000Z",
+      "end_date": null,
+      "traffic_split_a": "0.50",
+      "metric": "rating",
+      "is_active": true,
+      "created_at": "2025-11-29T08:09:28.732Z",
+      "updated_at": "2025-11-29T08:09:28.732Z"
+    },
+    {
+      "id": "2",
+      "experiment_code": "EXP_HDV_SYS_V1V2",
+      "service_code": "HORO_DAILY_VEDIC",
+      "variant_a_prompt_code": "HORO_DAILY_VEDIC_SYS_V1",
+      "variant_b_prompt_code": "HORO_DAILY_VEDIC_SYS_V1",
+      "start_date": "2024-12-31T16:00:00.000Z",
+      "end_date": null,
+      "traffic_split_a": "0.50",
+      "metric": "session_length",
+      "is_active": false,
+      "created_at": "2025-11-29T08:09:28.732Z",
+      "updated_at": "2025-11-29T08:09:28.732Z"
+    },
+    {
+      "id": "3",
+      "experiment_code": "EXP_AUSP_SYS_STYLE",
+      "service_code": "AUSPICIOUS_ALL_SIGNS",
+      "variant_a_prompt_code": "AUSPICIOUS_ALL_SIGNS_SYS_V1",
+      "variant_b_prompt_code": "AUSPICIOUS_ALL_SIGNS_SYS_V1",
+      "start_date": "2024-12-31T16:00:00.000Z",
+      "end_date": null,
+      "traffic_split_a": "0.50",
+      "metric": "click_through",
+      "is_active": false,
+      "created_at": "2025-11-29T08:09:28.732Z",
+      "updated_at": "2025-11-29T08:09:28.732Z"
+    },
+    {
+      "id": "4",
+      "experiment_code": "EXP_BCS_SYS_TONE",
+      "service_code": "BIRTH_CHART_SUMMARY",
+      "variant_a_prompt_code": "BIRTH_CHART_SUMMARY_SYS_V1",
+      "variant_b_prompt_code": "BIRTH_CHART_SUMMARY_SYS_V1",
+      "start_date": "2024-12-31T16:00:00.000Z",
+      "end_date": null,
+      "traffic_split_a": "0.50",
+      "metric": "rating",
+      "is_active": false,
+      "created_at": "2025-11-29T08:09:28.732Z",
+      "updated_at": "2025-11-29T08:09:28.732Z"
+    },
+    {
+      "id": "5",
+      "experiment_code": "EXP_CHAT_SYS_TONE",
+      "service_code": "CHAT_GENERAL_ASTRO",
+      "variant_a_prompt_code": "CHAT_GENERAL_ASTRO_SYS_V1",
+      "variant_b_prompt_code": "CHAT_GENERAL_ASTRO_SYS_V1",
+      "start_date": "2024-12-31T16:00:00.000Z",
+      "end_date": null,
+      "traffic_split_a": "0.50",
+      "metric": "session_length",
+      "is_active": true,
+      "created_at": "2025-11-29T08:09:28.732Z",
+      "updated_at": "2025-11-29T08:09:28.732Z"
+    },
+    {
+      "id": "6",
+      "experiment_code": "EXP_HDW_USER_LEN",
+      "service_code": "HORO_DAILY_WESTERN",
+      "variant_a_prompt_code": "HORO_DAILY_WESTERN_USER_V1",
+      "variant_b_prompt_code": "HORO_DAILY_WESTERN_USER_V1",
+      "start_date": "2024-12-31T16:00:00.000Z",
+      "end_date": null,
+      "traffic_split_a": "0.50",
+      "metric": "rating",
+      "is_active": false,
+      "created_at": "2025-11-29T08:09:28.732Z",
+      "updated_at": "2025-11-29T08:09:28.732Z"
+    },
+    {
+      "id": "7",
+      "experiment_code": "EXP_HDV_USER_LEN",
+      "service_code": "HORO_DAILY_VEDIC",
+      "variant_a_prompt_code": "HORO_DAILY_VEDIC_USER_V1",
+      "variant_b_prompt_code": "HORO_DAILY_VEDIC_USER_V1",
+      "start_date": "2024-12-31T16:00:00.000Z",
+      "end_date": null,
+      "traffic_split_a": "0.50",
+      "metric": "rating",
+      "is_active": false,
+      "created_at": "2025-11-29T08:09:28.732Z",
+      "updated_at": "2025-11-29T08:09:28.732Z"
+    },
+    {
+      "id": "8",
+      "experiment_code": "EXP_BCD_SYS_STRUCT",
+      "service_code": "BIRTH_CHART_DETAILED",
+      "variant_a_prompt_code": "BIRTH_CHART_SUMMARY_SYS_V1",
+      "variant_b_prompt_code": "BIRTH_CHART_SUMMARY_SYS_V1",
+      "start_date": "2024-12-31T16:00:00.000Z",
+      "end_date": null,
+      "traffic_split_a": "0.50",
+      "metric": "rating",
+      "is_active": false,
+      "created_at": "2025-11-29T08:09:28.732Z",
+      "updated_at": "2025-11-29T08:09:28.732Z"
+    },
+    {
+      "id": "9",
+      "experiment_code": "EXP_MATCH_SYS_STYLE",
+      "service_code": "MATCHMAKING_VEDIC",
+      "variant_a_prompt_code": "BIRTH_CHART_SUMMARY_SYS_V1",
+      "variant_b_prompt_code": "BIRTH_CHART_SUMMARY_SYS_V1",
+      "start_date": "2024-12-31T16:00:00.000Z",
+      "end_date": null,
+      "traffic_split_a": "0.50",
+      "metric": "rating",
+      "is_active": false,
+      "created_at": "2025-11-29T08:09:28.732Z",
+      "updated_at": "2025-11-29T08:09:28.732Z"
+    },
+    {
+      "id": "10",
+      "experiment_code": "EXP_CHAT_USER_STYLE",
+      "service_code": "CHAT_GENERAL_ASTRO",
+      "variant_a_prompt_code": "CHAT_GENERAL_ASTRO_USER_V1",
+      "variant_b_prompt_code": "CHAT_GENERAL_ASTRO_USER_V1",
+      "start_date": "2024-12-31T16:00:00.000Z",
+      "end_date": null,
+      "traffic_split_a": "0.50",
+      "metric": "rating",
+      "is_active": false,
+      "created_at": "2025-11-29T08:09:28.732Z",
+      "updated_at": "2025-11-29T08:09:28.732Z"
+    }
+  ],
+  "schemas": [
+    {
+      "schema_code": "DAILY_SIGN_JSON",
+      "service_code": "HORO_DAILY_WESTERN",
+      "schema_json": {
+        "type": "object",
+        "required": [
+          "sign",
+          "dateISO",
+          "summary"
+        ],
+        "properties": {
+          "sign": {
+            "type": "string"
+          },
+          "themes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dateISO": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          }
+        }
+      },
+      "strict": true,
+      "version": 1,
+      "created_at": "2025-11-29T08:07:33.941Z",
+      "updated_at": "2025-11-29T08:07:33.941Z"
+    },
+    {
+      "schema_code": "DAILY_SIGN_JSON_VEDIC",
+      "service_code": "HORO_DAILY_VEDIC",
+      "schema_json": {
+        "type": "object",
+        "required": [
+          "rashi",
+          "dateISO",
+          "guidance"
+        ],
+        "properties": {
+          "rashi": {
+            "type": "string"
+          },
+          "dateISO": {
+            "type": "string"
+          },
+          "guidance": {
+            "type": "string"
+          },
+          "nakshatra": {
+            "type": "string"
+          }
+        }
+      },
+      "strict": true,
+      "version": 1,
+      "created_at": "2025-11-29T08:07:33.941Z",
+      "updated_at": "2025-11-29T08:07:33.941Z"
+    },
+    {
+      "schema_code": "WEEKLY_SIGN_JSON",
+      "service_code": "HORO_WEEKLY_WESTERN",
+      "schema_json": {
+        "type": "object",
+        "required": [
+          "sign",
+          "weekStart",
+          "weekEnd",
+          "areas"
+        ],
+        "properties": {
+          "sign": {
+            "type": "string"
+          },
+          "areas": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "area",
+                "summary"
+              ],
+              "properties": {
+                "area": {
+                  "type": "string"
+                },
+                "summary": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "weekEnd": {
+            "type": "string"
+          },
+          "weekStart": {
+            "type": "string"
+          }
+        }
+      },
+      "strict": true,
+      "version": 1,
+      "created_at": "2025-11-29T08:07:33.941Z",
+      "updated_at": "2025-11-29T08:07:33.941Z"
+    },
+    {
+      "schema_code": "WEEKLY_SIGN_JSON_VEDIC",
+      "service_code": "HORO_WEEKLY_VEDIC",
+      "schema_json": {
+        "type": "object",
+        "required": [
+          "rashi",
+          "weekStart",
+          "weekEnd",
+          "highlights"
+        ],
+        "properties": {
+          "rashi": {
+            "type": "string"
+          },
+          "weekEnd": {
+            "type": "string"
+          },
+          "weekStart": {
+            "type": "string"
+          },
+          "highlights": {
+            "type": "string"
+          }
+        }
+      },
+      "strict": true,
+      "version": 1,
+      "created_at": "2025-11-29T08:07:33.941Z",
+      "updated_at": "2025-11-29T08:07:33.941Z"
+    },
+    {
+      "schema_code": "AUSPICIOUS_ONE_SIGN",
+      "service_code": "AUSPICIOUS_ONE_SIGN",
+      "schema_json": {
+        "type": "object",
+        "required": [
+          "sign",
+          "dateISO",
+          "hourlyScores",
+          "windows",
+          "peak"
+        ],
+        "properties": {
+          "peak": {
+            "type": "object"
+          },
+          "sign": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dateISO": {
+            "type": "string"
+          },
+          "windows": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "hourlyScores": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "strict": true,
+      "version": 1,
+      "created_at": "2025-11-29T08:07:33.941Z",
+      "updated_at": "2025-11-29T08:07:33.941Z"
+    },
+    {
+      "schema_code": "BIRTH_CHART_SUMMARY_JSON",
+      "service_code": "BIRTH_CHART_SUMMARY",
+      "schema_json": {
+        "type": "object",
+        "required": [
+          "profileId",
+          "summary"
+        ],
+        "properties": {
+          "summary": {
+            "type": "string"
+          },
+          "profileId": {
+            "type": "string"
+          },
+          "strengths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "challenges": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "strict": false,
+      "version": 1,
+      "created_at": "2025-11-29T08:07:33.941Z",
+      "updated_at": "2025-11-29T08:07:33.941Z"
+    },
+    {
+      "schema_code": "BIRTH_CHART_DETAILED_JSON",
+      "service_code": "BIRTH_CHART_DETAILED",
+      "schema_json": {
+        "type": "object",
+        "required": [
+          "profileId",
+          "sections"
+        ],
+        "properties": {
+          "sections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "title",
+                "body"
+              ],
+              "properties": {
+                "body": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "profileId": {
+            "type": "string"
+          }
+        }
+      },
+      "strict": false,
+      "version": 1,
+      "created_at": "2025-11-29T08:07:33.941Z",
+      "updated_at": "2025-11-29T08:07:33.941Z"
+    },
+    {
+      "schema_code": "MATCHMAKING_VEDIC_JSON",
+      "service_code": "MATCHMAKING_VEDIC",
+      "schema_json": {
+        "type": "object",
+        "required": [
+          "profileAId",
+          "profileBId",
+          "score",
+          "summary"
+        ],
+        "properties": {
+          "score": {
+            "type": "integer"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "dimensions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "score"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": "string"
+                },
+                "score": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "profileAId": {
+            "type": "string"
+          },
+          "profileBId": {
+            "type": "string"
+          }
+        }
+      },
+      "strict": true,
+      "version": 1,
+      "created_at": "2025-11-29T08:07:33.941Z",
+      "updated_at": "2025-11-29T08:07:33.941Z"
+    },
+    {
+      "schema_code": "CHAT_GENERAL_ASTRO_JSON",
+      "service_code": "CHAT_GENERAL_ASTRO",
+      "schema_json": {
+        "type": "object",
+        "required": [
+          "replyText"
+        ],
+        "properties": {
+          "replyText": {
+            "type": "string"
+          },
+          "safetyFlag": {
+            "type": "string"
+          }
+        }
+      },
+      "strict": false,
+      "version": 1,
+      "created_at": "2025-11-29T08:07:33.941Z",
+      "updated_at": "2025-11-29T08:07:33.941Z"
+    },
+    {
+      "schema_code": "AUSPICIOUS_ALL_SIGNS",
+      "service_code": "AUSPICIOUS_ALL_SIGNS",
+      "schema_json": {
+        "type": "object",
+        "required": [
+          "dateISO",
+          "signs"
+        ],
+        "properties": {
+          "signs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "sign",
+                "hourlyScores",
+                "windows",
+                "peak",
+                "tags"
+              ],
+              "properties": {
+                "peak": {
+                  "type": "object"
+                },
+                "sign": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "windows": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                },
+                "hourlyScores": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          "dateISO": {
+            "type": "string"
+          }
+        }
+      },
+      "strict": false,
+      "version": 1,
+      "created_at": "2025-11-29T08:07:33.941Z",
+      "updated_at": "2025-12-02T13:50:06.495Z"
+    }
+  ],
+  "serviceModels": [
+    {
+      "id": "1",
+      "service_code": "HORO_DAILY_WESTERN",
+      "tier": "free",
+      "model_id": "gpt-4.1-mini",
+      "priority_order": 1,
+      "max_tokens_input": 1500,
+      "max_tokens_output": 800,
+      "temperature": "0.70",
+      "top_p": "0.90",
+      "frequency_penalty": "0.00",
+      "presence_penalty": "0.00",
+      "schema_code": "DAILY_SIGN_JSON",
+      "response_format": "json_schema",
+      "cache_key_pattern": "HORO_DAILY_WESTERN:{{dateISO}}:{{sign}}",
+      "cache_ttl_sec": 3600,
+      "created_at": "2025-11-29T08:08:23.427Z",
+      "updated_at": "2025-11-29T08:08:23.427Z"
+    },
+    {
+      "id": "2",
+      "service_code": "HORO_DAILY_VEDIC",
+      "tier": "free",
+      "model_id": "gpt-4.1-mini",
+      "priority_order": 1,
+      "max_tokens_input": 1500,
+      "max_tokens_output": 900,
+      "temperature": "0.70",
+      "top_p": "0.90",
+      "frequency_penalty": "0.00",
+      "presence_penalty": "0.00",
+      "schema_code": "DAILY_SIGN_JSON_VEDIC",
+      "response_format": "json_schema",
+      "cache_key_pattern": "HORO_DAILY_VEDIC:{{dateISO}}:{{rashi}}",
+      "cache_ttl_sec": 3600,
+      "created_at": "2025-11-29T08:08:23.427Z",
+      "updated_at": "2025-11-29T08:08:23.427Z"
+    },
+    {
+      "id": "3",
+      "service_code": "HORO_WEEKLY_WESTERN",
+      "tier": "free",
+      "model_id": "gpt-4.1-mini",
+      "priority_order": 1,
+      "max_tokens_input": 2000,
+      "max_tokens_output": 1400,
+      "temperature": "0.70",
+      "top_p": "0.90",
+      "frequency_penalty": "0.00",
+      "presence_penalty": "0.00",
+      "schema_code": "WEEKLY_SIGN_JSON",
+      "response_format": "json_schema",
+      "cache_key_pattern": "HORO_WEEKLY_WESTERN:{{weekStart}}:{{sign}}",
+      "cache_ttl_sec": 86400,
+      "created_at": "2025-11-29T08:08:23.427Z",
+      "updated_at": "2025-11-29T08:08:23.427Z"
+    },
+    {
+      "id": "4",
+      "service_code": "HORO_WEEKLY_VEDIC",
+      "tier": "free",
+      "model_id": "gpt-4.1-mini",
+      "priority_order": 1,
+      "max_tokens_input": 2000,
+      "max_tokens_output": 1500,
+      "temperature": "0.70",
+      "top_p": "0.90",
+      "frequency_penalty": "0.00",
+      "presence_penalty": "0.00",
+      "schema_code": "WEEKLY_SIGN_JSON_VEDIC",
+      "response_format": "json_schema",
+      "cache_key_pattern": "HORO_WEEKLY_VEDIC:{{weekStart}}:{{rashi}}",
+      "cache_ttl_sec": 86400,
+      "created_at": "2025-11-29T08:08:23.427Z",
+      "updated_at": "2025-11-29T08:08:23.427Z"
+    },
+    {
+      "id": "5",
+      "service_code": "AUSPICIOUS_ALL_SIGNS",
+      "tier": "free",
+      "model_id": "gpt-4.1-mini",
+      "priority_order": 1,
+      "max_tokens_input": 1200,
+      "max_tokens_output": 1800,
+      "temperature": "0.20",
+      "top_p": "1.00",
+      "frequency_penalty": "0.00",
+      "presence_penalty": "0.00",
+      "schema_code": "AUSPICIOUS_ALL_SIGNS",
+      "response_format": "json_schema",
+      "cache_key_pattern": "AUSPICIOUS_ALL_SIGNS:{{dateISO}}",
+      "cache_ttl_sec": 86400,
+      "created_at": "2025-11-29T08:08:23.427Z",
+      "updated_at": "2025-11-29T08:08:23.427Z"
+    },
+    {
+      "id": "6",
+      "service_code": "AUSPICIOUS_ONE_SIGN",
+      "tier": "free",
+      "model_id": "gpt-4.1-mini",
+      "priority_order": 1,
+      "max_tokens_input": 1200,
+      "max_tokens_output": 900,
+      "temperature": "0.20",
+      "top_p": "1.00",
+      "frequency_penalty": "0.00",
+      "presence_penalty": "0.00",
+      "schema_code": "AUSPICIOUS_ONE_SIGN",
+      "response_format": "json_schema",
+      "cache_key_pattern": "AUSPICIOUS_ONE_SIGN:{{dateISO}}:{{sign}}",
+      "cache_ttl_sec": 86400,
+      "created_at": "2025-11-29T08:08:23.427Z",
+      "updated_at": "2025-11-29T08:08:23.427Z"
+    },
+    {
+      "id": "7",
+      "service_code": "BIRTH_CHART_SUMMARY",
+      "tier": "free",
+      "model_id": "gpt-4.1-mini",
+      "priority_order": 1,
+      "max_tokens_input": 2500,
+      "max_tokens_output": 1200,
+      "temperature": "0.60",
+      "top_p": "0.90",
+      "frequency_penalty": "0.00",
+      "presence_penalty": "0.00",
+      "schema_code": "BIRTH_CHART_SUMMARY_JSON",
+      "response_format": "json_schema",
+      "cache_key_pattern": "BIRTH_CHART_SUMMARY:{{profileId}}",
+      "cache_ttl_sec": 604800,
+      "created_at": "2025-11-29T08:08:23.427Z",
+      "updated_at": "2025-11-29T08:08:23.427Z"
+    },
+    {
+      "id": "8",
+      "service_code": "BIRTH_CHART_DETAILED",
+      "tier": "pro",
+      "model_id": "gpt-4.1",
+      "priority_order": 1,
+      "max_tokens_input": 4000,
+      "max_tokens_output": 3000,
+      "temperature": "0.60",
+      "top_p": "0.90",
+      "frequency_penalty": "0.00",
+      "presence_penalty": "0.00",
+      "schema_code": "BIRTH_CHART_DETAILED_JSON",
+      "response_format": "json_schema",
+      "cache_key_pattern": "BIRTH_CHART_DETAILED:{{profileId}}",
+      "cache_ttl_sec": 604800,
+      "created_at": "2025-11-29T08:08:23.427Z",
+      "updated_at": "2025-11-29T08:08:23.427Z"
+    },
+    {
+      "id": "9",
+      "service_code": "MATCHMAKING_VEDIC",
+      "tier": "pro",
+      "model_id": "gpt-4.1",
+      "priority_order": 1,
+      "max_tokens_input": 3000,
+      "max_tokens_output": 2000,
+      "temperature": "0.50",
+      "top_p": "0.90",
+      "frequency_penalty": "0.00",
+      "presence_penalty": "0.00",
+      "schema_code": "MATCHMAKING_VEDIC_JSON",
+      "response_format": "json_schema",
+      "cache_key_pattern": "MATCHMAKING_VEDIC:{{profileAId}}:{{profileBId}}",
+      "cache_ttl_sec": 604800,
+      "created_at": "2025-11-29T08:08:23.427Z",
+      "updated_at": "2025-11-29T08:08:23.427Z"
+    },
+    {
+      "id": "10",
+      "service_code": "CHAT_GENERAL_ASTRO",
+      "tier": "free",
+      "model_id": "gpt-4.1-mini",
+      "priority_order": 1,
+      "max_tokens_input": 2500,
+      "max_tokens_output": 900,
+      "temperature": "0.80",
+      "top_p": "0.90",
+      "frequency_penalty": "0.00",
+      "presence_penalty": "0.00",
+      "schema_code": "CHAT_GENERAL_ASTRO_JSON",
+      "response_format": "json_schema",
+      "cache_key_pattern": "CHAT_GENERAL_ASTRO:{{userId}}:{{sessionId}}",
+      "cache_ttl_sec": 1800,
+      "created_at": "2025-11-29T08:08:23.427Z",
+      "updated_at": "2025-11-29T08:08:23.427Z"
+    }
+  ]
+}

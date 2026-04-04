@@ -1,0 +1,27 @@
+{
+  "planetsA": {
+    "Sun":   { "sign": "♌" },
+    "Moon":  { "sign": "♊" },
+    "Venus": { "sign": "♌" },
+    "Mars":  { "sign": "♈" }
+  },
+  "planetsB": {
+    "Sun":   { "sign": "♊" },
+    "Moon":  { "sign": "♉" },
+    "Venus": { "sign": "♊" },
+    "Mars":  { "sign": "♒" }
+  },
+  "aspects": [
+    { "a":"Sun", "b":"Moon",   "type":"sextile",   "orb":58, "note":"Warm reciprocity" },
+    { "a":"Venus","b":"Mars",  "type":"trine",     "orb":72, "note":"Strong chemistry" },
+    { "a":"Saturn","b":"Sun",  "type":"square",    "orb":50, "note":"Pace boundaries" }
+  ],
+  "housesOverlay": [
+    { "house": 5, "planets": ["Venus"], "note": "Romance & play highlighted" },
+    { "house": 7, "planets": ["Sun"],   "note": "Focus on partnership themes" }
+  ],
+  "transits": [
+    { "date":"2025-01-06", "label":"Venus trine Mars", "severity":65, "note":"Plan a date night" },
+    { "date":"2025-01-10", "label":"Mercury sextile Moon", "severity":45, "note":"Good for talks" }
+  ]
+}

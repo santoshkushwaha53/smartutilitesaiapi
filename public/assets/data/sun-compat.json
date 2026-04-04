@@ -1,0 +1,34 @@
+{
+  "aries-gemini": {
+    "aspects": { "love": 84, "communication": 88, "trust": 72, "passion": 92, "values": 78 },
+    "desc": "Spark + banter — keep shared plans visible.",
+    "elements": { "fire": 45, "air": 35, "water": 10, "earth": 10 },
+    "traits": [
+      { "label": "Leadership", "you": 78, "partner": 70 },
+      { "label": "Creativity", "you": 74, "partner": 80 },
+      { "label": "Independence", "you": 72, "partner": 68 },
+      { "label": "Emotional Depth", "you": 58, "partner": 54 }
+    ]
+  },
+  "leo-taurus": {
+    "aspects": { "love": 80, "communication": 66, "trust": 75, "passion": 86, "values": 77 },
+    "desc": "Warmth meets steadiness — agree who leads what.",
+    "elements": { "fire": 40, "air": 10, "water": 10, "earth": 40 },
+    "traits": [
+      { "label": "Leadership", "you": 85, "partner": 72 },
+      { "label": "Creativity", "you": 82, "partner": 64 },
+      { "label": "Independence", "you": 76, "partner": 60 },
+      { "label": "Emotional Depth", "you": 60, "partner": 58 }
+    ]
+  },
+  "leo-aquarius": {
+    "aspects": { "love": 78, "communication": 82, "trust": 70, "passion": 88, "values": 73 },
+    "desc": "Opposites spark — celebrate differences + align on mission.",
+    "elements": { "fire": 40, "air": 40, "water": 10, "earth": 10 }
+  },
+  "cancer-pisces": {
+    "aspects": { "love": 87, "communication": 74, "trust": 82, "passion": 76, "values": 84 },
+    "desc": "Soft power: empathy + intuition. Guard healthy boundaries.",
+    "elements": { "fire": 5, "air": 10, "water": 70, "earth": 15 }
+  }
+}

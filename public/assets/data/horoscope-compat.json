@@ -1,0 +1,49 @@
+{
+  "elements": {
+    "icons": {
+      "fire": "assets/icons/elements/fire.svg",
+      "air": "assets/icons/elements/air.svg",
+      "water": "assets/icons/elements/water.svg",
+      "earth": "assets/icons/elements/earth.svg"
+    },
+    "descriptions": {
+      "fire": "Passion, action, confidence.",
+      "air": "Ideas, communication, perspective.",
+      "water": "Emotion, intuition, empathy.",
+      "earth": "Stability, patience, practicality."
+    }
+  },
+  "aspects": {
+    "love": {
+      "title": "Love",
+      "icon": "assets/icons/aspects/heart.svg",
+      "desc": "Hearts beat in perfect cosmic rhythm. Passionate connection flows naturally."
+    },
+    "communication": {
+      "title": "Communication",
+      "icon": "assets/icons/aspects/chat.svg",
+      "desc": "Words flow like celestial music. Ideas merge in harmonious dialogue."
+    },
+    "trust": {
+      "title": "Trust",
+      "icon": "assets/icons/aspects/handshake.svg",
+      "desc": "Foundation solid as cosmic stones. Loyalty flows through stellar bonds."
+    },
+    "passion": {
+      "title": "Passion",
+      "icon": "assets/icons/aspects/flame.svg",
+      "desc": "Fire burns with cosmic intensity. Magnetic attraction transcends time."
+    },
+    "values": {
+      "title": "Long-Term",
+      "icon": "assets/icons/aspects/hourglass.svg",
+      "desc": "Destined for enduring growth. Potential reaches the stars."
+    }
+  },
+  "traits": [
+    { "key": "leadership", "title": "Leadership", "icon": "assets/icons/traits/crown.svg" },
+    { "key": "creativity", "title": "Creativity", "icon": "assets/icons/traits/spark.svg" },
+    { "key": "independence", "title": "Independence", "icon": "assets/icons/traits/compass.svg" },
+    { "key": "emotion", "title": "Emotional Depth", "icon": "assets/icons/traits/moon.svg" }
+  ]
+}

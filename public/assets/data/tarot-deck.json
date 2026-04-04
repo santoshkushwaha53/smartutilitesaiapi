@@ -1,0 +1,74 @@
+[
+  {
+    "key": "the-fool",
+    "title": "The Fool",
+    "arcana": "Major",
+    "img": "the-fool.png",
+    "upright": "Innocence, new journeys, spontaneity, free spirit.",
+    "reversed": "Hesitation, recklessness, fear of the unknown."
+  },
+  {
+    "key": "the-magician",
+    "title": "The Magician",
+    "arcana": "Major",
+    "img": "the-magician.png",
+    "upright": "Manifestation, willpower, resourcefulness.",
+    "reversed": "Misalignment, manipulation, scattered energy."
+  },
+  {
+    "key": "the-high-priestess",
+    "title": "The High Priestess",
+    "arcana": "Major",
+    "img": "the-high-priestess.png",
+    "upright": "Intuition, mystery, inner voice.",
+    "reversed": "Secrets, withdrawal, blocked intuition."
+  },
+  {
+    "key": "the-empress",
+    "title": "The Empress",
+    "arcana": "Major",
+    "img": "the-empress.png",
+    "upright": "Creativity, abundance, nurturing.",
+    "reversed": "Dependence, creative block, overprotectiveness."
+  },
+  {
+    "key": "the-emperor",
+    "title": "The Emperor",
+    "arcana": "Major",
+    "img": "the-emperor.png",
+    "upright": "Structure, authority, strategy.",
+    "reversed": "Rigidity, control issues, domination."
+  },
+  {
+    "key": "the-moon",
+    "title": "The Moon",
+    "arcana": "Major",
+    "img": "the-moon.png",
+    "upright": "Dreams, subconscious, uncertainty.",
+    "reversed": "Clarity emerging, releasing fear."
+  },
+  {
+    "key": "the-sun",
+    "title": "The Sun",
+    "arcana": "Major",
+    "img": "the-sun.png",
+    "upright": "Joy, success, vitality, warmth.",
+    "reversed": "Temporary cloudiness, burnout risk, overexposure."
+  },
+  {
+    "key": "justice",
+    "title": "Justice",
+    "arcana": "Major",
+    "img": "justice.png",
+    "upright": "Fairness, truth, cause and effect.",
+    "reversed": "Bias, imbalance, avoidance."
+  },
+  {
+    "key": "the-world",
+    "title": "The World",
+    "arcana": "Major",
+    "img": "the-world.png",
+    "upright": "Completion, integration, travel.",
+    "reversed": "Delays, loose ends, lack of closure."
+  }
+]

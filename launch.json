@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Node: Launch (break on start)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/index.js",      // change if your entry is server.js
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env",
+      "runtimeArgs": ["--inspect-brk=9229", "--nolazy"],
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"]
+    }
+  ]
+}

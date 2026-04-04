@@ -1,0 +1,73 @@
+.
+├── -d
+├── -H
+├── .gitignore
+├── api-architecture.txt
+├── full.json
+├── index.js
+├── launch.json
+├── package-lock.json
+├── package.json
+├── routes
+│   ├── admin.costs.route.js
+│   ├── ai.batch.route.js
+│   ├── astrochat.route.js
+│   ├── auspicious.route.js
+│   ├── auth.facebook.js
+│   ├── auth.google.js
+│   ├── auth.js
+│   ├── horoscope.public.raw.route.js
+│   ├── horoscope.read.table.route.js
+│   ├── horoscope.route.js
+│   ├── horoscope.today.route.js
+│   ├── points.route.js
+│   ├── prediction.route.js
+│   ├── prokerala.route.js
+│   ├── prokerala.route2.js
+│   ├── promotions.route.js
+│   ├── providers.admin.route.js
+│   ├── providers.status.route.js
+│   ├── scripts
+│   │   ├── astro_predict_worker.js
+│   │   ├── backfill_guest_all_throttled.mjs
+│   │   └── backfill_guest_all_throttled.sh
+│   ├── status.providers.route.js
+│   ├── subscriptions.route.js
+│   ├── sun.compat.route.js
+│   ├── tarot.routes.js
+│   └── users.js
+├── scripts
+│   └── backfill_guest_all_throttled.mjs
+├── signs.json
+├── src
+│   ├── .DS_Store
+│   ├── controllers
+│   │   ├── astrochat.controller.js
+│   │   └── suncompat.controller.js
+│   ├── db.js
+│   ├── middleware
+│   │   └── auth.js
+│   ├── providerRouter.js
+│   ├── routes
+│   │   └── settings.route.js
+│   ├── services
+│   │   ├── astrochat.service.js
+│   │   ├── auspicious.service.js
+│   │   ├── points.service.js
+│   │   ├── promotions.service.js
+│   │   ├── subscriptions.service.js
+│   │   └── suncompat.service.js
+│   ├── settings.js
+│   └── sql
+│       └── 02_promotions_sprocs.sql
+└── utils
+    ├── async.js
+    ├── freeastro.js
+    ├── hash.js
+    ├── horoscope-prep.js
+    ├── llm.js
+    ├── pricing.js
+    ├── prokerala.js
+    └── prompt.js
+
+11 directories, 60 files

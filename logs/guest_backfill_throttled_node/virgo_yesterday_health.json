@@ -1,0 +1,3 @@
+{
+  "error": "new row for relation \"astro_prediction\" violates check constraint \"ap_generic_must_have_hg\""
+}

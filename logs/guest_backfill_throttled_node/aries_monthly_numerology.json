@@ -1,0 +1,21 @@
+{
+  "audience": "generic",
+  "system": "western",
+  "sign": "aries",
+  "sign_id": 1,
+  "period": "monthly",
+  "start": "2025-01-01",
+  "end": "2025-01-01",
+  "topics": [
+    "numerology"
+  ],
+  "provider": "prokerala",
+  "results": {
+    "numerology": {
+      "id": "aa933a4b-646e-4f93-9de3-ce5b763942b7",
+      "text": "{\"status\":\"ok\",\"data\":{\"vaara\":\"Wednesday\",\"nakshatra\":[{\"id\":20,\"name\":\"Uttara Ashadha\",\"lord\":{\"id\":0,\"name\":\"Sun\",\"vedic_name\":\"Ravi\"},\"start\":\"2025-01-01T02:33:45+08:00\",\"end\":\"2025-01-02T02:16:15+08:00\"},{\"id\":21,\"name\":\"Shravana\",\"lord\":{\"id\":1,\"name\":\"Moon\",\"vedic_name\":\"Chandra\"},\"start\":\"2025-01-02T02:16:16+08:00\",\"end\":\"2025-01-03T01:40:44+08:00\"}],\"tithi\":[{\"id\":17,\"index\":0,\"name\":\"Dwitiya\",\"paksha\":\"Shukla Paksha\",\"start\":\"2025-01-01T05:52:25+08:00\",\"end\":\"2025-01-02T04:54:35+08:00\"},{\"id\":18,\"index\":0,\"name\":\"Tritiya\",\"paksha\":\"Shukla Paksha\",\"start\":\"2025-01-02T04:54:36+08:00\",\"end\":\"2025-01-03T03:38:54+08:00\"}],\"karana\":[{\"index\":0,\"id\":1,\"name\":\"Balava\",\"start\":\"2025-01-01T05:52:25+08:00\",\"end\":\"2025-01-01T17:26:04+08:00\"},{\"index\":0,\"id\":2,\"name\":\"Kaulava\",\"start\":\"2025-01-01T17:26:05+08:00\",\"end\":\"2025-01-02T04:54:35+08:00\"},{\"index\":0,\"id\":3,\"name\":\"Taitila\",\"start\":\"2025-01-02T04:54:36+08:00\",\"end\":\"2025-01-02T16:18:40+08:00\"}],\"yoga\":[{\"id\":12,\"name\":\"Vyaghata\",\"start\":\"2024-12-31T21:29:16+08:00\",\"end\":\"2025-01-01T19:36:25+08:00\"},{\"id\":13,\"name\":\"Harshana\",\"start\":\"2025-01-01T19:36:26+08:00\",\"end\":\"2025-01-02T17:27:51+08:00\"}],\"sunrise\":\"2025-01-01T07:22:02+08:00\",\"sunset\":\"2025-01-01T19:11:35+08:00\",\"moonrise\":\"2025-01-01T08:23:43+08:00\",\"moonset\":\"2025-01-01T20:38:41+08:00\"}}",
+      "model": "gpt-4o-mini (error)",
+      "scope": "generic"
+    }
+  }
+}
