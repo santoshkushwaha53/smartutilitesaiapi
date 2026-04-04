@@ -15,7 +15,8 @@ const blogRoutes     = require("./modules/blog/blog.routes");
 const adminRoutes    = require("./modules/holidays/routes/admin.routes");
 const uploadRoutes   = require("./modules/holidays/routes/upload.routes");
 const importRoutes   = require("./modules/holidays/routes/import.routes");
-const kidsRoutes     = require("./modules/holidays/routes/kids.routes");
+const kidsRoutes          = require("./modules/holidays/routes/kids.routes");
+const mediaDownloadRoutes = require("./routes/media-download.routes");
 
 const app = express();
 
@@ -70,6 +71,7 @@ app.use("/api/admin",     adminRoutes);
 app.use("/api/upload",    uploadRoutes);
 app.use("/api/import",    importRoutes);
 app.use("/api/kids",      kidsRoutes);
+app.use("/api/media",     mediaDownloadRoutes);
 
 app.use(function (err, _req, res, _next) {
   if (err && err.message && err.message.startsWith("CORS blocked")) {
