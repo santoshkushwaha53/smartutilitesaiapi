@@ -6,8 +6,18 @@ const fs = require("fs");
 
 const router = express.Router();
 
-// Use the latest standalone binary which supports the web_safari client workaround
-const YT_DLP = "/Users/santoshkushwaha/Library/Python/3.9/bin/yt-dlp-new";
+// Use local standalone binary in dev, fall back to PATH on production (Render)
+const YT_DLP =
+  process.env.YT_DLP_PATH ||
+  (() => {
+    const local = "/Users/santoshkushwaha/Library/Python/3.9/bin/yt-dlp-new";
+    try {
+      require("fs").accessSync(local);
+      return local;
+    } catch {
+      return "yt-dlp"; // installed on PATH by render.yaml build command
+    }
+  })();
 
 function isSupportedPlatformUrl(url) {
   try {

@@ -2,7 +2,7 @@ services:
   - type: web
     name: smartutilitesaiapi
     runtime: node
-    buildCommand: npm install && npx prisma generate && npx prisma db push --skip-generate
+    buildCommand: pip install yt-dlp && npm install && npx prisma generate && npx prisma db push --skip-generate
     startCommand: node src/server.js
     envVars:
       - key: DATABASE_URL
