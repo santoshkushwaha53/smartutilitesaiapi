@@ -1,0 +1,201 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+}
+
+model BlogPost {
+  id             String    @id
+  siteId         String    @default("smartutilitiesai")
+  slug           String
+  topicId        String
+  featured       Boolean   @default(false)
+  published      Boolean   @default(true)
+  title          String
+  subtitle       String    @default("")
+  author         String    @default("SmartUtilitiesAI")
+  coverEmoji     String    @default("📝")
+  accent         String    @default("blue")
+  publishedAt    String
+  readingMinutes Int       @default(5)
+  seoTitle       String    @default("")
+  seoDescription String    @default("")
+  keywords       Json      @default("[]")
+  quickSummary   String    @default("")
+  sections       Json      @default("[]")
+  faq            Json      @default("[]")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime
+  BlogTopic      BlogTopic @relation(fields: [topicId], references: [id])
+
+  @@unique([siteId, slug])
+  @@index([siteId])
+  @@index([siteId, published])
+  @@index([topicId])
+}
+
+model BlogTopic {
+  id        String     @id
+  siteId    String     @default("smartutilitiesai")
+  title     String
+  icon      String     @default("📝")
+  accent    String     @default("blue")
+  order     Int        @default(0)
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime
+  BlogPost  BlogPost[]
+
+  @@unique([siteId, id])
+  @@index([siteId])
+}
+
+model Festival {
+  id               String   @id
+  name             String
+  alternateName    String?
+  type             String
+  month            Int
+  day              Int
+  description      String?
+  significance     String?
+  statesCelebrated String   @default("[]")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime
+  calendarType     String?
+  cardTheme        String   @default("{}")
+  colorTone        String   @default("")
+  dateLabel        String?
+  faq              String   @default("[]")
+  foods            String   @default("[]")
+  heroEmoji        String   @default("")
+  heroImage        String?
+  howToCelebrate   String   @default("[]")
+  images           String   @default("[]")
+  isActive         Boolean  @default(true)
+  regions          String   @default("[]")
+  rituals          String   @default("[]")
+  seoDescription   String?
+  seoKeywords      String   @default("[]")
+  seoTitle         String?
+  shortDesc        String?
+  sortOrder        Int      @default(0)
+  tags             String   @default("[]")
+  timeline         String   @default("[]")
+  whyCelebrate     String   @default("[]")
+  wishes           String   @default("[]")
+
+  @@index([isActive])
+  @@index([month])
+  @@index([type])
+}
+
+model Holiday {
+  id          String   @id
+  title       String
+  date        String
+  year        Int
+  type        String
+  states      String   @default("[]")
+  description String?
+  holidayType String   @default("gazetted")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+
+  @@index([date])
+  @@index([type])
+  @@index([year])
+}
+
+model KidsContent {
+  id            String   @id
+  slug          String   @unique
+  type          String
+  title         String
+  emoji         String   @default("🎉")
+  summary       String?
+  festivalSlugs String   @default("[]")
+  ageGroup      String   @default("[]")
+  featured      Boolean  @default(false)
+  isActive      Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  content       String   @default("{}")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime
+
+  @@index([isActive])
+  @@index([type])
+  @@index([type, isActive])
+}
+
+model SeoPage {
+  id            String   @id
+  routePath     String
+  title         String?
+  description   String?
+  canonicalPath String?
+  robots        String   @default("index,follow")
+  ogType        String   @default("website")
+  ogImage       String?
+  ogImageWidth  Int      @default(1200)
+  ogImageHeight Int      @default(630)
+  twitterCard   String   @default("summary_large_image")
+  twitterSite   String?
+  ogSiteName    String   @default("SmartUtilitiesAI")
+  jsonLd        Json?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime
+  siteId        String   @default("smartutilitiesai")
+
+  @@unique([siteId, routePath])
+  @@index([isActive])
+  @@index([siteId])
+}
+
+model State {
+  code      String   @id
+  name      String
+  emoji     String   @default("")
+  tone      String   @default("saff")
+  type      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model metal_price_snapshots {
+  id                 BigInt    @id @default(autoincrement())
+  source             String    @default("metals.dev")
+  base_currency      String    @default("USD") @db.VarChar(3)
+  unit               String    @default("toz") @db.VarChar(10)
+  gold_ounce         Decimal   @db.Decimal(18, 6)
+  silver_ounce       Decimal   @db.Decimal(18, 6)
+  gold_gram          Decimal   @db.Decimal(18, 6)
+  silver_gram        Decimal   @db.Decimal(18, 6)
+  provider_timestamp DateTime? @db.Timestamptz(6)
+  fetched_at         DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([base_currency, fetched_at(sort: Desc)], map: "idx_metal_price_snapshots_currency_fetched_at")
+}
+
+model metal_sync_state {
+  job_name        String    @id
+  last_run_at     DateTime? @db.Timestamptz(6)
+  last_success_at DateTime? @db.Timestamptz(6)
+  last_error      String?
+  updated_at      DateTime  @default(now()) @db.Timestamptz(6)
+}
