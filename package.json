@@ -6,8 +6,10 @@
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
     "test": "node --test src/routes/nearby.route.test.js",
+    "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:studio": "prisma studio"
   },
   "keywords": [],
