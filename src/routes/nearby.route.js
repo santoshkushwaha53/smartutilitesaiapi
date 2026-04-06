@@ -25,6 +25,8 @@ const OVERPASS_TIMEOUT_MS = 15000;
 const NOMINATIM_TIMEOUT_MS = 8000;
 const IPAPI_TIMEOUT_MS = 5000;
 const WIKI_TIMEOUT_MS = 3500;
+const GEOAPIFY_TIMEOUT_MS = 6500;
+const TOMTOM_TIMEOUT_MS = 6500;
 
 // Wikipedia enrichment
 const DEFAULT_WIKI_ENRICH_COUNT = 0;
@@ -34,6 +36,56 @@ const MAX_WIKI_ENRICH_COUNT = 4;
 const nearbyCache = new Map();
 const CACHE_TTL_MS = 15 * 60 * 1000;
 const MAX_CACHE_ENTRIES = 300;
+
+// Provider categories
+const GEOAPIFY_VISIT_CATEGORIES = [
+  "tourism.attraction",
+  "tourism.attraction.viewpoint",
+  "tourism.sights",
+  "entertainment.museum",
+  "entertainment.culture",
+  "entertainment.theme_park",
+  "entertainment.zoo",
+  "natural",
+  "national_park",
+  "beach",
+  "religion.place_of_worship",
+].join(",");
+
+const TOMTOM_VISIT_KEYWORDS = [
+  "tourist attraction",
+  "important tourist attraction",
+  "museum",
+  "park",
+  "recreation area",
+  "historical park",
+  "historic site",
+  "memorial",
+  "monument",
+  "castle",
+  "fort",
+  "palace",
+  "tower",
+  "viewpoint",
+  "lighthouse",
+  "planetarium",
+  "cultural center",
+  "theater",
+  "theatre",
+  "place of worship",
+  "temple",
+  "mosque",
+  "church",
+  "monastery",
+  "zoo",
+  "wildlife park",
+  "botanical garden",
+  "garden",
+  "nature reserve",
+  "beach",
+  "waterfall",
+  "amusement park",
+];
 
 /* =========================================================
    HELPERS
@@ -105,7 +157,13 @@ function safeErrorMessage(err) {
   if (err.code === "ECONNABORTED") return "Upstream map service timeout";
 
   if (axios.isAxiosError(err)) {
-    return err.response?.data?.remark || err.message || "Request failed";
+    return (
+      err.response?.data?.remark ||
+      err.response?.data?.message ||
+      err.response?.data?.error ||
+      err.message ||
+      "Request failed"
+    );
   }
 
   return err.message || String(err);
@@ -177,9 +235,14 @@ function prettyType(type) {
     peak: "Peak",
     waterfall: "Waterfall",
     park: "Park",
+    national_park: "National Park",
     garden: "Garden",
     nature_reserve: "Nature Reserve",
     historic: "Historic Site",
+    memorial: "Memorial",
+    castle: "Castle",
+    fort: "Fort",
+    palace: "Palace",
     place_of_worship: "Place of Worship",
     temple: "Temple",
     mosque: "Mosque",
@@ -188,7 +251,6 @@ function prettyType(type) {
     arts_centre: "Arts Centre",
     tower: "Tower",
     observatory: "Observatory",
-    memorial: "Memorial",
     railway_exhibit: "Railway Exhibit",
     aircraft_exhibit: "Aircraft Exhibit",
     place: "Place",
@@ -240,15 +302,17 @@ function getCategoryInfo(type = "", name = "") {
   const n = String(name || "").toLowerCase();
 
   if (
-    ["museum", "historic", "memorial"].includes(t) ||
+    ["museum", "historic", "memorial", "castle", "fort", "palace"].includes(t) ||
     n.includes("museum") ||
-    n.includes("heritage")
+    n.includes("heritage") ||
+    n.includes("fort") ||
+    n.includes("palace")
   ) {
     return { key: "heritage", label: "Heritage", badge: "Cultural spot" };
   }
 
   if (
-    ["park", "garden", "beach", "waterfall", "peak"].includes(t) ||
+    ["park", "national_park", "garden", "beach", "waterfall", "peak", "nature_reserve"].includes(t) ||
     n.includes("park") ||
     n.includes("garden") ||
     n.includes("waterfall") ||
@@ -286,6 +350,271 @@ function distanceBadge(distanceKm) {
   return "Worth a trip";
 }
 
+function isRateLimitLikeError(err, provider = "") {
+  const status = err?.response?.status;
+  const text = JSON.stringify(err?.response?.data || "").toLowerCase();
+
+  if (status === 429) return true;
+
+  if (
+    provider === "tomtom" &&
+    status === 403 &&
+    /(rate|volume limit exceeded|qps|too many requests|quota)/.test(text)
+  ) {
+    return true;
+  }
+
+  if (
+    provider === "geoapify" &&
+    (status === 402 || status === 403 || status === 429) &&
+    /(rate|quota|too many requests|daily limit|request limit)/.test(text)
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+function makeProviderSkipError(message) {
+  const err = new Error(message);
+  err.isProviderSkip = true;
+  return err;
+}
+
+function sortPlaces(places = []) {
+  places.sort((a, b) => {
+    const sa = scorePlace(a);
+    const sb = scorePlace(b);
+    if (sb !== sa) return sb - sa;
+    return (a.distanceKm ?? 999) - (b.distanceKm ?? 999);
+  });
+  return places;
+}
+
+function dedupePlaces(places = []) {
+  const seen = new Set();
+
+  return places.filter((p) => {
+    const key = [
+      (p.name || "").toLowerCase(),
+      p.type || "",
+      Math.round((p.lat || 0) * 1000),
+      Math.round((p.lon || 0) * 1000),
+    ].join("|");
+
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function buildNearbyItem(p) {
+  const type = p.type || "place";
+  const typeLabel = p.typeLabel || prettyType(type);
+  const cat = getCategoryInfo(type, p.name);
+
+  return {
+    id: p.id,
+    name: p.name || typeLabel,
+    type,
+    typeLabel,
+    categoryKey: cat.key,
+    categoryLabel: cat.label,
+    badge: cat.badge,
+    distanceBadge: distanceBadge(p.distanceKm),
+    lat: p.lat,
+    lon: p.lon,
+    address: p.address || "",
+    shortDescription: trimText(
+      p.shortDescription || p.address || `${typeLabel} nearby`,
+      100
+    ),
+    distanceKm: Number((p.distanceKm ?? 0).toFixed(2)),
+    hasImage: false,
+    placeDescription: "",
+    placeSummary: "",
+    placeImage: null,
+    wikipediaUrl: null,
+    openStreetMapUrl: `https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=15/${p.lat}/${p.lon}`,
+    googleMapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      `${p.lat},${p.lon}`
+    )}`,
+  };
+}
+
+function normalizeGeoapifyType(categories = [], name = "") {
+  const joined = Array.isArray(categories)
+    ? categories.join(" ").toLowerCase()
+    : "";
+
+  const lowerName = String(name || "").toLowerCase();
+
+  if (joined.includes("entertainment.museum") || lowerName.includes("museum")) return "museum";
+  if (joined.includes("entertainment.culture.gallery")) return "gallery";
+  if (joined.includes("entertainment.theme_park")) return "theme_park";
+  if (joined.includes("entertainment.zoo")) return "zoo";
+  if (joined.includes("tourism.attraction.viewpoint")) return "viewpoint";
+  if (joined.includes("tourism.attraction")) return "attraction";
+  if (joined.includes("tourism.sights.memorial")) return "memorial";
+  if (joined.includes("tourism.sights.place_of_worship.temple")) return "temple";
+  if (joined.includes("tourism.sights.place_of_worship.mosque")) return "mosque";
+  if (joined.includes("tourism.sights.place_of_worship.church")) return "church";
+  if (joined.includes("tourism.sights.place_of_worship")) return "place_of_worship";
+  if (joined.includes("religion.place_of_worship.hinduism")) return "temple";
+  if (joined.includes("religion.place_of_worship.islam")) return "mosque";
+  if (joined.includes("religion.place_of_worship.christianity")) return "church";
+  if (joined.includes("religion.place_of_worship")) return "place_of_worship";
+  if (joined.includes("beach")) return "beach";
+  if (joined.includes("national_park")) return "national_park";
+  if (joined.includes("natural.mountain.peak")) return "peak";
+  if (joined.includes("natural.water")) return "waterfall";
+  if (joined.includes("natural")) return "nature_reserve";
+
+  if (lowerName.includes("temple")) return "temple";
+  if (lowerName.includes("mosque")) return "mosque";
+  if (lowerName.includes("church")) return "church";
+  if (lowerName.includes("park")) return "park";
+  if (lowerName.includes("beach")) return "beach";
+  if (lowerName.includes("zoo")) return "zoo";
+  if (lowerName.includes("museum")) return "museum";
+
+  return "attraction";
+}
+
+function mapGeoapifyFeatures(features, lat, lon) {
+  const mapped = (Array.isArray(features) ? features : [])
+    .map((feature) => {
+      const props = feature?.properties || {};
+      const coords = feature?.geometry?.coordinates || [];
+      const lonVal = Number(coords[0]);
+      const latVal = Number(coords[1]);
+
+      if (!Number.isFinite(latVal) || !Number.isFinite(lonVal)) return null;
+
+      const name =
+        String(props.name || props.address_line1 || props.formatted || "").trim();
+
+      const type = normalizeGeoapifyType(props.categories || [], name);
+      const address = String(
+        props.formatted ||
+          [props.address_line1, props.address_line2].filter(Boolean).join(", ")
+      ).trim();
+
+      const distanceKm = Number.isFinite(props.distance)
+        ? Number(props.distance) / 1000
+        : haversineKm(lat, lon, latVal, lonVal);
+
+      return {
+        id: `geoapify-${props.place_id || `${latVal},${lonVal}`}`,
+        name,
+        type,
+        typeLabel: prettyType(type),
+        lat: latVal,
+        lon: lonVal,
+        address,
+        distanceKm,
+        shortDescription: address || prettyType(type),
+      };
+    })
+    .filter(Boolean);
+
+  return dedupePlaces(mapped);
+}
+
+function collectTomTomKeywords(result) {
+  const tokens = [];
+
+  if (result?.poi?.name) tokens.push(result.poi.name);
+  if (Array.isArray(result?.poi?.categories)) {
+    tokens.push(...result.poi.categories);
+  }
+
+  if (Array.isArray(result?.poi?.classifications)) {
+    for (const classification of result.poi.classifications) {
+      if (Array.isArray(classification?.names)) {
+        for (const item of classification.names) {
+          if (item?.name) tokens.push(item.name);
+        }
+      }
+      if (classification?.code) tokens.push(classification.code);
+    }
+  }
+
+  return tokens.join(" ").toLowerCase();
+}
+
+function isTomTomVisitPlace(result) {
+  const text = collectTomTomKeywords(result);
+  if (!text) return false;
+
+  return TOMTOM_VISIT_KEYWORDS.some((keyword) => text.includes(keyword));
+}
+
+function normalizeTomTomType(result) {
+  const text = collectTomTomKeywords(result);
+  const lowerName = String(result?.poi?.name || "").toLowerCase();
+
+  if (text.includes("museum") || lowerName.includes("museum")) return "museum";
+  if (text.includes("zoo")) return "zoo";
+  if (text.includes("theme park") || text.includes("amusement park")) return "theme_park";
+  if (text.includes("beach")) return "beach";
+  if (text.includes("botanical garden") || text.includes("garden")) return "garden";
+  if (text.includes("nature reserve") || text.includes("wildlife park")) return "nature_reserve";
+  if (text.includes("park") || text.includes("recreation area")) return "park";
+  if (text.includes("memorial") || text.includes("monument")) return "memorial";
+  if (text.includes("castle")) return "castle";
+  if (text.includes("fort")) return "fort";
+  if (text.includes("palace")) return "palace";
+  if (text.includes("tower")) return "tower";
+  if (text.includes("viewpoint")) return "viewpoint";
+  if (text.includes("place of worship")) return "place_of_worship";
+  if (text.includes("temple") || lowerName.includes("temple")) return "temple";
+  if (text.includes("mosque") || lowerName.includes("mosque")) return "mosque";
+  if (text.includes("church") || lowerName.includes("church")) return "church";
+  if (text.includes("cultural center") || text.includes("theater") || text.includes("theatre")) {
+    return "theatre";
+  }
+
+  return "attraction";
+}
+
+function mapTomTomResults(results, lat, lon) {
+  const mapped = (Array.isArray(results) ? results : [])
+    .filter((item) => item?.type === "POI")
+    .filter(isTomTomVisitPlace)
+    .map((item) => {
+      const poi = item.poi || {};
+      const position = item.position || {};
+      const latVal = Number(position.lat);
+      const lonVal = Number(position.lon);
+
+      if (!Number.isFinite(latVal) || !Number.isFinite(lonVal)) return null;
+
+      const name = String(poi.name || "").trim();
+      const type = normalizeTomTomType(item);
+      const address = String(item?.address?.freeformAddress || "").trim();
+
+      const distanceKm = Number.isFinite(item.dist)
+        ? Number(item.dist) / 1000
+        : haversineKm(lat, lon, latVal, lonVal);
+
+      return {
+        id: `tomtom-${item.id || `${latVal},${lonVal}`}`,
+        name,
+        type,
+        typeLabel: prettyType(type),
+        lat: latVal,
+        lon: lonVal,
+        address,
+        distanceKm,
+        shortDescription: address || prettyType(type),
+      };
+    })
+    .filter(Boolean);
+
+  return dedupePlaces(mapped);
+}
+
 /* =========================================================
    QUALITY FILTERS + SCORE
 ========================================================= */
@@ -313,11 +642,27 @@ function scorePlace(p) {
   const hasName = !!(p.name && p.name.trim());
   const d = p.distanceKm ?? 999;
 
-  if (["theme_park", "museum", "attraction", "zoo", "viewpoint", "beach", "waterfall"].includes(t)) {
+  if (
+    [
+      "theme_park",
+      "museum",
+      "attraction",
+      "zoo",
+      "viewpoint",
+      "beach",
+      "waterfall",
+      "castle",
+      "fort",
+      "palace",
+      "national_park",
+    ].includes(t)
+  ) {
     score += 50;
   }
 
-  if (["historic", "park", "garden"].includes(t)) {
+  if (
+    ["historic", "park", "garden", "memorial", "nature_reserve"].includes(t)
+  ) {
     score += 18;
   }
 
@@ -386,7 +731,105 @@ async function reverseGeocode(lat, lon) {
 }
 
 /* =========================================================
-   OVERPASS
+   PREMIUM PROVIDERS
+========================================================= */
+async function searchGeoapifyPlaces(lat, lon, radiusKm, limit) {
+  const apiKey = process.env.GEOAPIFY_API_KEY;
+  if (!apiKey) throw makeProviderSkipError("GEOAPIFY_API_KEY missing");
+
+  const radiusMeters = Math.round(radiusKm * 1000);
+  const requestLimit = clamp(Math.max(limit * 3, 20), 1, 60);
+
+  const { data } = await axios.get("https://api.geoapify.com/v2/places", {
+    timeout: GEOAPIFY_TIMEOUT_MS,
+    params: {
+      categories: GEOAPIFY_VISIT_CATEGORIES,
+      filter: `circle:${lon},${lat},${radiusMeters}`,
+      bias: `proximity:${lon},${lat}`,
+      limit: requestLimit,
+      lang: "en",
+      apiKey,
+    },
+    headers: { "User-Agent": UA },
+  });
+
+  const raw = Array.isArray(data?.features) ? data.features : [];
+  const mapped = sortPlaces(
+    mapGeoapifyFeatures(raw, lat, lon).filter(isUsefulPlace)
+  ).slice(0, MAX_PROCESS_RESULTS);
+
+  return {
+    provider: "geoapify",
+    places: mapped.map(buildNearbyItem),
+    debug: {
+      provider: "geoapify",
+      providerRawFound: raw.length,
+      providerMappedFound: mapped.length,
+      effectiveRadiusKm: radiusKm,
+      fallbackUsed: false,
+      fallbackRawFound: 0,
+      fallbackMappedFound: 0,
+      fallbackRadiusKm: 0,
+      strictRawFound: 0,
+      mappedStrictFound: 0,
+      afterQualityFilter: mapped.length,
+      providerChain: [],
+      premiumFallbackUsed: false,
+    },
+  };
+}
+
+async function searchTomTomPlaces(lat, lon, radiusKm, limit) {
+  const apiKey = process.env.TOMTOM_API_KEY;
+  if (!apiKey) throw makeProviderSkipError("TOMTOM_API_KEY missing");
+
+  const radiusMeters = Math.round(radiusKm * 1000);
+  const requestLimit = clamp(Math.max(limit * 4, 25), 1, 100);
+
+  const { data } = await axios.get(
+    "https://api.tomtom.com/search/2/nearbySearch/.json",
+    {
+      timeout: TOMTOM_TIMEOUT_MS,
+      params: {
+        key: apiKey,
+        lat,
+        lon,
+        radius: radiusMeters,
+        limit: requestLimit,
+        relatedPois: "off",
+      },
+      headers: { "User-Agent": UA },
+    }
+  );
+
+  const raw = Array.isArray(data?.results) ? data.results : [];
+  const mapped = sortPlaces(
+    mapTomTomResults(raw, lat, lon).filter(isUsefulPlace)
+  ).slice(0, MAX_PROCESS_RESULTS);
+
+  return {
+    provider: "tomtom",
+    places: mapped.map(buildNearbyItem),
+    debug: {
+      provider: "tomtom",
+      providerRawFound: raw.length,
+      providerMappedFound: mapped.length,
+      effectiveRadiusKm: radiusKm,
+      fallbackUsed: false,
+      fallbackRawFound: 0,
+      fallbackMappedFound: 0,
+      fallbackRadiusKm: 0,
+      strictRawFound: 0,
+      mappedStrictFound: 0,
+      afterQualityFilter: mapped.length,
+      providerChain: [],
+      premiumFallbackUsed: false,
+    },
+  };
+}
+
+/* =========================================================
+   OVERPASS / OSM FALLBACK
 ========================================================= */
 async function runOverpassQuery(query) {
   const endpoints = [
@@ -528,14 +971,7 @@ function mapOverpassElements(elements, lat, lon) {
     })
     .filter(Boolean);
 
-  const seen = new Set();
-
-  return mapped.filter((p) => {
-    const key = `${(p.name || "").toLowerCase()}|${p.type}|${Math.round(p.lat * 1000)}|${Math.round(p.lon * 1000)}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+  return dedupePlaces(mapped);
 }
 
 function buildStrictOverpassQuery(lat, lon, radiusMeters) {
@@ -636,44 +1072,14 @@ async function executeNearbySearch(lat, lon, radiusKm) {
     throw fallbackError;
   }
 
-  filtered.sort((a, b) => {
-    const sa = scorePlace(a);
-    const sb = scorePlace(b);
-    if (sb !== sa) return sb - sa;
-    return (a.distanceKm ?? 999) - (b.distanceKm ?? 999);
-  });
-
+  sortPlaces(filtered);
   filtered = filtered.slice(0, MAX_PROCESS_RESULTS);
 
-  const places = filtered.map((p) => {
-    const cat = getCategoryInfo(p.type, p.name);
-    return {
-      id: p.id,
-      name: p.name || p.typeLabel,
-      type: p.type,
-      typeLabel: p.typeLabel,
-      categoryKey: cat.key,
-      categoryLabel: cat.label,
-      badge: cat.badge,
-      distanceBadge: distanceBadge(p.distanceKm),
-      lat: p.lat,
-      lon: p.lon,
-      address: p.address || "",
-      shortDescription: trimText(p.address || `${p.typeLabel} nearby`, 100),
-      distanceKm: Number((p.distanceKm ?? 0).toFixed(2)),
-      hasImage: false,
-      placeDescription: "",
-      placeSummary: "",
-      placeImage: null,
-      wikipediaUrl: null,
-      openStreetMapUrl: `https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=15/${p.lat}/${p.lon}`,
-      googleMapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${p.lat},${p.lon}`)}`,
-    };
-  });
-
   return {
-    places,
+    provider: "osm",
+    places: filtered.map(buildNearbyItem),
     debug: {
+      provider: "osm",
       strictRawFound: strictRaw.length,
       mappedStrictFound: strictMapped.length,
       afterQualityFilter: filtered.length,
@@ -682,11 +1088,15 @@ async function executeNearbySearch(lat, lon, radiusKm) {
       fallbackMappedFound: fallbackMappedCount,
       fallbackRadiusKm,
       effectiveRadiusKm: radiusKm,
+      providerRawFound: strictRaw.length + fallbackRawCount,
+      providerMappedFound: filtered.length,
+      providerChain: [],
+      premiumFallbackUsed: false,
     },
   };
 }
 
-async function searchNearbyPlaces(lat, lon, userRadiusKm) {
+async function searchNearbyPlacesOsm(lat, lon, userRadiusKm) {
   const cappedRadiusKm = Math.min(userRadiusKm, MAX_OVERPASS_RADIUS_KM);
   const radiusSteps = [cappedRadiusKm, 2]
     .filter((v, i, arr) => v >= MIN_RADIUS_KM && arr.indexOf(v) === i)
@@ -696,15 +1106,75 @@ async function searchNearbyPlaces(lat, lon, userRadiusKm) {
 
   for (const radiusKm of radiusSteps) {
     try {
-      console.log(`[Nearby search] trying radius=${radiusKm}km`);
+      console.log(`[Nearby OSM search] trying radius=${radiusKm}km`);
       return await executeNearbySearch(lat, lon, radiusKm);
     } catch (e) {
       lastErr = e;
-      console.warn(`[Nearby search retry] radius=${radiusKm}km failed: ${safeErrorMessage(e)}`);
+      console.warn(`[Nearby OSM retry] radius=${radiusKm}km failed: ${safeErrorMessage(e)}`);
     }
   }
 
   throw lastErr || new Error("Nearby place search failed");
+}
+
+/* =========================================================
+   PROVIDER ORCHESTRATION
+========================================================= */
+async function searchNearbyPlaces(lat, lon, userRadiusKm, limit) {
+  const attempts = [];
+  const premiumProviders = [
+    { name: "geoapify", fn: () => searchGeoapifyPlaces(lat, lon, userRadiusKm, limit) },
+    { name: "tomtom", fn: () => searchTomTomPlaces(lat, lon, userRadiusKm, limit) },
+  ];
+
+  for (const provider of premiumProviders) {
+    try {
+      const result = await provider.fn();
+
+      attempts.push({
+        provider: provider.name,
+        status: result.places.length > 0 ? "ok" : "empty",
+        count: result.places.length,
+      });
+
+      if (result.places.length > 0) {
+        return {
+          ...result,
+          debug: {
+            ...result.debug,
+            providerChain: attempts,
+            premiumFallbackUsed: attempts.length > 1,
+          },
+        };
+      }
+    } catch (err) {
+      attempts.push({
+        provider: provider.name,
+        status: err.isProviderSkip
+          ? "skipped"
+          : isRateLimitLikeError(err, provider.name)
+          ? "rate_limited"
+          : "failed",
+        reason: safeErrorMessage(err),
+      });
+    }
+  }
+
+  const fallback = await searchNearbyPlacesOsm(lat, lon, userRadiusKm);
+  attempts.push({
+    provider: "osm",
+    status: fallback.places.length > 0 ? "ok" : "empty",
+    count: fallback.places.length,
+  });
+
+  return {
+    ...fallback,
+    debug: {
+      ...fallback.debug,
+      providerChain: attempts,
+      premiumFallbackUsed: true,
+    },
+  };
 }
 
 /* =========================================================
@@ -836,7 +1306,8 @@ router.get("/nearby-free", async (req, res) => {
       if (isPrivateOrLocalIp(ip)) {
         return res.status(400).json({
           ok: false,
-          error: "Local/private IP detected. Pass lat/lng for local testing, e.g. ?lat=3.1390&lng=101.6869",
+          error:
+            "Local/private IP detected. Pass lat/lng for local testing, e.g. ?lat=3.1390&lng=101.6869",
         });
       }
 
@@ -880,8 +1351,10 @@ router.get("/nearby-free", async (req, res) => {
     const country = reverse?.address?.country || loc.country || "";
 
     let searchResult = {
+      provider: "none",
       places: [],
       debug: {
+        provider: "none",
         strictRawFound: 0,
         mappedStrictFound: 0,
         afterQualityFilter: 0,
@@ -890,25 +1363,28 @@ router.get("/nearby-free", async (req, res) => {
         fallbackMappedFound: 0,
         fallbackRadiusKm: 0,
         effectiveRadiusKm: Math.min(radiusKm, MAX_OVERPASS_RADIUS_KM),
+        providerRawFound: 0,
+        providerMappedFound: 0,
+        providerChain: [],
+        premiumFallbackUsed: false,
       },
     };
 
-    let overpassError = "";
-    const tOverpassStart = Date.now();
+    let searchError = "";
+    const tSearchStart = Date.now();
 
     try {
-      searchResult = await searchNearbyPlaces(loc.lat, loc.lon, radiusKm);
+      searchResult = await searchNearbyPlaces(loc.lat, loc.lon, radiusKm, limit);
     } catch (e) {
-      overpassError = safeErrorMessage(e);
-      console.warn("[nearby places warning]", overpassError);
+      searchError = safeErrorMessage(e);
+      console.warn("[nearby places warning]", searchError);
     }
 
-    const overpassMs = Date.now() - tOverpassStart;
+    const searchMs = Date.now() - tSearchStart;
 
     let nearby = searchResult.places;
     let wikiMs = 0;
 
-    // enrich only very few top places when explicitly requested
     if (enrich && nearby.length > 0) {
       const tWikiStart = Date.now();
       try {
@@ -940,31 +1416,47 @@ router.get("/nearby-free", async (req, res) => {
         source: loc.source,
       },
       debug: {
+        provider: searchResult.provider || "none",
+        providerChain: searchResult.debug.providerChain || [],
+        premiumFallbackUsed: !!searchResult.debug.premiumFallbackUsed,
+
         totalFound: nearby.length,
-        overpassError,
+        providerError: searchError,
+        overpassError: searchResult.provider === "osm" ? searchError : "",
+
         fallbackUsed: !!searchResult.debug.fallbackUsed,
         fallbackFound: searchResult.debug.fallbackMappedFound || 0,
         fallbackRadiusKm: searchResult.debug.fallbackRadiusKm || 0,
+
         strictRawFound: searchResult.debug.strictRawFound || 0,
         mappedStrictFound: searchResult.debug.mappedStrictFound || 0,
         afterQualityFilter: searchResult.debug.afterQualityFilter || 0,
         effectiveRadiusKm: searchResult.debug.effectiveRadiusKm,
+
+        providerRawFound: searchResult.debug.providerRawFound || 0,
+        providerMappedFound: searchResult.debug.providerMappedFound || 0,
+
         cacheHit: false,
         cacheAgeMs: 0,
         timingsMs: {
           reverseGeocode: reverseMs,
-          overpass: overpassMs,
+          providerSearch: searchMs,
+          overpass: searchMs, // kept for backward compatibility
           wikipedia: wikiMs,
           total: totalMs,
         },
         note:
-          overpassError && nearby.length === 0
-            ? "Nearby search failed upstream, but location lookup succeeded."
+          searchError && nearby.length === 0
+            ? "All provider searches failed, but location lookup succeeded."
             : nearby.length === 0
-            ? "No OSM matches found after filtering. Try another location or smaller radius."
+            ? "No nearby places found after filtering. Try another location or smaller radius."
+            : searchResult.provider === "geoapify"
+            ? "Geoapify primary results."
+            : searchResult.provider === "tomtom"
+            ? "TomTom fallback results."
             : enrich
-            ? "Fast nearby results with light enrichment."
-            : "Fast nearby results without enrichment.",
+            ? "OSM fallback results with light enrichment."
+            : "OSM fallback results.",
       },
       nearby: nearby.slice(0, limit),
     };
