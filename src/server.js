@@ -14,11 +14,28 @@ const currencyRoutes = require("./routes/currency.route");
 const metalsRoutes = require("./routes/metals.routes");
 const { startMetalsSyncScheduler } = require("./services/metals.service");
 const nearbyRoutes = require("./routes/nearby.route");
+
+// restored routes
+const blogRoutes = require("./routes/blog.routes");
+const seoRoutes = require("./routes/seo.routes");
+
 const app = express();
 
 const allowedOrigins = (
   process.env.CORS_ORIGIN ||
-  "http://localhost:4200,http://localhost:4201,http://localhost:8100,http://127.0.0.1:4200,http://127.0.0.1:4201,http://127.0.0.1:8100,https://www.smartutilitiesai.com,https://smartutilitiesai.com,https://api.smartutilitiesai.com"
+  [
+    "http://localhost:4200",
+    "http://localhost:4201",
+    "http://localhost:8100",
+    "http://127.0.0.1:4200",
+    "http://127.0.0.1:4201",
+    "http://127.0.0.1:8100",
+    "https://www.smartutilitiesai.com",
+    "https://smartutilitiesai.com",
+    "https://api.smartutilitiesai.com",
+    "https://indiapublicholidays.com",
+    "https://www.indiapublicholidays.com",
+  ].join(",")
 )
   .split(",")
   .map((item) => item.trim())
@@ -66,7 +83,12 @@ app.use("/api/auth", authRoutes);
 app.use("/api/holidays", holidaysRoutes);
 app.use("/api/currency", currencyRoutes);
 app.use("/api/market/metals", metalsRoutes);
-app.use("/api/location", nearbyRoutes);
+app.use("/api/travel", nearbyRoutes);
+
+// restored mounts
+app.use("/api/blog", blogRoutes);
+app.use("/api/seo", seoRoutes);
+
 app.get("/api/health", function (_req, res) {
   res.json({
     ok: true,
@@ -90,7 +112,14 @@ app.use(function (err, _req, res, _next) {
 
 const port = Number(process.env.PORT || 4000);
 
-startMetalsSyncScheduler();
+// do not let metals sync crash the whole API
+(async () => {
+  try {
+    await startMetalsSyncScheduler();
+  } catch (error) {
+    console.error("Metals scheduler failed to start:", error);
+  }
+})();
 
 app.listen(port, function () {
   console.log(`API running on http://localhost:${port}`);
