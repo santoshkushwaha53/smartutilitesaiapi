@@ -13,7 +13,7 @@ const holidaysRoutes = require("./routes/holidays.route");
 const currencyRoutes = require("./routes/currency.route");
 const metalsRoutes = require("./routes/metals.routes");
 const { startMetalsSyncScheduler } = require("./services/metals.service");
-
+const nearbyRoutes = require("./routes/nearby.route");
 const app = express();
 
 const allowedOrigins = (
@@ -24,11 +24,25 @@ const allowedOrigins = (
   .map((item) => item.trim())
   .filter(Boolean);
 
+function isLocalAllowedOrigin(origin) {
+  if (!origin) return false;
+
+  try {
+    const url = new URL(origin);
+    return (
+      url.protocol === "http:" &&
+      ["localhost", "127.0.0.1", "::1"].includes(url.hostname)
+    );
+  } catch {
+    return false;
+  }
+}
+
 const corsOptions = {
   origin(origin, callback) {
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.includes(origin)) {
+    if (allowedOrigins.includes(origin) || isLocalAllowedOrigin(origin)) {
       return callback(null, true);
     }
 
@@ -52,7 +66,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/holidays", holidaysRoutes);
 app.use("/api/currency", currencyRoutes);
 app.use("/api/market/metals", metalsRoutes);
-
+app.use("/api/location", nearbyRoutes);
 app.get("/api/health", function (_req, res) {
   res.json({
     ok: true,

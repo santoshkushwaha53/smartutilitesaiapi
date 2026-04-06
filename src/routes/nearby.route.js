@@ -1,5 +1,5 @@
-import express from "express";
-import axios from "axios";
+const express = require("express");
+const axios = require("axios");
 
 const router = express.Router();
 
@@ -21,8 +21,8 @@ const FALLBACK_MAX_RADIUS_KM = 1.5;
 const MAX_PROCESS_RESULTS = 30;
 
 // Timeouts
-const OVERPASS_TIMEOUT_MS = 7000;
-const NOMINATIM_TIMEOUT_MS = 6000;
+const OVERPASS_TIMEOUT_MS = 15000;
+const NOMINATIM_TIMEOUT_MS = 8000;
 const IPAPI_TIMEOUT_MS = 5000;
 const WIKI_TIMEOUT_MS = 3500;
 
@@ -143,6 +143,9 @@ function getCachedPayload(cacheKey) {
     nearbyCache.delete(cacheKey);
     return null;
   }
+
+  if (!entry.data || !Array.isArray(entry.data.nearby)) return null;
+  if (entry.data.nearby.length === 0) return null;
 
   return {
     ...entry.data,
@@ -388,8 +391,10 @@ async function reverseGeocode(lat, lon) {
 async function runOverpassQuery(query) {
   const endpoints = [
     "https://overpass-api.de/api/interpreter",
+    "https://overpass.openstreetmap.fr/api/interpreter",
     "https://lz4.overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
+    "https://z.overpass-api.de/api/interpreter",
   ];
 
   let lastErr = null;
@@ -418,6 +423,68 @@ async function runOverpassQuery(query) {
   }
 
   throw lastErr || new Error("All Overpass endpoints failed");
+}
+
+async function searchNominatimPlaces(lat, lon, radiusMeters) {
+  const degreeRadius = radiusMeters / 111000;
+  const viewbox = [
+    lon - degreeRadius,
+    lat - degreeRadius,
+    lon + degreeRadius,
+    lat + degreeRadius,
+  ]
+    .map((value) => Number(value).toFixed(6))
+    .join(",");
+
+  const { data } = await axios.get("https://nominatim.openstreetmap.org/search", {
+    timeout: NOMINATIM_TIMEOUT_MS,
+    params: {
+      format: "jsonv2",
+      q: "attraction",
+      viewbox,
+      bounded: 1,
+      limit: 30,
+      addressdetails: 1,
+      extratags: 1,
+    },
+    headers: { "User-Agent": UA },
+  });
+
+  return Array.isArray(data) ? data : [];
+}
+
+function mapNominatimElements(elements, lat, lon) {
+  return elements
+    .map((item) => {
+      const elLat = Number(item.lat);
+      const elLon = Number(item.lon);
+      if (!Number.isFinite(elLat) || !Number.isFinite(elLon)) return null;
+
+      const rawName = String(item.display_name || item.name || "");
+      const name = rawName.split(",")[0].trim();
+      const type = String(item.type || item.category || "place").toLowerCase();
+      const address = item.display_name || "";
+
+      return {
+        id: `nominatim-${item.place_id}`,
+        name: name || type,
+        type,
+        typeLabel: prettyType(type),
+        lat: elLat,
+        lon: elLon,
+        address,
+        distanceKm: haversineKm(lat, lon, elLat, elLon),
+        osmType: "nominatim",
+        osmId: item.place_id,
+        placeDescription: "",
+        placeSummary: "",
+        placeImage: null,
+        wikipediaUrl: item.extratags?.wikidata
+          ? `https://www.wikidata.org/wiki/${item.extratags.wikidata}`
+          : null,
+      };
+    })
+    .filter(Boolean);
 }
 
 function mapOverpassElements(elements, lat, lon) {
@@ -473,7 +540,7 @@ function mapOverpassElements(elements, lat, lon) {
 
 function buildStrictOverpassQuery(lat, lon, radiusMeters) {
   return `
-[out:json][timeout:6];
+[out:json][timeout:15];
 (
   node["tourism"~"attraction|museum|viewpoint|zoo|theme_park"](around:${radiusMeters},${lat},${lon});
   way["tourism"~"attraction|museum|viewpoint|zoo|theme_park"](around:${radiusMeters},${lat},${lon});
@@ -487,7 +554,7 @@ out center tags;
 
 function buildFallbackOverpassQuery(lat, lon, radiusMeters) {
   return `
-[out:json][timeout:5];
+[out:json][timeout:12];
 (
   node["tourism"~"attraction|museum|theme_park|viewpoint"](around:${radiusMeters},${lat},${lon});
   way["tourism"~"attraction|museum|theme_park|viewpoint"](around:${radiusMeters},${lat},${lon});
@@ -505,7 +572,15 @@ out center tags;
 async function executeNearbySearch(lat, lon, radiusKm) {
   const radiusMeters = Math.round(radiusKm * 1000);
 
-  const strictRaw = await runOverpassQuery(buildStrictOverpassQuery(lat, lon, radiusMeters));
+  let strictRaw = [];
+  let strictError = null;
+  try {
+    strictRaw = await runOverpassQuery(buildStrictOverpassQuery(lat, lon, radiusMeters));
+  } catch (e) {
+    strictError = e;
+    console.warn("[Overpass strict failed]", safeErrorMessage(e));
+  }
+
   const strictMapped = mapOverpassElements(strictRaw, lat, lon);
   let filtered = strictMapped.filter(isUsefulPlace);
 
@@ -513,6 +588,7 @@ async function executeNearbySearch(lat, lon, radiusKm) {
   let fallbackRawCount = 0;
   let fallbackMappedCount = 0;
   let fallbackRadiusKm = 0;
+  let fallbackError = null;
 
   if (filtered.length < 4) {
     fallbackUsed = true;
@@ -534,9 +610,30 @@ async function executeNearbySearch(lat, lon, radiusKm) {
       }
       filtered = [...byId.values()];
     } catch (e) {
+      fallbackError = e;
       console.warn("[Overpass fallback failed]", safeErrorMessage(e));
-      if (filtered.length === 0) throw e;
     }
+  }
+
+  if (filtered.length === 0) {
+    try {
+      const nominatimRaw = await searchNominatimPlaces(lat, lon, radiusMeters);
+      const nominatimMapped = mapNominatimElements(nominatimRaw, lat, lon);
+      const nominatimFiltered = nominatimMapped.filter(isUsefulPlace);
+
+      if (nominatimFiltered.length > 0) {
+        fallbackUsed = true;
+        fallbackRawCount += nominatimMapped.length;
+        fallbackMappedCount += nominatimFiltered.length;
+        filtered = nominatimFiltered;
+      }
+    } catch (e) {
+      console.warn("[Nominatim fallback failed]", safeErrorMessage(e));
+    }
+  }
+
+  if (filtered.length === 0 && strictError && fallbackError) {
+    throw fallbackError;
   }
 
   filtered.sort((a, b) => {
@@ -872,7 +969,9 @@ router.get("/nearby-free", async (req, res) => {
       nearby: nearby.slice(0, limit),
     };
 
-    setCachedPayload(cacheKey, payload);
+    if (nearby.length > 0) {
+      setCachedPayload(cacheKey, payload);
+    }
 
     return res.json(payload);
   } catch (err) {
@@ -889,4 +988,4 @@ router.get("/nearby-free", async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;
