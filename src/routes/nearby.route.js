@@ -1,5 +1,13 @@
 const express = require("express");
 const axios = require("axios");
+const crypto = require("crypto");
+
+let Pool = null;
+try {
+  ({ Pool } = require("pg"));
+} catch (err) {
+  console.warn("[nearby-free] pg package not installed, DB logging disabled");
+}
 
 const router = express.Router();
 
@@ -7,6 +15,7 @@ const router = express.Router();
    CONFIG
 ========================================================= */
 const UA = "SohumAstrAI-HolidayPlanner/1.0 (+https://sohumastroai.com)";
+const ROUTE_NAME = "GET /api/travel/nearby-free";
 
 const DEFAULT_LIMIT = 12;
 const MAX_LIMIT = 40;
@@ -86,6 +95,141 @@ const TOMTOM_VISIT_KEYWORDS = [
   "waterfall",
   "amusement park",
 ];
+
+const DEFAULT_PROVIDER_ORDER = ["geoapify", "tomtom"];
+const ALL_PREMIUM_PROVIDERS = ["geoapify", "tomtom"];
+
+/* =========================================================
+   OPTIONAL DB LOGGING
+========================================================= */
+const ENABLE_NEARBY_API_LOGGING =
+  String(process.env.ENABLE_NEARBY_API_LOGGING || "1") === "1";
+
+const apiLogPool =
+  Pool && process.env.DATABASE_URL
+    ? new Pool({
+        connectionString: process.env.DATABASE_URL,
+        ssl:
+          String(process.env.DB_SSL || "false") === "true"
+            ? { rejectUnauthorized: false }
+            : false,
+      })
+    : null;
+
+let apiLogTableReady = false;
+let apiLogTableInitTried = false;
+
+async function ensureApiLogTable() {
+  if (!apiLogPool || !ENABLE_NEARBY_API_LOGGING) return;
+  if (apiLogTableReady) return;
+  if (apiLogTableInitTried && !apiLogTableReady) return;
+
+  apiLogTableInitTried = true;
+
+  try {
+    await apiLogPool.query(`
+      CREATE TABLE IF NOT EXISTS public.api_provider_call_log (
+        id BIGSERIAL PRIMARY KEY,
+        request_id UUID NOT NULL,
+        route_name VARCHAR(120) NOT NULL,
+        api_name VARCHAR(120) NOT NULL,
+        provider_name VARCHAR(200) NOT NULL,
+        country VARCHAR(120),
+        latitude NUMERIC(10,7),
+        longitude NUMERIC(10,7),
+        response_time_ms INTEGER NOT NULL,
+        http_status INTEGER,
+        call_status VARCHAR(30) NOT NULL,
+        result_count INTEGER,
+        called_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        error_message TEXT,
+        extra JSONB NOT NULL DEFAULT '{}'::jsonb
+      );
+    `);
+
+    await apiLogPool.query(`
+      CREATE INDEX IF NOT EXISTS idx_api_provider_call_log_called_at
+      ON public.api_provider_call_log (called_at DESC);
+    `);
+
+    await apiLogPool.query(`
+      CREATE INDEX IF NOT EXISTS idx_api_provider_call_log_api_name
+      ON public.api_provider_call_log (api_name);
+    `);
+
+    await apiLogPool.query(`
+      CREATE INDEX IF NOT EXISTS idx_api_provider_call_log_request_id
+      ON public.api_provider_call_log (request_id);
+    `);
+
+    apiLogTableReady = true;
+  } catch (err) {
+    console.error("[nearby-free] failed to ensure api_provider_call_log table:", err.message);
+  }
+}
+
+async function logApiCall({
+  requestId,
+  routeName,
+  apiName,
+  providerName,
+  country = "",
+  latitude = null,
+  longitude = null,
+  responseTimeMs = 0,
+  httpStatus = null,
+  callStatus = "success",
+  resultCount = null,
+  errorMessage = "",
+  extra = {},
+}) {
+  if (!apiLogPool || !ENABLE_NEARBY_API_LOGGING) return;
+
+  await ensureApiLogTable();
+  if (!apiLogTableReady) return;
+
+  try {
+    await apiLogPool.query(
+      `
+      INSERT INTO public.api_provider_call_log (
+        request_id,
+        route_name,
+        api_name,
+        provider_name,
+        country,
+        latitude,
+        longitude,
+        response_time_ms,
+        http_status,
+        call_status,
+        result_count,
+        error_message,
+        extra
+      )
+      VALUES (
+        $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13
+      )
+      `,
+      [
+        requestId,
+        routeName,
+        apiName,
+        providerName,
+        country || null,
+        latitude,
+        longitude,
+        responseTimeMs,
+        httpStatus,
+        callStatus,
+        resultCount,
+        errorMessage || null,
+        JSON.stringify(extra || {}),
+      ]
+    );
+  } catch (err) {
+    console.error("[nearby-free] api log insert failed:", err.message);
+  }
+}
 
 /* =========================================================
    HELPERS
@@ -491,8 +635,9 @@ function mapGeoapifyFeatures(features, lat, lon) {
 
       if (!Number.isFinite(latVal) || !Number.isFinite(lonVal)) return null;
 
-      const name =
-        String(props.name || props.address_line1 || props.formatted || "").trim();
+      const name = String(
+        props.name || props.address_line1 || props.formatted || ""
+      ).trim();
 
       const type = normalizeGeoapifyType(props.categories || [], name);
       const address = String(
@@ -615,6 +760,108 @@ function mapTomTomResults(results, lat, lon) {
   return dedupePlaces(mapped);
 }
 
+function makeTrace(routeName, lat = null, lon = null, country = "") {
+  return {
+    requestId: crypto.randomUUID(),
+    routeName,
+    lat,
+    lon,
+    country,
+  };
+}
+
+async function saveApiLog(trace, details) {
+  await logApiCall({
+    requestId: trace.requestId,
+    routeName: trace.routeName,
+    apiName: details.apiName,
+    providerName: details.providerName || details.apiName,
+    country: details.country ?? trace.country ?? "",
+    latitude: details.latitude ?? trace.lat ?? null,
+    longitude: details.longitude ?? trace.lon ?? null,
+    responseTimeMs: details.responseTimeMs,
+    httpStatus: details.httpStatus ?? null,
+    callStatus: details.callStatus || "success",
+    resultCount: details.resultCount ?? null,
+    errorMessage: details.errorMessage || "",
+    extra: details.extra || {},
+  });
+}
+
+async function trackedAxios(trace, axiosConfig, logMeta = {}) {
+  const startedAt = Date.now();
+
+  try {
+    const response = await axios(axiosConfig);
+
+    await saveApiLog(trace, {
+      apiName: logMeta.apiName,
+      providerName: logMeta.providerName || logMeta.apiName,
+      responseTimeMs: Date.now() - startedAt,
+      httpStatus: response.status,
+      callStatus: logMeta.callStatus || "success",
+      resultCount:
+        typeof logMeta.getResultCount === "function"
+          ? logMeta.getResultCount(response.data)
+          : null,
+      extra: {
+        method: String(axiosConfig.method || "get").toUpperCase(),
+        url: axiosConfig.url,
+        ...logMeta.extra,
+      },
+    });
+
+    return response;
+  } catch (err) {
+    await saveApiLog(trace, {
+      apiName: logMeta.apiName,
+      providerName: logMeta.providerName || logMeta.apiName,
+      responseTimeMs: Date.now() - startedAt,
+      httpStatus: err?.response?.status || null,
+      callStatus: logMeta.errorStatus || "failed",
+      resultCount: null,
+      errorMessage: safeErrorMessage(err),
+      extra: {
+        method: String(axiosConfig.method || "get").toUpperCase(),
+        url: axiosConfig.url,
+        ...logMeta.extra,
+      },
+    });
+
+    throw err;
+  }
+}
+
+function getConfiguredPremiumProviderOrder() {
+  const raw = String(
+    process.env.NEARBY_PROVIDER_ORDER ||
+      process.env.NEAREST_PLACE_PROVIDER_ORDER ||
+      DEFAULT_PROVIDER_ORDER.join(",")
+  )
+    .split(",")
+    .map((v) => v.trim().toLowerCase())
+    .filter(Boolean);
+
+  const uniqueRequested = [];
+  for (const item of raw) {
+    if (ALL_PREMIUM_PROVIDERS.includes(item) && !uniqueRequested.includes(item)) {
+      uniqueRequested.push(item);
+    }
+  }
+
+  if (uniqueRequested.length === 0) {
+    return [...DEFAULT_PROVIDER_ORDER];
+  }
+
+  for (const provider of DEFAULT_PROVIDER_ORDER) {
+    if (!uniqueRequested.includes(provider)) {
+      uniqueRequested.push(provider);
+    }
+  }
+
+  return uniqueRequested;
+}
+
 /* =========================================================
    QUALITY FILTERS + SCORE
 ========================================================= */
@@ -660,9 +907,7 @@ function scorePlace(p) {
     score += 50;
   }
 
-  if (
-    ["historic", "park", "garden", "memorial", "nature_reserve"].includes(t)
-  ) {
+  if (["historic", "park", "garden", "memorial", "nature_reserve"].includes(t)) {
     score += 18;
   }
 
@@ -681,17 +926,27 @@ function scorePlace(p) {
 /* =========================================================
    IP + REVERSE
 ========================================================= */
-async function getIpLocation(ip) {
+async function getIpLocation(ip, trace) {
   const cleanIp = String(ip || "").replace(/^::ffff:/, "").trim();
 
   const url = cleanIp
     ? `https://ipapi.co/${encodeURIComponent(cleanIp)}/json/`
     : `https://ipapi.co/json/`;
 
-  const { data } = await axios.get(url, {
-    timeout: IPAPI_TIMEOUT_MS,
-    headers: { "User-Agent": UA },
-  });
+  const { data } = await trackedAxios(
+    trace,
+    {
+      method: "get",
+      url,
+      timeout: IPAPI_TIMEOUT_MS,
+      headers: { "User-Agent": UA },
+    },
+    {
+      apiName: "ipapi_geolocation",
+      providerName: "ipapi.co",
+      getResultCount: () => 1,
+    }
+  );
 
   if (!data || data.error) {
     throw new Error(data?.reason || "IP geolocation failed");
@@ -714,18 +969,28 @@ async function getIpLocation(ip) {
   };
 }
 
-async function reverseGeocode(lat, lon) {
-  const { data } = await axios.get("https://nominatim.openstreetmap.org/reverse", {
-    timeout: NOMINATIM_TIMEOUT_MS,
-    params: {
-      format: "jsonv2",
-      lat,
-      lon,
-      zoom: 10,
-      addressdetails: 1,
+async function reverseGeocode(lat, lon, trace) {
+  const { data } = await trackedAxios(
+    trace,
+    {
+      method: "get",
+      url: "https://nominatim.openstreetmap.org/reverse",
+      timeout: NOMINATIM_TIMEOUT_MS,
+      params: {
+        format: "jsonv2",
+        lat,
+        lon,
+        zoom: 10,
+        addressdetails: 1,
+      },
+      headers: { "User-Agent": UA },
     },
-    headers: { "User-Agent": UA },
-  });
+    {
+      apiName: "reverse_geocode",
+      providerName: "nominatim",
+      getResultCount: () => 1,
+    }
+  );
 
   return data || null;
 }
@@ -733,25 +998,35 @@ async function reverseGeocode(lat, lon) {
 /* =========================================================
    PREMIUM PROVIDERS
 ========================================================= */
-async function searchGeoapifyPlaces(lat, lon, radiusKm, limit) {
+async function searchGeoapifyPlaces(lat, lon, radiusKm, limit, trace) {
   const apiKey = process.env.GEOAPIFY_API_KEY;
   if (!apiKey) throw makeProviderSkipError("GEOAPIFY_API_KEY missing");
 
   const radiusMeters = Math.round(radiusKm * 1000);
   const requestLimit = clamp(Math.max(limit * 3, 20), 1, 60);
 
-  const { data } = await axios.get("https://api.geoapify.com/v2/places", {
-    timeout: GEOAPIFY_TIMEOUT_MS,
-    params: {
-      categories: GEOAPIFY_VISIT_CATEGORIES,
-      filter: `circle:${lon},${lat},${radiusMeters}`,
-      bias: `proximity:${lon},${lat}`,
-      limit: requestLimit,
-      lang: "en",
-      apiKey,
+  const { data } = await trackedAxios(
+    trace,
+    {
+      method: "get",
+      url: "https://api.geoapify.com/v2/places",
+      timeout: GEOAPIFY_TIMEOUT_MS,
+      params: {
+        categories: GEOAPIFY_VISIT_CATEGORIES,
+        filter: `circle:${lon},${lat},${radiusMeters}`,
+        bias: `proximity:${lon},${lat}`,
+        limit: requestLimit,
+        lang: "en",
+        apiKey,
+      },
+      headers: { "User-Agent": UA },
     },
-    headers: { "User-Agent": UA },
-  });
+    {
+      apiName: "geoapify_places",
+      providerName: "geoapify",
+      getResultCount: (payload) => payload?.features?.length || 0,
+    }
+  );
 
   const raw = Array.isArray(data?.features) ? data.features : [];
   const mapped = sortPlaces(
@@ -779,16 +1054,18 @@ async function searchGeoapifyPlaces(lat, lon, radiusKm, limit) {
   };
 }
 
-async function searchTomTomPlaces(lat, lon, radiusKm, limit) {
+async function searchTomTomPlaces(lat, lon, radiusKm, limit, trace) {
   const apiKey = process.env.TOMTOM_API_KEY;
   if (!apiKey) throw makeProviderSkipError("TOMTOM_API_KEY missing");
 
   const radiusMeters = Math.round(radiusKm * 1000);
   const requestLimit = clamp(Math.max(limit * 4, 25), 1, 100);
 
-  const { data } = await axios.get(
-    "https://api.tomtom.com/search/2/nearbySearch/.json",
+  const { data } = await trackedAxios(
+    trace,
     {
+      method: "get",
+      url: "https://api.tomtom.com/search/2/nearbySearch/.json",
       timeout: TOMTOM_TIMEOUT_MS,
       params: {
         key: apiKey,
@@ -799,6 +1076,11 @@ async function searchTomTomPlaces(lat, lon, radiusKm, limit) {
         relatedPois: "off",
       },
       headers: { "User-Agent": UA },
+    },
+    {
+      apiName: "tomtom_nearby_search",
+      providerName: "tomtom",
+      getResultCount: (payload) => payload?.results?.length || 0,
     }
   );
 
@@ -831,7 +1113,7 @@ async function searchTomTomPlaces(lat, lon, radiusKm, limit) {
 /* =========================================================
    OVERPASS / OSM FALLBACK
 ========================================================= */
-async function runOverpassQuery(query) {
+async function runOverpassQuery(query, trace, queryType = "strict") {
   const endpoints = [
     "https://overpass-api.de/api/interpreter",
     "https://overpass.openstreetmap.fr/api/interpreter",
@@ -844,18 +1126,24 @@ async function runOverpassQuery(query) {
 
   for (const url of endpoints) {
     try {
-      const started = Date.now();
-
-      const { data } = await axios.post(url, query, {
-        timeout: OVERPASS_TIMEOUT_MS,
-        headers: {
-          "Content-Type": "text/plain",
-          "User-Agent": UA,
+      const { data } = await trackedAxios(
+        trace,
+        {
+          method: "post",
+          url,
+          data: query,
+          timeout: OVERPASS_TIMEOUT_MS,
+          headers: {
+            "Content-Type": "text/plain",
+            "User-Agent": UA,
+          },
         },
-      });
-
-      console.log(
-        `[Overpass OK] ${url} ${Date.now() - started}ms elements=${data?.elements?.length || 0}`
+        {
+          apiName: "overpass_search",
+          providerName: url,
+          getResultCount: (payload) => payload?.elements?.length || 0,
+          extra: { queryType },
+        }
       );
 
       return Array.isArray(data?.elements) ? data.elements : [];
@@ -868,7 +1156,7 @@ async function runOverpassQuery(query) {
   throw lastErr || new Error("All Overpass endpoints failed");
 }
 
-async function searchNominatimPlaces(lat, lon, radiusMeters) {
+async function searchNominatimPlaces(lat, lon, radiusMeters, trace) {
   const degreeRadius = radiusMeters / 111000;
   const viewbox = [
     lon - degreeRadius,
@@ -879,19 +1167,29 @@ async function searchNominatimPlaces(lat, lon, radiusMeters) {
     .map((value) => Number(value).toFixed(6))
     .join(",");
 
-  const { data } = await axios.get("https://nominatim.openstreetmap.org/search", {
-    timeout: NOMINATIM_TIMEOUT_MS,
-    params: {
-      format: "jsonv2",
-      q: "attraction",
-      viewbox,
-      bounded: 1,
-      limit: 30,
-      addressdetails: 1,
-      extratags: 1,
+  const { data } = await trackedAxios(
+    trace,
+    {
+      method: "get",
+      url: "https://nominatim.openstreetmap.org/search",
+      timeout: NOMINATIM_TIMEOUT_MS,
+      params: {
+        format: "jsonv2",
+        q: "attraction",
+        viewbox,
+        bounded: 1,
+        limit: 30,
+        addressdetails: 1,
+        extratags: 1,
+      },
+      headers: { "User-Agent": UA },
     },
-    headers: { "User-Agent": UA },
-  });
+    {
+      apiName: "nominatim_search",
+      providerName: "nominatim",
+      getResultCount: (payload) => (Array.isArray(payload) ? payload.length : 0),
+    }
+  );
 
   return Array.isArray(data) ? data : [];
 }
@@ -1005,13 +1303,17 @@ out center tags;
 `.trim();
 }
 
-async function executeNearbySearch(lat, lon, radiusKm) {
+async function executeNearbySearch(lat, lon, radiusKm, trace) {
   const radiusMeters = Math.round(radiusKm * 1000);
 
   let strictRaw = [];
   let strictError = null;
   try {
-    strictRaw = await runOverpassQuery(buildStrictOverpassQuery(lat, lon, radiusMeters));
+    strictRaw = await runOverpassQuery(
+      buildStrictOverpassQuery(lat, lon, radiusMeters),
+      trace,
+      "strict"
+    );
   } catch (e) {
     strictError = e;
     console.warn("[Overpass strict failed]", safeErrorMessage(e));
@@ -1032,7 +1334,9 @@ async function executeNearbySearch(lat, lon, radiusKm) {
 
     try {
       const fallbackRaw = await runOverpassQuery(
-        buildFallbackOverpassQuery(lat, lon, Math.round(fallbackRadiusKm * 1000))
+        buildFallbackOverpassQuery(lat, lon, Math.round(fallbackRadiusKm * 1000)),
+        trace,
+        "fallback"
       );
 
       fallbackRawCount = fallbackRaw.length;
@@ -1053,7 +1357,7 @@ async function executeNearbySearch(lat, lon, radiusKm) {
 
   if (filtered.length === 0) {
     try {
-      const nominatimRaw = await searchNominatimPlaces(lat, lon, radiusMeters);
+      const nominatimRaw = await searchNominatimPlaces(lat, lon, radiusMeters, trace);
       const nominatimMapped = mapNominatimElements(nominatimRaw, lat, lon);
       const nominatimFiltered = nominatimMapped.filter(isUsefulPlace);
 
@@ -1096,7 +1400,7 @@ async function executeNearbySearch(lat, lon, radiusKm) {
   };
 }
 
-async function searchNearbyPlacesOsm(lat, lon, userRadiusKm) {
+async function searchNearbyPlacesOsm(lat, lon, userRadiusKm, trace) {
   const cappedRadiusKm = Math.min(userRadiusKm, MAX_OVERPASS_RADIUS_KM);
   const radiusSteps = [cappedRadiusKm, 2]
     .filter((v, i, arr) => v >= MIN_RADIUS_KM && arr.indexOf(v) === i)
@@ -1107,7 +1411,7 @@ async function searchNearbyPlacesOsm(lat, lon, userRadiusKm) {
   for (const radiusKm of radiusSteps) {
     try {
       console.log(`[Nearby OSM search] trying radius=${radiusKm}km`);
-      return await executeNearbySearch(lat, lon, radiusKm);
+      return await executeNearbySearch(lat, lon, radiusKm, trace);
     } catch (e) {
       lastErr = e;
       console.warn(`[Nearby OSM retry] radius=${radiusKm}km failed: ${safeErrorMessage(e)}`);
@@ -1120,12 +1424,24 @@ async function searchNearbyPlacesOsm(lat, lon, userRadiusKm) {
 /* =========================================================
    PROVIDER ORCHESTRATION
 ========================================================= */
-async function searchNearbyPlaces(lat, lon, userRadiusKm, limit) {
+async function searchNearbyPlaces(lat, lon, userRadiusKm, limit, trace) {
   const attempts = [];
-  const premiumProviders = [
-    { name: "geoapify", fn: () => searchGeoapifyPlaces(lat, lon, userRadiusKm, limit) },
-    { name: "tomtom", fn: () => searchTomTomPlaces(lat, lon, userRadiusKm, limit) },
-  ];
+  const configuredOrder = getConfiguredPremiumProviderOrder();
+
+  const premiumProviderMap = {
+    geoapify: {
+      name: "geoapify",
+      fn: () => searchGeoapifyPlaces(lat, lon, userRadiusKm, limit, trace),
+    },
+    tomtom: {
+      name: "tomtom",
+      fn: () => searchTomTomPlaces(lat, lon, userRadiusKm, limit, trace),
+    },
+  };
+
+  const premiumProviders = configuredOrder
+    .map((name) => premiumProviderMap[name])
+    .filter(Boolean);
 
   for (const provider of premiumProviders) {
     try {
@@ -1144,6 +1460,7 @@ async function searchNearbyPlaces(lat, lon, userRadiusKm, limit) {
             ...result.debug,
             providerChain: attempts,
             premiumFallbackUsed: attempts.length > 1,
+            providerOrder: configuredOrder,
           },
         };
       }
@@ -1160,7 +1477,7 @@ async function searchNearbyPlaces(lat, lon, userRadiusKm, limit) {
     }
   }
 
-  const fallback = await searchNearbyPlacesOsm(lat, lon, userRadiusKm);
+  const fallback = await searchNearbyPlacesOsm(lat, lon, userRadiusKm, trace);
   attempts.push({
     provider: "osm",
     status: fallback.places.length > 0 ? "ok" : "empty",
@@ -1173,6 +1490,7 @@ async function searchNearbyPlaces(lat, lon, userRadiusKm, limit) {
       ...fallback.debug,
       providerChain: attempts,
       premiumFallbackUsed: true,
+      providerOrder: configuredOrder,
     },
   };
 }
@@ -1180,33 +1498,50 @@ async function searchNearbyPlaces(lat, lon, userRadiusKm, limit) {
 /* =========================================================
    LIGHT ENRICHMENT
 ========================================================= */
-async function getWikiSummary(placeName, city = "", country = "") {
+async function getWikiSummary(placeName, city = "", country = "", trace) {
   try {
     if (!placeName) return null;
 
     const q = [placeName, city, country].filter(Boolean).join(" ");
 
-    const { data: searchData } = await axios.get("https://en.wikipedia.org/w/api.php", {
-      timeout: WIKI_TIMEOUT_MS,
-      params: {
-        action: "query",
-        list: "search",
-        srsearch: q,
-        format: "json",
-        utf8: 1,
-        srlimit: 1,
+    const { data: searchData } = await trackedAxios(
+      trace,
+      {
+        method: "get",
+        url: "https://en.wikipedia.org/w/api.php",
+        timeout: WIKI_TIMEOUT_MS,
+        params: {
+          action: "query",
+          list: "search",
+          srsearch: q,
+          format: "json",
+          utf8: 1,
+          srlimit: 1,
+        },
+        headers: { "User-Agent": UA },
       },
-      headers: { "User-Agent": UA },
-    });
+      {
+        apiName: "wikipedia_search",
+        providerName: "wikipedia",
+        getResultCount: (payload) => payload?.query?.search?.length || 0,
+      }
+    );
 
     const hit = searchData?.query?.search?.[0];
     if (!hit?.title) return null;
 
-    const { data: summary } = await axios.get(
-      `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(hit.title)}`,
+    const { data: summary } = await trackedAxios(
+      trace,
       {
+        method: "get",
+        url: `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(hit.title)}`,
         timeout: WIKI_TIMEOUT_MS,
         headers: { "User-Agent": UA },
+      },
+      {
+        apiName: "wikipedia_summary",
+        providerName: "wikipedia",
+        getResultCount: () => 1,
       }
     );
 
@@ -1221,7 +1556,7 @@ async function getWikiSummary(placeName, city = "", country = "") {
   }
 }
 
-async function enrichPlacesWithWikipedia(places, city, country, maxEnrich = 2) {
+async function enrichPlacesWithWikipedia(places, city, country, maxEnrich = 2, trace) {
   if (!maxEnrich || maxEnrich <= 0) return places;
 
   const top = places.slice(0, maxEnrich);
@@ -1241,7 +1576,7 @@ async function enrichPlacesWithWikipedia(places, city, country, maxEnrich = 2) {
         };
       }
 
-      const wiki = await getWikiSummary(p.name, city, country);
+      const wiki = await getWikiSummary(p.name, city, country, trace);
 
       const placeDescription = wiki?.description || "";
       const placeSummary = wiki?.summary || "";
@@ -1271,6 +1606,7 @@ async function enrichPlacesWithWikipedia(places, city, country, maxEnrich = 2) {
 ========================================================= */
 router.get("/nearby-free", async (req, res) => {
   const startedAt = Date.now();
+  const trace = makeTrace(ROUTE_NAME);
 
   try {
     const qRadius = toNumber(req.query.radiusKm);
@@ -1281,7 +1617,6 @@ router.get("/nearby-free", async (req, res) => {
     const radiusKm = clamp(qRadius ?? DEFAULT_RADIUS_KM, MIN_RADIUS_KM, MAX_RADIUS_KM);
     const limit = clamp(qLimit ?? DEFAULT_LIMIT, 1, MAX_LIMIT);
 
-    // free-first: no enrich by default
     const enrich = String(req.query.enrich || "0") === "1";
     const wikiCount = clamp(
       toNumber(req.query.wikiCount) ?? DEFAULT_WIKI_ENRICH_COUNT,
@@ -1311,8 +1646,12 @@ router.get("/nearby-free", async (req, res) => {
         });
       }
 
-      loc = await getIpLocation(ip);
+      loc = await getIpLocation(ip, trace);
     }
+
+    trace.lat = loc.lat;
+    trace.lon = loc.lon;
+    trace.country = loc.country || "";
 
     const cacheKey = makeCacheKey({
       lat: loc.lat,
@@ -1332,7 +1671,7 @@ router.get("/nearby-free", async (req, res) => {
     const tReverseStart = Date.now();
 
     try {
-      reverse = await reverseGeocode(loc.lat, loc.lon);
+      reverse = await reverseGeocode(loc.lat, loc.lon, trace);
     } catch (e) {
       console.warn("[reverseGeocode warning]", safeErrorMessage(e));
     }
@@ -1349,6 +1688,8 @@ router.get("/nearby-free", async (req, res) => {
 
     const region = reverse?.address?.state || loc.region || "";
     const country = reverse?.address?.country || loc.country || "";
+
+    trace.country = country || trace.country || "";
 
     let searchResult = {
       provider: "none",
@@ -1367,6 +1708,7 @@ router.get("/nearby-free", async (req, res) => {
         providerMappedFound: 0,
         providerChain: [],
         premiumFallbackUsed: false,
+        providerOrder: getConfiguredPremiumProviderOrder(),
       },
     };
 
@@ -1374,7 +1716,13 @@ router.get("/nearby-free", async (req, res) => {
     const tSearchStart = Date.now();
 
     try {
-      searchResult = await searchNearbyPlaces(loc.lat, loc.lon, radiusKm, limit);
+      searchResult = await searchNearbyPlaces(
+        loc.lat,
+        loc.lon,
+        radiusKm,
+        limit,
+        trace
+      );
     } catch (e) {
       searchError = safeErrorMessage(e);
       console.warn("[nearby places warning]", searchError);
@@ -1388,7 +1736,13 @@ router.get("/nearby-free", async (req, res) => {
     if (enrich && nearby.length > 0) {
       const tWikiStart = Date.now();
       try {
-        nearby = await enrichPlacesWithWikipedia(nearby, city, country, wikiCount || 2);
+        nearby = await enrichPlacesWithWikipedia(
+          nearby,
+          city,
+          country,
+          wikiCount || 2,
+          trace
+        );
       } catch (e) {
         console.warn("[wiki enrich warning]", safeErrorMessage(e));
       }
@@ -1418,6 +1772,7 @@ router.get("/nearby-free", async (req, res) => {
       debug: {
         provider: searchResult.provider || "none",
         providerChain: searchResult.debug.providerChain || [],
+        providerOrder: searchResult.debug.providerOrder || getConfiguredPremiumProviderOrder(),
         premiumFallbackUsed: !!searchResult.debug.premiumFallbackUsed,
 
         totalFound: nearby.length,
@@ -1441,7 +1796,7 @@ router.get("/nearby-free", async (req, res) => {
         timingsMs: {
           reverseGeocode: reverseMs,
           providerSearch: searchMs,
-          overpass: searchMs, // kept for backward compatibility
+          overpass: searchMs,
           wikipedia: wikiMs,
           total: totalMs,
         },
