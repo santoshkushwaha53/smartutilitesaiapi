@@ -69,24 +69,41 @@ function validateStateInput(state, requireCode = true) {
   return null;
 }
 
-async function seedStatesIfEmpty() {
-  const count = await prisma.state.count();
-  if (count > 0) return count;
+async function syncCanonicalStates() {
+  const canonicalCodes = new Set(CANONICAL_STATES.map((state) => state.code));
+  const currentStates = await prisma.state.findMany({ select: { code: true } });
+  const currentCodes = new Set(currentStates.map((state) => state.code));
 
-  await prisma.state.createMany({
-    data: CANONICAL_STATES.map((state) => ({
-      ...state,
-      updatedAt: new Date(),
-    })),
-    skipDuplicates: true,
-  });
+  await prisma.$transaction(
+    CANONICAL_STATES.map((state) =>
+      prisma.state.upsert({
+        where: { code: state.code },
+        update: {
+          name: state.name,
+          type: state.type,
+          emoji: state.emoji,
+          tone: state.tone,
+          updatedAt: new Date(),
+        },
+        create: {
+          ...state,
+          updatedAt: new Date(),
+        },
+      }),
+    ),
+  );
+
+  const staleCodes = [...currentCodes].filter((code) => !canonicalCodes.has(code));
+  if (staleCodes.length) {
+    await prisma.state.deleteMany({ where: { code: { in: staleCodes } } });
+  }
 
   return prisma.state.count();
 }
 
 router.get("/", async (req, res) => {
   try {
-    await seedStatesIfEmpty();
+    await syncCanonicalStates();
 
     const search = String(req.query.search || "").trim();
     const type = String(req.query.type || "all").trim().toLowerCase();
@@ -131,15 +148,7 @@ router.get("/", async (req, res) => {
 
 router.post("/seed", authMiddleware, async (_req, res) => {
   try {
-    await prisma.state.createMany({
-      data: CANONICAL_STATES.map((state) => ({
-        ...state,
-        updatedAt: new Date(),
-      })),
-      skipDuplicates: true,
-    });
-
-    const count = await prisma.state.count();
+    const count = await syncCanonicalStates();
     return res.status(200).json({ success: true, count });
   } catch (error) {
     console.error("POST /api/states/seed failed:", error);
