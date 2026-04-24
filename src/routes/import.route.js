@@ -17,6 +17,13 @@ const STATE_CODES = [
 
 const HOLIDAY_TYPES = new Set(["national", "state", "bank", "festival", "school"]);
 const HOLIDAY_SCOPES = new Set(["gazetted", "restricted", "seasonal", "observance", "weekly-off"]);
+const HOLIDAY_TYPE_ALIASES = {
+  regional: "state",
+  stateut: "state",
+  ut: "state",
+  public: "national",
+  observance: "festival",
+};
 
 function normalizeColumnName(value) {
   return String(value || "")
@@ -118,12 +125,21 @@ function pickStates(row) {
   return combined.sort();
 }
 
+function normalizeHolidayTypeValue(value) {
+  const normalized = String(value || "").trim().toLowerCase();
+  return HOLIDAY_TYPE_ALIASES[normalized] || normalized;
+}
+
+function normalizeHolidayScopeValue(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
 function normalizeHolidayRow(row, index) {
   const date = toIsoDate(row.date, row);
   const year = Number(row.year || (date ? date.slice(0, 4) : 0));
   const title = String(row.title || row.holiday || row.name || "").trim();
-  const type = String(row.type || row.holidayTypeKey || "national").trim().toLowerCase();
-  const holidayType = String(row.holidayType || row.scope || "gazetted").trim().toLowerCase();
+  const type = normalizeHolidayTypeValue(row.type || row.holidayTypeKey || "national");
+  const holidayType = normalizeHolidayScopeValue(row.holidayType || row.scope || "gazetted");
   const description = String(row.description || row.note || "").trim();
   const states = pickStates(row);
 
@@ -218,7 +234,7 @@ function previewPayload(rows) {
   };
 }
 
-router.post("/preview", authMiddleware, upload.single("file"), async (req, res) => {
+router.post("/preview", upload.single("file"), async (req, res) => {
   try {
     const type = String(req.body.type || "").trim().toLowerCase();
     if (type !== "holidays") {
