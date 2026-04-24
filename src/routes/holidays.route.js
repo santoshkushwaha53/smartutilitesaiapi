@@ -1,5 +1,7 @@
+const crypto = require("crypto");
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
+const { authMiddleware } = require("../core/middlewares/auth.middleware");
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -91,6 +93,59 @@ function normalizeHoliday(row) {
   };
 }
 
+function normalizeHolidayInput(payload) {
+  const date = String(payload.date || "").slice(0, 10);
+  const year = Number(payload.year || (date ? date.slice(0, 4) : 0));
+  const type = String(payload.type || "").trim().toLowerCase();
+  const holidayType = String(payload.holidayType || "gazetted").trim().toLowerCase();
+  const states = parseStates(payload.states);
+
+  return {
+    id: String(payload.id || "").trim(),
+    title: String(payload.title || "").trim(),
+    date,
+    year,
+    type,
+    states,
+    description: String(payload.description || "").trim() || null,
+    holidayType,
+  };
+}
+
+function validateHolidayInput(holiday, { requireId = false } = {}) {
+  if (requireId && !holiday.id) {
+    return "Holiday id is required";
+  }
+  if (!holiday.title) {
+    return "Holiday title is required";
+  }
+  if (!holiday.date) {
+    return "Holiday date is required";
+  }
+  if (!holiday.year || !Number.isFinite(holiday.year)) {
+    return "Holiday year is required";
+  }
+  if (!["national", "state", "bank", "festival", "school"].includes(holiday.type)) {
+    return "Holiday type is invalid";
+  }
+  if (!["gazetted", "restricted", "seasonal", "observance", "weekly-off"].includes(holiday.holidayType)) {
+    return "Holiday scope is invalid";
+  }
+  return null;
+}
+
+function buildHolidayId(holiday) {
+  if (holiday.id) return holiday.id;
+
+  const slug = holiday.title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 48);
+
+  return `${slug || "holiday"}-${holiday.date}-${crypto.randomUUID().slice(0, 8)}`;
+}
+
 function matchesKind(h, kind) {
   switch (kind) {
     case "all":
@@ -127,7 +182,7 @@ router.get("/", async function (req, res) {
   try {
     const year = Number(req.query.year);
     const kind = String(req.query.kind || "all").toLowerCase();
-    const stateCode = String(req.query.stateCode || "ALL").toUpperCase();
+    const stateCode = String(req.query.stateCode || req.query.state || "ALL").toUpperCase();
 
     if (!Number.isFinite(year)) {
       return res.status(400).json({
@@ -162,6 +217,99 @@ router.get("/", async function (req, res) {
     return res.status(500).json({
       success: false,
       error: "Failed to load holidays",
+    });
+  }
+});
+
+router.post("/", authMiddleware, async function (req, res) {
+  try {
+    const holiday = normalizeHolidayInput(req.body);
+    const validationError = validateHolidayInput(holiday);
+
+    if (validationError) {
+      return res.status(400).json({ success: false, error: validationError });
+    }
+
+    const created = await prisma.holiday.create({
+      data: {
+        id: buildHolidayId(holiday),
+        title: holiday.title,
+        date: holiday.date,
+        year: holiday.year,
+        type: holiday.type,
+        states: JSON.stringify(holiday.states),
+        description: holiday.description,
+        holidayType: holiday.holidayType,
+        updatedAt: new Date(),
+      },
+    });
+
+    return res.status(201).json({
+      success: true,
+      holiday: normalizeHoliday(created),
+    });
+  } catch (error) {
+    console.error("POST /api/holidays failed:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Failed to create holiday",
+    });
+  }
+});
+
+router.put("/:id", authMiddleware, async function (req, res) {
+  try {
+    const holiday = normalizeHolidayInput({
+      ...req.body,
+      id: req.params.id,
+    });
+    const validationError = validateHolidayInput(holiday, { requireId: true });
+
+    if (validationError) {
+      return res.status(400).json({ success: false, error: validationError });
+    }
+
+    const updated = await prisma.holiday.update({
+      where: { id: holiday.id },
+      data: {
+        title: holiday.title,
+        date: holiday.date,
+        year: holiday.year,
+        type: holiday.type,
+        states: JSON.stringify(holiday.states),
+        description: holiday.description,
+        holidayType: holiday.holidayType,
+        updatedAt: new Date(),
+      },
+    });
+
+    return res.json({
+      success: true,
+      holiday: normalizeHoliday(updated),
+    });
+  } catch (error) {
+    console.error("PUT /api/holidays/:id failed:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Failed to update holiday",
+    });
+  }
+});
+
+router.delete("/:id", authMiddleware, async function (req, res) {
+  try {
+    const id = String(req.params.id || "").trim();
+    if (!id) {
+      return res.status(400).json({ success: false, error: "Holiday id is required" });
+    }
+
+    await prisma.holiday.delete({ where: { id } });
+    return res.json({ success: true, id });
+  } catch (error) {
+    console.error("DELETE /api/holidays/:id failed:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Failed to delete holiday",
     });
   }
 });
