@@ -37,9 +37,25 @@ function parseStates(value) {
     .filter(Boolean);
 }
 
+function parseHolidayTypes(value) {
+  if (Array.isArray(value)) {
+    return value
+      .map((entry) => String(entry).trim().toLowerCase())
+      .filter(Boolean);
+  }
+
+  if (typeof value !== "string") return [];
+
+  return value
+    .split(",")
+    .map((entry) => entry.trim().toLowerCase())
+    .filter(Boolean);
+}
+
 function normalizeHoliday(row) {
   const holidayType = String(row.holidayType || "").trim().toLowerCase();
-  let type = String(row.type || "").trim().toLowerCase();
+  const parsedTypes = parseHolidayTypes(row.type);
+  let type = parsedTypes[0] || "";
   const states = parseStates(row.states);
 
   if (!type) {
@@ -78,6 +94,7 @@ function normalizeHoliday(row) {
     date: String(row.date || "").slice(0, 10),
     year: Number(row.year || 0),
     type,
+    types: parsedTypes.length ? parsedTypes : [type],
     states,
     regionLabel: states.length ? undefined : "All India",
     description: row.description || "",
@@ -96,7 +113,8 @@ function normalizeHoliday(row) {
 function normalizeHolidayInput(payload) {
   const date = String(payload.date || "").slice(0, 10);
   const year = Number(payload.year || (date ? date.slice(0, 4) : 0));
-  const type = String(payload.type || "").trim().toLowerCase();
+  const types = parseHolidayTypes(payload.types && payload.types.length ? payload.types : payload.type);
+  const type = types[0] || "";
   const holidayType = String(payload.holidayType || "gazetted").trim().toLowerCase();
   const states = parseStates(payload.states);
 
@@ -106,6 +124,7 @@ function normalizeHolidayInput(payload) {
     date,
     year,
     type,
+    types,
     states,
     description: String(payload.description || "").trim() || null,
     holidayType,
@@ -125,7 +144,7 @@ function validateHolidayInput(holiday, { requireId = false } = {}) {
   if (!holiday.year || !Number.isFinite(holiday.year)) {
     return "Holiday year is required";
   }
-  if (!["national", "state", "bank", "festival", "school"].includes(holiday.type)) {
+  if (!holiday.types.length || !holiday.types.every((type) => ["national", "state", "bank", "festival", "school"].includes(type))) {
     return "Holiday type is invalid";
   }
   if (!["gazetted", "restricted", "seasonal", "observance", "weekly-off"].includes(holiday.holidayType)) {
@@ -154,16 +173,16 @@ function matchesKind(h, kind) {
 
     case "bank":
     case "bank-closures":
-      return h.type === "bank" || h.holidayClass === "bank";
+      return (h.types || [h.type]).includes("bank") || h.holidayClass === "bank";
 
     case "national":
-      return h.isNationalHoliday || h.type === "national" || h.holidayClass === "national";
+      return h.isNationalHoliday || (h.types || [h.type]).includes("national") || h.holidayClass === "national";
 
     case "state":
-      return h.type === "state" || h.holidayClass === "state";
+      return (h.types || [h.type]).includes("state") || h.holidayClass === "state";
 
     case "festival":
-      return h.type === "festival" || h.holidayClass === "festival";
+      return (h.types || [h.type]).includes("festival") || h.holidayClass === "festival";
 
     default:
       return true;
@@ -236,7 +255,7 @@ router.post("/", authMiddleware, async function (req, res) {
         title: holiday.title,
         date: holiday.date,
         year: holiday.year,
-        type: holiday.type,
+        type: holiday.types.join(","),
         states: JSON.stringify(holiday.states),
         description: holiday.description,
         holidayType: holiday.holidayType,
@@ -275,7 +294,7 @@ router.put("/:id", authMiddleware, async function (req, res) {
         title: holiday.title,
         date: holiday.date,
         year: holiday.year,
-        type: holiday.type,
+        type: holiday.types.join(","),
         states: JSON.stringify(holiday.states),
         description: holiday.description,
         holidayType: holiday.holidayType,
