@@ -23,12 +23,15 @@ function normalizeWish(raw, festival) {
     festivalId: festival.id,
     festivalName: festival.name,
     type: raw.type === "image" ? "image" : "text",
-    language: ["en", "hi", "mixed"].includes(raw.language) ? raw.language : "en",
+    language: String(raw.language || "en").trim() || "en",
     tone: String(raw.tone || "family").trim() || "family",
     message: String(raw.message || "").trim(),
     tags: Array.isArray(raw.tags) ? raw.tags.map((tag) => String(tag).trim()).filter(Boolean) : [],
     isActive: raw.isActive !== false,
     sortOrder: Number(raw.sortOrder || 0),
+    imageUrl: String(raw.imageUrl || "").trim() || undefined,
+    thumbUrl: String(raw.thumbUrl || "").trim() || undefined,
+    caption: String(raw.caption || "").trim() || undefined,
   };
 }
 
@@ -37,18 +40,22 @@ function normalizeWishInput(payload) {
     id: String(payload.id || "").trim() || `wish-${crypto.randomUUID().slice(0, 8)}`,
     festivalId: String(payload.festivalId || "").trim(),
     type: payload.type === "image" ? "image" : "text",
-    language: ["en", "hi", "mixed"].includes(payload.language) ? payload.language : "en",
+    language: String(payload.language || "en").trim() || "en",
     tone: String(payload.tone || "family").trim() || "family",
     message: String(payload.message || "").trim(),
     tags: Array.isArray(payload.tags) ? payload.tags.map((tag) => String(tag).trim()).filter(Boolean) : [],
     isActive: payload.isActive !== false,
     sortOrder: Number(payload.sortOrder || 0),
+    imageUrl: String(payload.imageUrl || "").trim() || "",
+    thumbUrl: String(payload.thumbUrl || "").trim() || "",
+    caption: String(payload.caption || "").trim() || "",
   };
 }
 
 function validateWishInput(wish) {
   if (!wish.festivalId) return "Festival is required";
-  if (!wish.message) return "Wish message is required";
+  if (wish.type === "image" && !wish.imageUrl) return "Wish image URL is required";
+  if (wish.type !== "image" && !wish.message) return "Wish message is required";
   return null;
 }
 

@@ -17,12 +17,26 @@ const STATE_CODES = [
 
 const HOLIDAY_TYPES = new Set(["national", "state", "bank", "festival", "school"]);
 const HOLIDAY_SCOPES = new Set(["gazetted", "restricted", "seasonal", "observance", "weekly-off"]);
+const WISH_TYPES = new Set(["text", "image"]);
 const HOLIDAY_TYPE_ALIASES = {
   regional: "state",
   stateut: "state",
   ut: "state",
   public: "national",
   observance: "festival",
+};
+const WISH_LANGUAGE_ALIASES = {
+  english: "en",
+  hindi: "hi",
+  hinglish: "mixed",
+  tamil: "ta",
+  telugu: "te",
+  bengali: "bn",
+  marathi: "mr",
+  gujarati: "gu",
+  kannada: "kn",
+  malayalam: "ml",
+  punjabi: "pa",
 };
 
 function normalizeColumnName(value) {
@@ -234,18 +248,190 @@ function previewPayload(rows) {
   };
 }
 
+function previewPayloadFor(type, rows) {
+  const columns = rows.length ? Object.keys(rows[0]) : [];
+  return {
+    type,
+    count: rows.length,
+    columns,
+    preview: rows.slice(0, 5),
+  };
+}
+
+function normalizeWishLanguage(value) {
+  const normalized = String(value || "").trim().toLowerCase();
+  return WISH_LANGUAGE_ALIASES[normalized] || normalized || "en";
+}
+
+function normalizeWishType(value) {
+  const normalized = String(value || "").trim().toLowerCase();
+  return WISH_TYPES.has(normalized) ? normalized : "text";
+}
+
+function normalizeWishBase(row, index) {
+  return {
+    rowNumber: index + 2,
+    id: String(row.id || "").trim(),
+    festivalId: String(row.festivalId || row.festivalSlug || row.slug || "").trim(),
+    festivalName: String(row.festivalName || row.festival || row.name || "").trim(),
+    type: normalizeWishType(row.type),
+    tone: String(row.tone || "family").trim() || "family",
+    message: String(row.message || row.text || row.wish || "").trim(),
+    language: normalizeWishLanguage(row.language || row.lang || "en"),
+    imageUrl: String(row.imageUrl || row.image || "").trim(),
+    thumbUrl: String(row.thumbUrl || row.thumbnail || "").trim(),
+    caption: String(row.caption || row.title || "").trim(),
+    tags: String(row.tags || "")
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean),
+    sortOrder: Number(row.sortOrder || 0),
+    isActive: !["false", "0", "no", "inactive"].includes(String(row.isActive ?? "true").trim().toLowerCase()),
+  };
+}
+
+function expandWishRows(row, index) {
+  const base = normalizeWishBase(row, index);
+  const expanded = [];
+
+  const multiLanguageEntries = Object.entries(row)
+    .filter(([key, value]) => /^message_/i.test(String(key)) && String(value || "").trim())
+    .map(([key, value]) => ({
+      ...base,
+      id: base.id ? `${base.id}-${normalizeWishLanguage(String(key).replace(/^message_/i, ""))}` : "",
+      type: "text",
+      language: normalizeWishLanguage(String(key).replace(/^message_/i, "")),
+      message: String(value).trim(),
+    }));
+
+  if (base.message) {
+    expanded.push({
+      ...base,
+      type: base.type === "image" && !base.message ? "image" : "text",
+    });
+  }
+
+  expanded.push(...multiLanguageEntries);
+
+  if (base.imageUrl) {
+    expanded.push({
+      ...base,
+      id: base.id ? `${base.id}-image` : "",
+      type: "image",
+      language: base.language || "en",
+      message: "",
+    });
+  }
+
+  return expanded.filter((wish, idx, arr) =>
+    arr.findIndex((candidate) =>
+      candidate.type === wish.type &&
+      candidate.language === wish.language &&
+      candidate.message === wish.message &&
+      candidate.imageUrl === wish.imageUrl
+    ) === idx
+  );
+}
+
+function validateWishRow(row) {
+  if (!row.festivalId && !row.festivalName) return "festivalId or festivalName is required";
+  if (!WISH_TYPES.has(row.type)) return `type must be one of: ${[...WISH_TYPES].join(", ")}`;
+  if (row.type === "image" && !row.imageUrl) return "imageUrl is required for image wishes";
+  if (row.type === "text" && !row.message) return "message is required for text wishes";
+  return null;
+}
+
+async function resolveFestival(row) {
+  if (row.festivalId) {
+    const exact = await prisma.festival.findUnique({ where: { id: row.festivalId } });
+    if (exact) return exact;
+  }
+
+  if (row.festivalName) {
+    const festivals = await prisma.festival.findMany();
+    return festivals.find((festival) => festival.name.toLowerCase() === row.festivalName.toLowerCase()) || null;
+  }
+
+  return null;
+}
+
+async function upsertWish(row) {
+  const festival = await resolveFestival(row);
+  if (!festival) {
+    throw new Error("Festival not found");
+  }
+
+  const existingWishes = (() => {
+    try {
+      const parsed = JSON.parse(festival.wishes || "[]");
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  })();
+
+  const normalizedId = row.id || `wish-${crypto.randomUUID().slice(0, 8)}`;
+  const nextEntry = {
+    id: normalizedId,
+    type: row.type,
+    language: row.language || "en",
+    tone: row.tone,
+    message: row.message || "",
+    tags: row.tags,
+    isActive: row.isActive,
+    sortOrder: row.sortOrder,
+    imageUrl: row.imageUrl || undefined,
+    thumbUrl: row.thumbUrl || undefined,
+    caption: row.caption || undefined,
+  };
+
+  const existingIndex = existingWishes.findIndex((wish) => {
+    if (row.id && String(wish.id || "") === row.id) return true;
+    return (
+      String(wish.type || "text") === row.type &&
+      String(wish.language || "en") === (row.language || "en") &&
+      String(wish.message || "") === String(row.message || "") &&
+      String(wish.imageUrl || "") === String(row.imageUrl || "")
+    );
+  });
+
+  let result = "created";
+  if (existingIndex >= 0) {
+    existingWishes[existingIndex] = { ...existingWishes[existingIndex], ...nextEntry };
+    result = "updated";
+  } else {
+    existingWishes.push(nextEntry);
+  }
+
+  await prisma.festival.update({
+    where: { id: festival.id },
+    data: {
+      wishes: JSON.stringify(existingWishes),
+      updatedAt: new Date(),
+    },
+  });
+
+  return result;
+}
+
 router.post("/preview", upload.single("file"), async (req, res) => {
   try {
     const type = String(req.body.type || "").trim().toLowerCase();
-    if (type !== "holidays") {
-      return res.status(400).json({ message: "Only holiday import preview is supported right now." });
-    }
     if (!req.file) {
       return res.status(400).json({ message: "File is required." });
     }
 
     const rows = parseWorkbook(req.file);
-    return res.json(previewPayload(rows));
+    if (type === "holidays") {
+      return res.json(previewPayload(rows));
+    }
+
+    if (type === "wishes") {
+      const expanded = rows.flatMap((row, index) => expandWishRows(row, index));
+      return res.json(previewPayloadFor("wishes", expanded));
+    }
+
+    return res.status(400).json({ message: "Unsupported import type." });
   } catch (error) {
     console.error("POST /api/import/preview failed:", error);
     return res.status(500).json({ message: "Failed to preview import file." });
@@ -293,6 +479,50 @@ router.post("/holidays", authMiddleware, upload.single("file"), async (req, res)
   } catch (error) {
     console.error("POST /api/import/holidays failed:", error);
     return res.status(500).json({ message: "Failed to import holiday file." });
+  }
+});
+
+router.post("/wishes", authMiddleware, upload.single("file"), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "File is required." });
+    }
+
+    const rows = parseWorkbook(req.file);
+    const expandedRows = rows.flatMap((row, index) => expandWishRows(row, index));
+    let created = 0;
+    let updated = 0;
+    const errors = [];
+
+    for (const row of expandedRows) {
+      const validationError = validateWishRow(row);
+      if (validationError) {
+        errors.push({ row: String(row.rowNumber), error: validationError });
+        continue;
+      }
+
+      try {
+        const result = await upsertWish(row);
+        if (result === "created") created += 1;
+        else updated += 1;
+      } catch (error) {
+        errors.push({
+          row: String(row.rowNumber),
+          error: error instanceof Error ? error.message : "Unknown import error",
+        });
+      }
+    }
+
+    return res.json({
+      message: "Wishes import completed",
+      created,
+      updated,
+      total: expandedRows.length,
+      errors,
+    });
+  } catch (error) {
+    console.error("POST /api/import/wishes failed:", error);
+    return res.status(500).json({ message: "Failed to import wishes file." });
   }
 });
 
