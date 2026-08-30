@@ -121,6 +121,75 @@ model Holiday {
   @@index([year])
 }
 
+// ─── Holiday Auto-Ingestion Pipeline ──────────────────────────────────────────
+
+model HolidaySource {
+  id            String   @id @default(uuid())
+  name          String
+  scope         String
+  stateCode     String?
+  url           String
+  kind          String   @default("html")
+  parserKey     String   @default("generic")
+  isOfficial    Boolean  @default(true)
+  isActive      Boolean  @default(true)
+  lastCheckedAt DateTime?
+  lastSuccessAt DateTime?
+  lastError     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  candidates    HolidayCandidate[]
+
+  @@index([scope])
+  @@index([stateCode])
+  @@index([isActive])
+}
+
+model HolidayCandidate {
+  id             String   @id @default(uuid())
+  sourceId       String
+  source         HolidaySource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  year           Int
+  stateCode      String?
+  title          String
+  date           String?
+  rawDateText    String?
+  type           String   @default("state")
+  holidayType    String   @default("gazetted")
+  confidence     String   @default("low")
+  rawExcerpt     String?
+  sourceUrl      String
+  status         String   @default("pending")
+  duplicateOfId  String?
+  resultHolidayId String?
+  reviewedAt     DateTime?
+  reviewedBy     String?
+  createdAt      DateTime @default(now())
+
+  @@index([status])
+  @@index([year])
+  @@index([stateCode])
+  @@index([sourceId])
+}
+
+model IngestionRun {
+  id               String   @id @default(uuid())
+  startedAt        DateTime @default(now())
+  finishedAt       DateTime?
+  status           String   @default("running")
+  triggeredBy      String   @default("manual")
+  sourcesChecked   Int      @default(0)
+  sourcesFailed    Int      @default(0)
+  candidatesFound  Int      @default(0)
+  candidatesNew    Int      @default(0)
+  candidatesDuplicate Int   @default(0)
+  errors           Json     @default("[]")
+
+  @@index([status])
+  @@index([startedAt])
+}
+
 model KidsContent {
   id            String   @id
   slug          String   @unique

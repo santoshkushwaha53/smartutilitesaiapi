@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -22,6 +23,15 @@ const nearbyRoutes = require("./routes/nearby.route");
 // restored routes
 const blogRoutes = require("./routes/blog.routes");
 const seoRoutes = require("./routes/seo.routes");
+
+// Admin CMS + holiday auto-ingestion (merged in from the `main` branch, which
+// carries the admin panel backend that `production` never had)
+const adminRoutes = require("./modules/holidays/routes/admin.routes");
+const kidsRoutes = require("./modules/holidays/routes/kids.routes");
+const uploadRoutes = require("./modules/holidays/routes/upload.routes");
+const ingestionRoutes = require("./modules/holidays/routes/ingestion.routes");
+const cron = require("node-cron");
+const { runIngestion } = require("./modules/holidays/ingestion/run");
 
 const app = express();
 
@@ -79,6 +89,7 @@ app.use(cors(corsOptions));
 app.options("/{*any}", cors(corsOptions));
 app.use(express.json({ limit: "1mb" }));
 app.use(morgan("dev"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(uploadTestRoute);
 app.use("/api", mediaDownloadRoute);
@@ -96,6 +107,12 @@ app.use("/api/travel", nearbyRoutes);
 // restored mounts
 app.use("/api/blog", blogRoutes);
 app.use("/api/seo", seoRoutes);
+
+// Admin CMS + holiday auto-ingestion
+app.use("/api/admin", adminRoutes);
+app.use("/api/kids", kidsRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/api/ingestion", ingestionRoutes);
 
 app.get("/api/health", function (_req, res) {
   res.json({
@@ -133,3 +150,19 @@ app.listen(port, function () {
   console.log(`API running on http://localhost:${port}`);
   console.log("Allowed origins:", allowedOrigins);
 });
+
+// Weekly auto-refresh of the holiday review queue — every Monday 03:00 IST.
+// Approval still requires a human via /api/ingestion/queue/:id/approve, so a
+// stale or misparsed source can never publish bad dates on its own.
+if (process.env.HOLIDAY_INGESTION_CRON !== "off") {
+  cron.schedule(
+    "0 3 * * 1",
+    function () {
+      console.log("[holiday-ingestion] scheduled run starting...");
+      runIngestion({ triggeredBy: "schedule" })
+        .then((run) => console.log("[holiday-ingestion] scheduled run finished:", run.id, run.status))
+        .catch((err) => console.error("[holiday-ingestion] scheduled run failed:", err.message));
+    },
+    { timezone: "Asia/Kolkata" }
+  );
+}
