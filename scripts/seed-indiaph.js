@@ -48,7 +48,10 @@ function mapHoliday(h, year, overrideType, stateCode) {
   }
 
   const type = overrideType || h.type || 'festival';
-  const sfx  = stateCode ? `-${stateCode}` : '-national';
+  // Suffix must be unique per (type, state) — otherwise a national holiday and a
+  // bank holiday sharing the same title (e.g. "Republic Day") with no state code
+  // would compute the same id and silently clobber each other on upsert.
+  const sfx  = stateCode ? `-${stateCode}` : `-${type}`;
   const id   = `${h.id || h.title?.toLowerCase().replace(/\s+/g,'-')}${sfx}-${year}`;
 
   // Always derive year from actual date when available
@@ -79,18 +82,24 @@ async function upsertHoliday(data) {
 async function seedNational() {
   console.log('\n── National Holidays ──');
 
-  // 2026 main file
+  // 2026 main file — skip type:'national' entries here; the dedicated
+  // central-only files below are the authoritative DoPT gazetted list, and
+  // duplicating titles like "Gandhi Jayanti" vs "Mahatma Gandhi Jayanti" here
+  // would otherwise create two rows for the same holiday.
   const f26 = readJson(path.join(ASSETS, 'holidays/holidays-2026.json'));
   if (f26?.holidays) {
-    for (const h of f26.holidays) await upsertHoliday(mapHoliday(h, 2026, null, null));
-    console.log(`  2026 main: ${f26.holidays.length} holidays`);
+    const nonNational = f26.holidays.filter((h) => h.type !== 'national');
+    for (const h of nonNational) await upsertHoliday(mapHoliday(h, 2026, null, null));
+    console.log(`  2026 main: ${nonNational.length} holidays (${f26.holidays.length - nonNational.length} national-type entries skipped in favor of the central-only file)`);
   }
 
-  // 2026 central-only
-  const cn26 = readJson(path.join(ASSETS, 'holidays/2026/national/india_holidays_2027_central_only.json'));
-  if (cn26?.holidays) {
-    for (const h of cn26.holidays) await upsertHoliday(mapHoliday(h, 2026, 'national', null));
-    console.log(`  2026 central: ${cn26.holidays.length} holidays`);
+  // Central-only (DoPT gazetted) — 2026 and 2027
+  for (const year of [2026, 2027]) {
+    const central = readJson(path.join(ASSETS, `holidays/${year}/national/india_holidays_${year}_central_only.json`));
+    if (central?.holidays) {
+      for (const h of central.holidays) await upsertHoliday(mapHoliday(h, year, 'national', null));
+      console.log(`  ${year} central: ${central.holidays.length} holidays`);
+    }
   }
 }
 
@@ -113,19 +122,11 @@ async function seedStates() {
     console.log(`  ${year} states: ${total} holidays across ${fs.readdirSync(dir).length} states`);
   }
 
-  // Legacy /states/{CODE}/holidays-2026.json files
-  const legacyDir = path.join(ASSETS, 'holidays/states');
-  if (fs.existsSync(legacyDir)) {
-    let total = 0;
-    for (const stateCode of fs.readdirSync(legacyDir)) {
-      const file = path.join(legacyDir, stateCode, 'holidays-2026.json');
-      const data = readJson(file);
-      if (!data?.holidays) continue;
-      for (const h of data.holidays) await upsertHoliday(mapHoliday(h, 2026, 'state', stateCode));
-      total += data.holidays.length;
-    }
-    console.log(`  Legacy state files: ${total} holidays`);
-  }
+  // NOTE: holidays/states/{CODE}/holidays-2026.json (12 states) is now
+  // superseded by holidays/2026/state and holidays/2027/state (all 36
+  // states/UTs) and is intentionally NOT seeded here anymore — seeding both
+  // produced two rows per holiday (different auto-generated ids) for the
+  // same date/title/state.
 }
 
 // ─── 3. BANK holidays ────────────────────────────────────────────────────────

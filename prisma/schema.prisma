@@ -92,6 +92,75 @@ model Holiday {
   @@index([type])
 }
 
+// ─── Holiday Auto-Ingestion Pipeline ──────────────────────────────────────────
+
+model HolidaySource {
+  id            String   @id @default(uuid())
+  name          String                          // e.g. "DoPT Central Gazetted Holidays"
+  scope         String                          // "central" | "state"
+  stateCode     String?                         // set when scope = "state"
+  url           String
+  kind          String   @default("html")       // "html" | "pdf"
+  parserKey     String   @default("generic")    // which parser strategy to use
+  isOfficial    Boolean  @default(true)          // official govt source vs trusted aggregator fallback
+  isActive      Boolean  @default(true)
+  lastCheckedAt DateTime?
+  lastSuccessAt DateTime?
+  lastError     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  candidates    HolidayCandidate[]
+
+  @@index([scope])
+  @@index([stateCode])
+  @@index([isActive])
+}
+
+model HolidayCandidate {
+  id             String   @id @default(uuid())
+  sourceId       String
+  source         HolidaySource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  year           Int
+  stateCode      String?                        // null = central/national
+  title          String
+  date           String?                        // YYYY-MM-DD, null if parser couldn't resolve a date
+  rawDateText    String?                        // original text the date was extracted from
+  type           String   @default("state")     // national | state | bank | festival
+  holidayType    String   @default("gazetted")  // gazetted | restricted | observance | seasonal
+  confidence     String   @default("low")       // high | medium | low
+  rawExcerpt     String?                        // surrounding source text, for reviewer context
+  sourceUrl      String
+  status         String   @default("pending")   // pending | approved | rejected | duplicate
+  duplicateOfId  String?                        // existing Holiday.id this matched, when status=duplicate
+  resultHolidayId String?                       // Holiday.id created/updated on approval
+  reviewedAt     DateTime?
+  reviewedBy     String?
+  createdAt      DateTime @default(now())
+
+  @@index([status])
+  @@index([year])
+  @@index([stateCode])
+  @@index([sourceId])
+}
+
+model IngestionRun {
+  id               String   @id @default(uuid())
+  startedAt        DateTime @default(now())
+  finishedAt       DateTime?
+  status           String   @default("running") // running | completed | failed
+  triggeredBy      String   @default("manual")  // manual | schedule
+  sourcesChecked   Int      @default(0)
+  sourcesFailed    Int      @default(0)
+  candidatesFound  Int      @default(0)
+  candidatesNew    Int      @default(0)
+  candidatesDuplicate Int   @default(0)
+  errors           Json     @default("[]")
+
+  @@index([status])
+  @@index([startedAt])
+}
+
 // ─── Kids Zone Content ───────────────────────────────────────────────────────
 
 model KidsContent {

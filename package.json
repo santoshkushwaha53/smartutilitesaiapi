@@ -9,7 +9,11 @@
     "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "holidays:seed": "node scripts/seed-indiaph.js",
+    "holidays:seed-sources": "node scripts/seed-holiday-sources.js",
+    "holidays:ingest": "node -e \"require('dotenv').config(); require('./src/modules/holidays/ingestion/run').runIngestion({triggeredBy:'manual'}).then(r=>{console.log(r);process.exit(0)}).catch(e=>{console.error(e);process.exit(1)})\"",
+    "holidays:validate": "node scripts/validate-holidays.js"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +34,8 @@
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
     "multer": "^2.1.1",
+    "node-cron": "^4.6.0",
+    "pdf-parse": "^2.4.5",
     "pg": "^8.20.0",
     "tldts": "^7.0.27"
   },

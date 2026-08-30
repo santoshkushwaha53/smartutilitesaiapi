@@ -16,7 +16,10 @@ const adminRoutes    = require("./modules/holidays/routes/admin.routes");
 const uploadRoutes   = require("./modules/holidays/routes/upload.routes");
 const importRoutes   = require("./modules/holidays/routes/import.routes");
 const kidsRoutes          = require("./modules/holidays/routes/kids.routes");
+const ingestionRoutes     = require("./modules/holidays/routes/ingestion.routes");
 const mediaDownloadRoutes = require("./routes/media-download.routes");
+const cron = require("node-cron");
+const { runIngestion } = require("./modules/holidays/ingestion/run");
 
 const app = express();
 
@@ -71,6 +74,7 @@ app.use("/api/admin",     adminRoutes);
 app.use("/api/upload",    uploadRoutes);
 app.use("/api/import",    importRoutes);
 app.use("/api/kids",      kidsRoutes);
+app.use("/api/ingestion", ingestionRoutes);
 app.use("/api/media",     mediaDownloadRoutes);
 
 app.use(function (err, _req, res, _next) {
@@ -92,3 +96,19 @@ app.listen(port, function () {
   console.log(`API running on http://localhost:${port}`);
   console.log("Allowed origins:", allowedOrigins);
 });
+
+// Weekly auto-refresh of the holiday review queue — every Monday 03:00 IST.
+// Approval still requires a human via /api/ingestion/queue/:id/approve, so a
+// stale or misparsed source can never publish bad dates on its own.
+if (process.env.HOLIDAY_INGESTION_CRON !== "off") {
+  cron.schedule(
+    "0 3 * * 1",
+    function () {
+      console.log("[holiday-ingestion] scheduled run starting...");
+      runIngestion({ triggeredBy: "schedule" })
+        .then((run) => console.log("[holiday-ingestion] scheduled run finished:", run.id, run.status))
+        .catch((err) => console.error("[holiday-ingestion] scheduled run failed:", err.message));
+    },
+    { timezone: "Asia/Kolkata" }
+  );
+}
