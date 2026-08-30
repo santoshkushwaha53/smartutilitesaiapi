@@ -101,21 +101,21 @@ router.get("/download", async (req, res) => {
   const args = [
     "--no-playlist",
     "--no-warnings",
-    "--extractor-args", "youtube:player_client=web_safari,default",
+    "--extractor-args", "youtube:player_client=ios,web_safari,default",
     "--output", outputTemplate,
   ];
 
   if (format === "audio") {
-    // Download best audio-only track; no ffmpeg needed for m4a/webm audio
+    // Best combined audio stream — m4a/140 is widely available without ffmpeg merge
     args.push(
       "--format", "140/bestaudio[ext=m4a]/bestaudio",
     );
   } else {
-    // Use combined video+audio streams (no ffmpeg/merge required).
-    // Format 18 = 360p combined mp4 with audio — reliable and widely available.
-    // Fall back to best single-file mp4 if 18 is unavailable.
+    // Format 18 = 360p combined mp4 (no merge needed). Falls back through a chain
+    // of single-file mp4 formats that don't require ffmpeg.
     args.push(
-      "--format", "18/best[ext=mp4][vcodec!=none][acodec!=none]/best[vcodec!=none][acodec!=none]/best",
+      "--format",
+      "18/22/bestvideo[ext=mp4][vcodec^=avc1]+bestaudio[ext=m4a]/best[ext=mp4][vcodec!=none][acodec!=none]/best[vcodec!=none][acodec!=none]/best",
     );
   }
 
