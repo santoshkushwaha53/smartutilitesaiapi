@@ -33,6 +33,11 @@ const ingestionRoutes = require("./modules/holidays/routes/ingestion.routes");
 const cron = require("node-cron");
 const { runIngestion } = require("./modules/holidays/ingestion/run");
 
+// Public developer API portal
+const developerRoutes = require("./modules/developer-api/developer.routes");
+const publicApiRoutes = require("./modules/developer-api/public-api.routes");
+const { apiKeyAuth } = require("./modules/developer-api/api-key.middleware");
+
 const app = express();
 
 const allowedOrigins = (
@@ -69,24 +74,31 @@ function isLocalAllowedOrigin(origin) {
   }
 }
 
-const corsOptions = {
-  origin(origin, callback) {
-    if (!origin) return callback(null, true);
+// Public developer API (/api/v1/*, /api/developer/*) is key-gated, not
+// origin-gated — external developers call it from their own sites/servers,
+// so it needs open CORS. Everything else keeps the fixed allowlist.
+const PUBLIC_API_PREFIXES = ["/api/v1", "/api/developer"];
 
-    if (allowedOrigins.includes(origin) || isLocalAllowedOrigin(origin)) {
-      return callback(null, true);
-    }
+function isPublicApiPath(pathname) {
+  return PUBLIC_API_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+}
 
-    return callback(new Error(`CORS blocked for origin: ${origin}`));
-  },
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: false,
-};
+function corsOptionsDelegate(req, callback) {
+  if (isPublicApiPath(req.path)) {
+    return callback(null, { origin: true, methods: ["GET", "POST"], allowedHeaders: ["Content-Type", "X-API-Key"] });
+  }
+
+  const origin = req.header("Origin");
+  if (!origin || allowedOrigins.includes(origin) || isLocalAllowedOrigin(origin)) {
+    return callback(null, { origin: true, methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], allowedHeaders: ["Content-Type", "Authorization"], credentials: false });
+  }
+
+  return callback(new Error(`CORS blocked for origin: ${origin}`));
+}
 
 app.use(helmet());
-app.use(cors(corsOptions));
-app.options("/{*any}", cors(corsOptions));
+app.use(cors(corsOptionsDelegate));
+app.options("/{*any}", cors(corsOptionsDelegate));
 app.use(express.json({ limit: "1mb" }));
 app.use(morgan("dev"));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -113,6 +125,11 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/kids", kidsRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/ingestion", ingestionRoutes);
+
+// Public developer API portal — /api/developer/signup needs no key (that's
+// how you get one); /api/v1/* requires the X-API-Key header.
+app.use("/api/developer", developerRoutes);
+app.use("/api/v1", apiKeyAuth, publicApiRoutes);
 
 app.get("/api/health", function (_req, res) {
   res.json({

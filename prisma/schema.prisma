@@ -190,6 +190,25 @@ model IngestionRun {
   @@index([startedAt])
 }
 
+// ─── Developer API Portal ──────────────────────────────────────────────────
+
+model ApiKey {
+  id              String    @id @default(uuid())
+  key             String    @unique
+  name            String                       // developer's app/project name
+  email           String    @unique            // one key per email; resubmitting returns the same key
+  isActive        Boolean   @default(true)
+  rateLimitPerDay Int       @default(1000)
+  dailyCount      Int       @default(0)
+  dailyResetAt    DateTime  @default(now())     // dailyCount resets when now() has passed this
+  requestCount    BigInt    @default(0)         // lifetime total, never resets
+  lastUsedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([isActive])
+}
+
 model KidsContent {
   id            String   @id
   slug          String   @unique
