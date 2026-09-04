@@ -19,32 +19,57 @@ model User {
 }
 
 model BlogPost {
-  id             String    @id
-  siteId         String    @default("smartutilitiesai")
-  slug           String
-  topicId        String
-  featured       Boolean   @default(false)
-  published      Boolean   @default(true)
-  title          String
-  subtitle       String    @default("")
-  author         String    @default("SmartUtilitiesAI")
-  coverEmoji     String    @default("📝")
-  accent         String    @default("blue")
-  publishedAt    String
-  readingMinutes Int       @default(5)
-  seoTitle       String    @default("")
-  seoDescription String    @default("")
-  keywords       Json      @default("[]")
-  quickSummary   String    @default("")
-  sections       Json      @default("[]")
-  faq            Json      @default("[]")
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime
-  BlogTopic      BlogTopic @relation(fields: [topicId], references: [id])
+  id               String    @id
+  siteId           String    @default("smartutilitiesai")
+  slug             String
+  topicId          String
+  featured         Boolean   @default(false)
+  published        Boolean   @default(true)
+  /// draft | scheduled | published | archived — keep `published` in sync for legacy clients
+  status           String    @default("published")
+  trending         Boolean   @default(false)
+  /// article | quick-read | holiday-guide | long-weekend-guide | festival-guide |
+  /// travel-guide | family-activity | did-you-know | history | culture | lifestyle |
+  /// announcement | holiday-update
+  contentType      String    @default("article")
+  title            String
+  subtitle         String    @default("")
+  author           String    @default("SmartUtilitiesAI")
+  coverEmoji       String    @default("📝")
+  accent           String    @default("blue")
+  featuredImage    String?
+  thumbnailImage   String?
+  publishedAt      String
+  readingMinutes   Int       @default(5)
+  seoTitle         String    @default("")
+  seoDescription   String    @default("")
+  keywords         Json      @default("[]")
+  quickSummary     String    @default("")
+  sections         Json      @default("[]")
+  faq              Json      @default("[]")
+  ogTitle          String    @default("")
+  ogDescription    String    @default("")
+  ogImage          String?
+  canonicalUrl     String?
+  viewCount        Int       @default(0)
+  /// Holiday ids from Holiday.id
+  holidayIds       Json      @default("[]")
+  /// Festival ids/slugs
+  festivalIds      Json      @default("[]")
+  /// State codes e.g. MH, DL, ALL
+  stateCodes       Json      @default("[]")
+  /// Related BlogPost ids
+  relatedPostIds   Json      @default("[]")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  BlogTopic        BlogTopic @relation(fields: [topicId], references: [id])
 
   @@unique([siteId, slug])
   @@index([siteId])
   @@index([siteId, published])
+  @@index([siteId, status])
+  @@index([siteId, trending])
+  @@index([siteId, contentType])
   @@index([topicId])
 }
 
