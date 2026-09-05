@@ -12,7 +12,7 @@ const PROVIDERS = {
     envKey: "GROQ_API_KEY",
     modelEnv: "GROQ_MODEL",
     // Instant model is widely available on Groq free/paid tiers.
-    defaultModel: "llama-3.1-8b-instant",
+    defaultModel: "openai/gpt-oss-20b",
     kind: "openai",
     baseUrl: "https://api.groq.com/openai/v1/chat/completions",
   },
