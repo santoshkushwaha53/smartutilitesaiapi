@@ -8,12 +8,12 @@ const { chatJson } = require("./llm-providers.service");
 const SYSTEM_GENERATE = `You are an editorial assistant for IndiaPublicHolidays.com.
 Write practical, accurate Explore guides for Indian public holidays, festivals, leave planning, travel, and culture.
 Use clear English for Indian readers. Do not invent official gazetted dates — if unsure, say to confirm with the state calendar / employer.
-Reply with STRICT JSON only (no markdown), matching this shape:
+Reply with ONE complete STRICT JSON object only (no markdown), matching this shape:
 {
   "title": string,
   "slug": string (kebab-case),
   "subtitle": string,
-  "quickSummary": string (2-3 sentences),
+  "quickSummary": string (2 short sentences),
   "seoTitle": string,
   "seoDescription": string (<=155 chars),
   "keywords": string[],
@@ -21,13 +21,14 @@ Reply with STRICT JSON only (no markdown), matching this shape:
   "coverEmoji": string (single emoji),
   "contentType": string,
   "topicId": string|null,
-  "bodyParagraphs": string[] (4-8 paragraphs),
-  "faq": [{"q": string, "a": string}],
+  "bodyParagraphs": string[] (4-5 short paragraphs, each 2-4 sentences),
+  "faq": [{"q": string, "a": string}] (3-4 items),
   "holidayIds": string[],
   "festivalIds": string[],
   "stateCodes": string[],
   "whyNow": string (1-2 sentences on why this topic fits right now)
-}`;
+}
+Keep the full JSON compact enough to finish completely — never truncate.`;
 
 const SYSTEM_SUGGEST = `You are a content strategist for IndiaPublicHolidays.com.
 Suggest timely Explore article ideas for the next few weeks in India (public holidays, festivals, long weekends, leave bridges, travel, family).
@@ -127,15 +128,18 @@ async function generateExplorePost(provider, input = {}) {
     input.holidayIds?.length ? `Related holiday IDs: ${input.holidayIds.join(", ")}` : null,
     input.festivalIds?.length ? `Related festival IDs: ${input.festivalIds.join(", ")}` : null,
     input.stateCodes?.length ? `Related state codes: ${input.stateCodes.join(", ")}` : null,
-    input.targetMinutes ? `Target reading time ~${input.targetMinutes} minutes` : "Target reading time 4-6 minutes",
+    input.targetMinutes ? `Target reading time ~${input.targetMinutes} minutes` : "Target reading time 4 minutes",
     input.tone ? `Tone: ${input.tone}` : "Tone: helpful, practical, warm",
     "Include concrete leave-bridge tips when relevant (Mon/Fri bridges, confirm employer/state).",
-    "Include 3-5 FAQ items.",
+    "Keep bodyParagraphs to 4 short paragraphs and FAQ to 3 items so the JSON finishes completely.",
   ]
     .filter(Boolean)
     .join("\n");
 
-  const raw = await chatJson(provider, SYSTEM_GENERATE, user, { temperature: 0.45 });
+  const raw = await chatJson(provider, SYSTEM_GENERATE, user, {
+    temperature: 0.4,
+    maxTokens: 8192,
+  });
   return normalizeDraft(raw, input);
 }
 
