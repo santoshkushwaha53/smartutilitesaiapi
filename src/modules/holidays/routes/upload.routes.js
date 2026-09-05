@@ -1,48 +1,65 @@
-const express  = require('express');
-const multer   = require('multer');
-const path     = require('path');
-const fs       = require('fs');
-const { authMiddleware: auth } = require('../../../core/middlewares/auth.middleware');
+const express = require("express");
+const multer = require("multer");
+const path = require("path");
+const { authMiddleware: auth } = require("../../../core/middlewares/auth.middleware");
+const imagekit = require("../../../services/imagekit.service");
 
 const router = express.Router();
 
-const UPLOAD_DIR = path.resolve(__dirname, '../../../uploads/festivals');
-if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, UPLOAD_DIR),
-  filename: (_req, file, cb) => {
-    const ext  = path.extname(file.originalname).toLowerCase();
-    const safe = path.basename(file.originalname, ext).replace(/[^a-z0-9_-]/gi, '_').toLowerCase();
-    cb(null, `${safe}-${Date.now()}${ext}`);
-  },
-});
-
 const fileFilter = (_req, file, cb) => {
-  const allowed = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg'];
+  const allowed = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg"];
   if (allowed.includes(path.extname(file.originalname).toLowerCase())) cb(null, true);
-  else cb(new Error('Only image files are allowed'));
+  else cb(new Error("Only image files are allowed"));
 };
 
-const upload = multer({ storage, fileFilter, limits: { fileSize: 5 * 1024 * 1024 } }); // 5 MB
+// Memory storage so we can stream the buffer straight to ImageKit.
+const upload = multer({
+  storage: multer.memoryStorage(),
+  fileFilter,
+  limits: { fileSize: 8 * 1024 * 1024 }, // 8 MB
+});
 
-// POST /api/upload/image  — single image
-router.post('/image', auth, upload.single('file'), (req, res) => {
-  if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
-  const url = `/uploads/festivals/${req.file.filename}`;
-  res.json({ url, filename: req.file.filename, originalName: req.file.originalname, size: req.file.size });
+router.get("/status", auth, (_req, res) => {
+  res.json({
+    provider: "imagekit",
+    configured: imagekit.configured(),
+    folder: process.env.IMAGEKIT_FOLDER || "/indiaph/articles",
+  });
+});
+
+// POST /api/upload/image  — single image → ImageKit CDN URL
+router.post("/image", auth, upload.single("file"), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ message: "No file uploaded" });
+    const folder = req.body?.folder || undefined;
+    const result = await imagekit.uploadImage(req.file, { folder });
+    res.json(result);
+  } catch (err) {
+    const status = err.status || 500;
+    res.status(status).json({ message: err.message || "Upload failed" });
+  }
 });
 
 // POST /api/upload/images — multiple images (up to 10)
-router.post('/images', auth, upload.array('files', 10), (req, res) => {
-  if (!req.files || req.files.length === 0) return res.status(400).json({ message: 'No files uploaded' });
-  const urls = req.files.map(f => ({ url: `/uploads/festivals/${f.filename}`, filename: f.filename, size: f.size }));
-  res.json({ urls });
+router.post("/images", auth, upload.array("files", 10), async (req, res) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: "No files uploaded" });
+    }
+    const folder = req.body?.folder || undefined;
+    const urls = [];
+    for (const file of req.files) {
+      urls.push(await imagekit.uploadImage(file, { folder }));
+    }
+    res.json({ urls });
+  } catch (err) {
+    const status = err.status || 500;
+    res.status(status).json({ message: err.message || "Upload failed" });
+  }
 });
 
-// Error handler for multer
 router.use((err, _req, res, _next) => {
-  res.status(400).json({ message: err.message || 'Upload failed' });
+  res.status(400).json({ message: err.message || "Upload failed" });
 });
 
 module.exports = router;
