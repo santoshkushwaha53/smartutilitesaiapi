@@ -11,7 +11,8 @@ const PROVIDERS = {
     label: "Groq",
     envKey: "GROQ_API_KEY",
     modelEnv: "GROQ_MODEL",
-    defaultModel: "llama-3.3-70b-versatile",
+    // Instant model is widely available on Groq free/paid tiers.
+    defaultModel: "llama-3.1-8b-instant",
     kind: "openai",
     baseUrl: "https://api.groq.com/openai/v1/chat/completions",
   },
@@ -80,30 +81,55 @@ function parseJsonContent(content) {
   }
 }
 
+function providerHttpError(provider, err) {
+  const status = err?.response?.status;
+  const data = err?.response?.data;
+  const detail =
+    (typeof data === "string" && data) ||
+    data?.error?.message ||
+    data?.message ||
+    (data ? JSON.stringify(data).slice(0, 400) : "") ||
+    err?.message ||
+    "Unknown AI provider error";
+  const e = new Error(
+    status
+      ? `${provider.label} API error ${status}: ${detail}`
+      : `${provider.label} API error: ${detail}`
+  );
+  e.code = "LLM_PROVIDER_HTTP";
+  e.status = status;
+  return e;
+}
+
 async function callOpenAiCompatible(provider, system, user, { temperature = 0.4 } = {}) {
   const model = process.env[provider.modelEnv] || provider.defaultModel;
-  const response = await axios.post(
-    provider.baseUrl,
-    {
-      model,
-      temperature,
-      response_format: { type: "json_object" },
-      messages: [
-        { role: "system", content: system },
-        { role: "user", content: user },
-      ],
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${process.env[provider.envKey]}`,
-        "Content-Type": "application/json",
+  try {
+    const response = await axios.post(
+      provider.baseUrl,
+      {
+        model,
+        temperature,
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: `${user}\n\nReturn valid JSON only.` },
+        ],
       },
-      timeout: 90000,
-    }
-  );
-  const content = response.data?.choices?.[0]?.message?.content;
-  if (!content) throw new Error(`${provider.label} returned an empty response`);
-  return parseJsonContent(content);
+      {
+        headers: {
+          Authorization: `Bearer ${process.env[provider.envKey]}`,
+          "Content-Type": "application/json",
+        },
+        timeout: 90000,
+      }
+    );
+    const content = response.data?.choices?.[0]?.message?.content;
+    if (!content) throw new Error(`${provider.label} returned an empty response`);
+    return parseJsonContent(content);
+  } catch (err) {
+    if (err.code === "LLM_PROVIDER_HTTP") throw err;
+    if (err?.response) throw providerHttpError(provider, err);
+    throw err;
+  }
 }
 
 async function callGemini(provider, system, user, { temperature = 0.4 } = {}) {
@@ -112,26 +138,32 @@ async function callGemini(provider, system, user, { temperature = 0.4 } = {}) {
     `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent` +
     `?key=${encodeURIComponent(process.env[provider.envKey])}`;
 
-  const response = await axios.post(
-    url,
-    {
-      systemInstruction: { parts: [{ text: system }] },
-      contents: [{ role: "user", parts: [{ text: user }] }],
-      generationConfig: {
-        temperature,
-        responseMimeType: "application/json",
+  try {
+    const response = await axios.post(
+      url,
+      {
+        systemInstruction: { parts: [{ text: system }] },
+        contents: [{ role: "user", parts: [{ text: user }] }],
+        generationConfig: {
+          temperature,
+          responseMimeType: "application/json",
+        },
       },
-    },
-    {
-      headers: { "Content-Type": "application/json" },
-      timeout: 90000,
-    }
-  );
+      {
+        headers: { "Content-Type": "application/json" },
+        timeout: 90000,
+      }
+    );
 
-  const parts = response.data?.candidates?.[0]?.content?.parts || [];
-  const content = parts.map((p) => p.text || "").join("\n").trim();
-  if (!content) throw new Error(`${provider.label} returned an empty response`);
-  return parseJsonContent(content);
+    const parts = response.data?.candidates?.[0]?.content?.parts || [];
+    const content = parts.map((p) => p.text || "").join("\n").trim();
+    if (!content) throw new Error(`${provider.label} returned an empty response`);
+    return parseJsonContent(content);
+  } catch (err) {
+    if (err.code === "LLM_PROVIDER_HTTP") throw err;
+    if (err?.response) throw providerHttpError(provider, err);
+    throw err;
+  }
 }
 
 /**
