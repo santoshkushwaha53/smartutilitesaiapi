@@ -2,6 +2,11 @@ const crypto = require("crypto");
 const express = require("express");
 const prisma = require("../lib/prisma");
 const { authMiddleware } = require("../core/middlewares/auth.middleware");
+const { listProviders } = require("../services/llm-providers.service");
+const {
+  generateExplorePost,
+  suggestExploreTopics,
+} = require("../services/blog-ai.service");
 
 const router = express.Router();
 
@@ -508,6 +513,80 @@ router.post("/posts/:id/view", async (req, res) => {
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: "Failed to record view" });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// POSTS — AI DRAFT / SUGGEST (admin)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+router.get("/ai/providers", authMiddleware, (_req, res) => {
+  res.json({
+    providers: listProviders(),
+    defaultProvider:
+      listProviders().find((p) => p.configured)?.id || "groq",
+  });
+});
+
+router.post("/posts/generate", authMiddleware, async (req, res) => {
+  try {
+    const provider = String(req.body?.provider || "").trim().toLowerCase();
+    if (!provider) {
+      return res.status(400).json({ error: "provider is required (groq|gemini|deepseek)" });
+    }
+
+    let topicTitle = req.body?.topicTitle || null;
+    if (!topicTitle && req.body?.topicId) {
+      const topic = await prisma.blogTopic.findUnique({
+        where: { id: String(req.body.topicId) },
+        select: { title: true },
+      });
+      topicTitle = topic?.title || null;
+    }
+
+    const draft = await generateExplorePost(provider, {
+      topicHint: req.body?.topicHint || req.body?.title || req.body?.prompt,
+      title: req.body?.title,
+      angle: req.body?.angle || req.body?.brief,
+      contentType: req.body?.contentType,
+      topicId: req.body?.topicId,
+      topicTitle,
+      holidayIds: req.body?.holidayIds,
+      festivalIds: req.body?.festivalIds,
+      stateCodes: req.body?.stateCodes,
+      targetMinutes: req.body?.targetMinutes,
+      tone: req.body?.tone,
+    });
+
+    res.json({ provider, draft });
+  } catch (e) {
+    console.error("blog generate failed", e);
+    if (e.code === "LLM_NOT_CONFIGURED" || e.code === "LLM_PROVIDER_INVALID") {
+      return res.status(503).json({ error: e.message, code: e.code });
+    }
+    res.status(500).json({ error: e.message || "Failed to generate article draft" });
+  }
+});
+
+router.post("/posts/suggest", authMiddleware, async (req, res) => {
+  try {
+    const provider = String(req.body?.provider || "").trim().toLowerCase();
+    if (!provider) {
+      return res.status(400).json({ error: "provider is required (groq|gemini|deepseek)" });
+    }
+
+    const result = await suggestExploreTopics(provider, {
+      focus: req.body?.focus,
+      stateCodes: req.body?.stateCodes,
+      knownHolidays: req.body?.knownHolidays,
+    });
+    res.json(result);
+  } catch (e) {
+    console.error("blog suggest failed", e);
+    if (e.code === "LLM_NOT_CONFIGURED" || e.code === "LLM_PROVIDER_INVALID") {
+      return res.status(503).json({ error: e.message, code: e.code });
+    }
+    res.status(500).json({ error: e.message || "Failed to suggest article ideas" });
   }
 });
 
